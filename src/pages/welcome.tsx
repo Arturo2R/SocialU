@@ -1,0 +1,121 @@
+import React from 'react';
+import {
+  Paper,
+  createStyles,
+  TextInput,
+  PasswordInput,
+  Checkbox,
+  Button,
+  Title,
+  Text,
+  Anchor,
+  Group,
+  Divider,
+  Space,
+} from '@mantine/core';
+import Link from 'next/link';
+import Image from 'next/image';
+
+const useStyles = createStyles((theme) => ({
+  wrapper: {
+    minHeight: "100vh",
+    // height: "100%",
+    backgroundRepeat: "no-repeat",
+    // backgroundSize: "" ,
+    backgroundSize: "cover",
+    backgroundClip: "content-box",
+    backgroundImage:
+      'url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)',
+  },
+
+  form: {
+    borderRight: `1px solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]
+    }`,
+    minHeight: "100vh",
+    maxWidth: 450,
+    paddingTop: 80,
+
+    [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
+      maxWidth: '100%',
+    },
+  },
+
+  title: {
+    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+  },
+
+  logo: {
+    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    width: 120,
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+}));
+
+function AuthenticationImage() {
+  const { classes } = useStyles();
+  return (
+    <div className={classes.wrapper}>
+      <Paper className={classes.form} radius={0} p={30}>
+
+        <Group>
+          <Image src="/logologo.svg" width={50} height={50} />
+          <Title>SocialU</Title>
+        </Group>
+
+        <Space h="md"/>
+
+        <Title order={2} className={classes.title} mt="md" mb={10}>
+          Bienvenido
+        </Title>
+        <Text mb={25}>La red social que te conecta en la universidad</Text>
+
+        <Group grow mb="md" mt="md">
+          <Button color="orange" radius="xl">
+            Google
+          </Button>
+          {/* <GoogleButton radius="xl">Google</GoogleButton>
+          <TwitterButton radius="xl">Twitter</TwitterButton> */}
+        </Group>
+        <Divider label="O continua con tu correo universitario" labelPosition="center" my="lg" />
+        <TextInput label="Correo universitario" placeholder="hello@uninorte.edu.com" size="md" />
+        <PasswordInput label="Contraseña" placeholder="Tu contraseña" mt="md" size="md" />
+        {/* <Checkbox label="Keep me logged in" mt="xl" size="md" /> */}
+
+        <Anchor component={Link} href="/">
+          <Button color="orange" fullWidth mt="xl" size="md">
+            Iniciar Sesión
+          </Button>
+        </Anchor>
+
+        <Text align="center" mt="md">
+          No tienes una cuenta?{' '}
+          <Anchor<'a'>
+            color="orange"
+            href="#"
+            weight={700}
+            onClick={(event) => event.preventDefault()}
+          >
+            Registrate
+          </Anchor>
+        </Text>
+        <Space h="xl" />
+        <Text align="center" lineClamp={3}>
+          Si continuas aceptas los{' '}
+          <Anchor color="orange" weight={700} component={Link} href="/terminos">
+            Terminos De Servicio
+          </Anchor>{' '}
+          de SocialU y confirmas que has leído nuestra{' '}
+          <Anchor className="mt-4" component={Link} href="/privacidad">
+            Política de privacidad
+          </Anchor>
+        </Text>
+      </Paper>
+    </div>
+  );
+}
+
+export default AuthenticationImage;
