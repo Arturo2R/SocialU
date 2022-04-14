@@ -7,4 +7,7 @@ module.exports = withBundleAnalyzer({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['source.unsplash.com', 'example2.com'],
+  },
 });
