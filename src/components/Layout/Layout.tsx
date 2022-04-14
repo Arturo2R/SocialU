@@ -58,12 +58,11 @@ const classes = createStyles((theme) => ({
   },
 }));
 
-// type LayoutProps = {
-//   navLinks: { link: string; label: string }[];
-//   children?: ReactNode;
-// };
+type LayoutProps = {
+  children: ReactNode;
+};
 
-export default function Layout({ children }) {
+export default function Layout({ children }: LayoutProps) {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [active, setActive] = useState();

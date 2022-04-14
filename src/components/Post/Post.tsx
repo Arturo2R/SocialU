@@ -19,34 +19,6 @@ import { ChevronsRight, Plus } from "tabler-icons-react";
 import SeeUser from "./SeeUser";
 // import { theme } from 'twin.macro'
 
-const asistontos = [
-  {
-    id: "jlfksd",
-    name: "El Kangas",
-    avatar: "https://source.unsplash.random/30x30",
-  },
-  {
-    id: "jlfksd",
-    name: "El Carecu",
-    avatar: "https://source.unsplash.random/30x30",
-  },
-  {
-    id: "jlfksd",
-    name: "El Brayan",
-    avatar: "https://source.unsplash.random/30x30",
-  },
-  {
-    id: "jlfksd",
-    name: "El Manotas",
-    avatar: "https://source.unsplash.random/30x30",
-  },
-  {
-    id: "jlfksd",
-    name: "El Gato Volador",
-    avatar: "https://source.unsplash.random/30x30",
-  },
-];
-
 interface PostProps {
   author: { avatar?: string; name: string; id: string } | "anonimo";
   image?: string;
@@ -58,7 +30,7 @@ interface PostProps {
   asistants?: { id: string; name: string; avatar: string }[];
 }
 
-const Post = ({
+export const Post = ({
   author,
   title,
   image,
@@ -81,7 +53,7 @@ const Post = ({
     <article>
       <Anchor
         component={Link}
-        href={`/${author?.id ? author.id : author}/${postId}`}
+        href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
       >
         <div className="w-full">
           <Card withBorder p="lg" radius="md">
@@ -110,7 +82,7 @@ const Post = ({
               <>
                 <Group grow mt="sm">
                   <Button
-                    onClick={(e) => {
+                    onClick={(e: { stopPropagation: () => void }) => {
                       e.stopPropagation();
                       setExpanded(!expanded);
                     }}
@@ -122,7 +94,7 @@ const Post = ({
                     Ver Asistentes
                   </Button>
                   <Button
-                    onClick={(e) => {
+                    onClick={(e: { stopPropagation: () => void }) => {
                       e.stopPropagation();
                     }}
                     color="orange"
@@ -147,5 +119,3 @@ const Post = ({
     </article>
   );
 };
-
-export default Post;

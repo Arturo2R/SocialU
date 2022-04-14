@@ -1,6 +1,6 @@
 import { Title, Text, Anchor, Container, Space, Stack } from "@mantine/core";
 
-import Post from "../Post/Post";
+import { Post } from "../Post/Post";
 import useStyles from "./Welcome.styles";
 
 export function Welcome() {
