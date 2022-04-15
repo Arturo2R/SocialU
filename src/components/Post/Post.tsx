@@ -21,7 +21,7 @@ import SeeUser from "./SeeUser";
 // import { theme } from 'twin.macro'
 
 interface PostProps {
-  author: { avatar?: string; name: string; id: string } | "anonimo";
+  author: { image?: string; name: string; id: string } | "anonimo";
   image?: string;
   description: string;
   title: string;
@@ -51,7 +51,7 @@ export const Post = ({
   };
 
   return (
-    <article className="w-full">
+    <article className="mx-auto max-w-sm">
       {/* <Anchor
         component={Link}
         href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
@@ -68,7 +68,7 @@ export const Post = ({
 
         {author !== "anonimo" ? (
           <Group mt="md">
-            <Avatar size="sm" src={author?.avatar} radius="xl" />
+            <Avatar size="md" src={author?.image} radius="xl" />
             <Anchor component={Link} href={`/${author.id}`}>
               {author?.name}
             </Anchor>

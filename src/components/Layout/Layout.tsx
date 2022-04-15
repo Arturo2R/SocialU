@@ -18,6 +18,8 @@ import AppFooter from "./AppFooter";
 import Image from "next/image";
 import AppSidebar from "./AppSidebar";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const classes = createStyles((theme) => ({
   links: {
@@ -64,6 +66,8 @@ type LayoutProps = {
 };
 
 export default function Layout({ children }: LayoutProps) {
+  const router = useRouter();
+
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [active, setActive] = useState();
@@ -81,7 +85,7 @@ export default function Layout({ children }: LayoutProps) {
   //     {link.label}
   //   </a>
   // ));
-
+  console.log(router.pathname);
   return (
     <AppShell
       styles={{
@@ -97,10 +101,10 @@ export default function Layout({ children }: LayoutProps) {
       fixed
       navbar={<AppNavbar opened={opened} />}
       aside={<AppSidebar />}
-      footer={<AppFooter />}
+      footer={router.pathname === "/" ? <AppFooter /> : <></>}
       header={
         <Header height={70} p="md">
-          <div className="flex h-full items-center justify-between">
+          <div className="flex justify-between items-center h-full">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
               <Burger
                 opened={opened}
@@ -110,13 +114,14 @@ export default function Layout({ children }: LayoutProps) {
                 mr="xl"
               />
             </MediaQuery>
-
-            <Group>
-              <Image src="/logologo.svg" width={30} height={30} />
-              <Title className=' {font-family:"inter";} text-2xl'>
-                SocialU
-              </Title>
-            </Group>
+            <Link href="/">
+              <Group>
+                <Image src="/logologo.svg" width={30} height={30} />
+                <Title className=' {font-family:"inter";} text-2xl'>
+                  SocialU
+                </Title>
+              </Group>
+            </Link>
             <ColorSchemeToggle />
           </div>
         </Header>

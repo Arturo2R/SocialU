@@ -1,38 +1,83 @@
-import React from "react";
-import { createStyles, Text, Avatar, Group } from "@mantine/core";
+import React, { useState } from "react";
+import {
+  createStyles,
+  Text,
+  Avatar,
+  Group,
+  Anchor,
+  Stack,
+  Textarea,
+  Button,
+  ActionIcon,
+  Collapse,
+} from "@mantine/core";
+import { useToggle } from "@mantine/hooks";
+import { Send } from "tabler-icons-react";
 
-const useStyles = createStyles((theme) => ({
-  body: {
-    paddingLeft: 54,
-    paddingTop: theme.spacing.sm,
-  },
-}));
-
-interface CommentProps {
+export interface CommentProps {
   postedAt: string;
   body: string;
-  author: {
-    name: string;
-    image: string;
-  };
+  author:
+    | {
+        name: string;
+        image: string;
+      }
+    | "anonimo";
+  subComments?: CommentProps[];
 }
 
-export function Comment({ postedAt, body, author }: CommentProps) {
-  const { classes } = useStyles();
+const manageReply = (e) => {
+  e.preventDefault;
+};
+
+export function Comment({ postedAt, body, author, subComments }: CommentProps) {
+  const [reply, toggle] = useToggle("closed", ["closed", "open"]);
+  const [opened, setOpen] = useState(false);
   return (
     <div>
       <Group>
-        <Avatar src={author.image} alt={author.name} radius="xl" />
+        <Avatar size="sm" src={author.image} alt={author.name} radius="xl" />
         <div>
-          <Text size="sm">{author.name}</Text>
+          <Text size="sm">{author.name ? author.name : "Anónimo"}</Text>
           <Text size="xs" color="dimmed">
             {postedAt}
           </Text>
         </div>
       </Group>
-      <Text className={classes.body} size="sm">
-        {body}
-      </Text>
+      <div className="">
+        <Text size="sm">{body}</Text>
+        <Anchor onClick={() => setOpen((o) => !o)} color="orange">
+          Responder
+        </Anchor>
+
+        <Collapse in={opened}>
+          <form action="">
+            <Textarea />
+            <ActionIcon
+              type="submit"
+              component="button"
+              color="orange"
+              radius="xl"
+            >
+              <Send />
+            </ActionIcon>
+          </form>
+        </Collapse>
+      </div>
+
+      {subComments && (
+        <Stack className="pl-4 border-l-2">
+          {subComments?.map((subco, index) => (
+            <Comment
+              key={index}
+              postedAt={subco.postedAt}
+              author={subco.author}
+              body={subco.body}
+              subComments={subco.subComments}
+            />
+          ))}
+        </Stack>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ export function Feed() {
 
   return (
     <>
-      <Container className="p-0">
+      <Container className="p-0 lg:px-12">
         <Title className={classes.title} align="center">
           Bienvenido A
           <Text
@@ -24,7 +24,12 @@ export function Feed() {
         <Stack spacing="lg">
           <Post
             description="Pues ocurrio una vaina muy jodida por alla en el culo de la mula un par de arrechos hijueputas estaban cagando encima de un ..."
-            author="anonimo"
+            author={{
+              image:
+                "https://cr00.epimg.net/radio/imagenes/2021/01/02/tendencias/1609606240_435257_1609606414_noticia_normal.jpg",
+              name: "María Juana",
+              id: "kjsdflk",
+            }}
             title="Hola Que Hace"
             // image="https://source.unsplash.com/random/180x90"
             postId="kljdfslkf"
