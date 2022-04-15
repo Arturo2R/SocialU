@@ -9,6 +9,7 @@ import {
   Anchor,
   Collapse,
   Stack,
+  Spoiler,
 } from "@mantine/core";
 import { NextLink } from "@mantine/next";
 import Link from "next/link";
@@ -50,72 +51,88 @@ export const Post = ({
   };
 
   return (
-    <article>
-      <Anchor
+    <article className="w-full">
+      {/* <Anchor
         component={Link}
         href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
-      >
-        <div className="w-full">
-          <Card withBorder p="lg" radius="md">
-            {image && (
-              <Card.Section>
-                <Image src={image} alt={title} height={160} />
-              </Card.Section>
-            )}
-            {/* <Badge>{category}</Badge> */}
-            <Text className="mt-2 text-xl font-bold">{title}</Text>
+      > */}
 
-            {author !== "anonimo" ? (
-              <Group mt="md">
-                <Avatar size="sm" src={author?.avatar} radius="xl" />
-                <Anchor component={Link} href={`/${author.id}`}>
-                  {author?.name}
-                </Anchor>
-              </Group>
-            ) : (
-              <Text color="orange">Anónimo</Text>
-            )}
+      <Card withBorder p="xs" radius="md">
+        {image && (
+          <Card.Section>
+            <Image src={image} alt={title} height={160} />
+          </Card.Section>
+        )}
+        {/* <Badge>{category}</Badge> */}
+        <Text className="mt-2 text-xl font-bold">{title}</Text>
 
-            <Text className="mt-2">{description}</Text>
+        {author !== "anonimo" ? (
+          <Group mt="md">
+            <Avatar size="sm" src={author?.avatar} radius="xl" />
+            <Anchor component={Link} href={`/${author.id}`}>
+              {author?.name}
+            </Anchor>
+          </Group>
+        ) : (
+          <Text color="orange">Anónimo</Text>
+        )}
 
-            {event && (
-              <>
-                <Group grow mt="sm">
-                  <Button
-                    onClick={(e: { stopPropagation: () => void }) => {
-                      e.stopPropagation();
-                      setExpanded(!expanded);
-                    }}
-                    variant="light"
-                    color="orange"
-                    disabled={aja()}
-                    rightIcon={<ChevronsRight />}
-                  >
-                    Ver Asistentes
-                  </Button>
-                  <Button
-                    onClick={(e: { stopPropagation: () => void }) => {
-                      e.stopPropagation();
-                    }}
-                    color="orange"
-                    rightIcon={<Plus />}
-                  >
-                    Unirme
-                  </Button>
-                </Group>
+        <Spoiler maxHeight={110} showLabel="Ver Más" hideLabel="Menos">
+          <Text>{description}</Text>
+        </Spoiler>
 
-                <Collapse in={expanded}>
-                  <Stack mt="sm" spacing="xs">
-                    {asistants?.map((i) => (
-                      <SeeUser id={i.id} name={i.name} image={i.avatar} />
-                    ))}
-                  </Stack>
-                </Collapse>
-              </>
-            )}
-          </Card>
-        </div>
-      </Anchor>
+        {event && (
+          <>
+            <Group grow my="sm">
+              <Button
+                size="lg"
+                onClick={(e: { stopPropagation: () => void }) => {
+                  e.stopPropagation();
+                  setExpanded(!expanded);
+                }}
+                variant="light"
+                color="orange"
+                disabled={aja()}
+                compact
+                // rightIcon={<ChevronsRight />}
+              >
+                Asistentes
+              </Button>
+              <Button
+                compact
+                size="lg"
+                onClick={(e: { stopPropagation: () => void }) => {
+                  e.stopPropagation();
+                }}
+                color="orange"
+                rightIcon={<Plus />}
+              >
+                Unirme
+              </Button>
+            </Group>
+
+            <Collapse in={expanded}>
+              <Stack spacing="xs">
+                {/* <Spoiler
+                    maxHeight={180}
+                    showLabel="Ver Más"
+                    hideLabel="Menos"
+                  > */}
+                {asistants?.map((i, index) => (
+                  <SeeUser
+                    key={index}
+                    id={i.id}
+                    name={i.name}
+                    image={i.avatar}
+                  />
+                ))}
+                {/* </Spoiler> */}
+              </Stack>
+            </Collapse>
+          </>
+        )}
+      </Card>
+      {/* </Anchor> */}
     </article>
   );
 };

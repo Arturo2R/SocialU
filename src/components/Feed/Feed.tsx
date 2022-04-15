@@ -1,19 +1,19 @@
-import { Title, Text, Anchor, Container, Space, Stack } from "@mantine/core";
+import { Container, Space, Stack, Text, Title } from "@mantine/core";
 
 import { Post } from "../Post/Post";
-import useStyles from "./Welcome.styles";
+import useStyles from "./Feed.styles";
 
-export function Welcome() {
+export function Feed() {
   const { classes } = useStyles();
 
   return (
     <>
-      <Container px="xl">
+      <Container className="p-0">
         <Title className={classes.title} align="center">
           Bienvenido A
           <Text
             inherit
-            className="ml-1 bg-gradient-to-r from-yellow-400 to-orange-600 bg-clip-text text-transparent"
+            className="ml-1 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600"
             component="span"
           >
             SocialU
@@ -26,10 +26,35 @@ export function Welcome() {
             description="Pues ocurrio una vaina muy jodida por alla en el culo de la mula un par de arrechos hijueputas estaban cagando encima de un ..."
             author="anonimo"
             title="Hola Que Hace"
-            image="https://source.unsplash.com/random/180x90"
+            // image="https://source.unsplash.com/random/180x90"
             postId="kljdfslkf"
             event
             asistants={[
+              {
+                id: "jlfksd",
+                name: "El Kangas",
+                avatar: "https://source.unsplash.random/30x30",
+              },
+              {
+                id: "jlfksd",
+                name: "El Carecu",
+                avatar: "https://source.unsplash.random/30x30",
+              },
+              {
+                id: "jlfksd",
+                name: "El Brayan",
+                avatar: "https://source.unsplash.random/30x30",
+              },
+              {
+                id: "jlfksd",
+                name: "El Manotas",
+                avatar: "https://source.unsplash.random/30x30",
+              },
+              {
+                id: "jlfksd",
+                name: "El Gato Volador",
+                avatar: "https://source.unsplash.random/30x30",
+              },
               {
                 id: "jlfksd",
                 name: "El Kangas",

@@ -1,6 +1,5 @@
-import { Welcome } from "../components/Welcome/Welcome";
 import { ColorSchemeToggle } from "../components/ColorSchemeToggle/ColorSchemeToggle";
-import NavBar from "../components/NavBar";
+import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
 
 export default function HomePage() {
@@ -19,8 +18,7 @@ export default function HomePage() {
       //   },
       // ]}
       >
-        <Welcome />
-
+        <Feed />
         <ColorSchemeToggle />
       </Layout>
     </>

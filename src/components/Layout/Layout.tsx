@@ -17,6 +17,7 @@ import AppNavbar from "./AppNavbar";
 import AppFooter from "./AppFooter";
 import Image from "next/image";
 import AppSidebar from "./AppSidebar";
+import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 
 const classes = createStyles((theme) => ({
   links: {
@@ -99,9 +100,7 @@ export default function Layout({ children }: LayoutProps) {
       footer={<AppFooter />}
       header={
         <Header height={70} p="md">
-          <div
-            style={{ display: "flex", alignItems: "center", height: "100%" }}
-          >
+          <div className="flex h-full items-center justify-between">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
               <Burger
                 opened={opened}
@@ -118,6 +117,7 @@ export default function Layout({ children }: LayoutProps) {
                 SocialU
               </Title>
             </Group>
+            <ColorSchemeToggle />
           </div>
         </Header>
       }
