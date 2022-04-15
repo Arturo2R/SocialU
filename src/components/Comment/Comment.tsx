@@ -26,10 +26,6 @@ export interface CommentProps {
   subComments?: CommentProps[];
 }
 
-const manageReply = (e) => {
-  e.preventDefault;
-};
-
 export function Comment({ postedAt, body, author, subComments }: CommentProps) {
   const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
