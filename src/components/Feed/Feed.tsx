@@ -13,7 +13,7 @@ export function Feed() {
           Bienvenido A
           <Text
             inherit
-            className="ml-1 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-600"
+            className="ml-1 bg-gradient-to-r from-yellow-400 to-orange-600 bg-clip-text text-transparent"
             component="span"
           >
             SocialU

@@ -17,12 +17,7 @@ import { Send } from "tabler-icons-react";
 export interface CommentProps {
   postedAt: string;
   body: string;
-  author:
-    | {
-        name: string;
-        image: string;
-      }
-    | "anonimo";
+  author: { name: string; image: string } | "anonimo";
   subComments?: CommentProps[];
 }
 
@@ -32,9 +27,15 @@ export function Comment({ postedAt, body, author, subComments }: CommentProps) {
   return (
     <div>
       <Group>
-        <Avatar size="sm" src={author.image} alt={author.name} radius="xl" />
+        {author === "anonimo" ? (
+          <Avatar size="sm" alt="Anónimo" radius="xl" />
+        ) : (
+          <Avatar size="sm" src={author.image} alt={author.name} radius="xl" />
+        )}
         <div>
-          <Text size="sm">{author.name ? author.name : "Anónimo"}</Text>
+          <Text size="sm">
+            {author === "anonimo" ? "Anónimo" : author.name}
+          </Text>
           <Text size="xs" color="dimmed">
             {postedAt}
           </Text>
@@ -62,7 +63,7 @@ export function Comment({ postedAt, body, author, subComments }: CommentProps) {
       </div>
 
       {subComments && (
-        <Stack className="pl-4 border-l-2">
+        <Stack className="border-l-2 pl-4">
           {subComments?.map((subco, index) => (
             <Comment
               key={index}
