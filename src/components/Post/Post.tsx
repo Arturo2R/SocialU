@@ -52,87 +52,85 @@ export const Post = ({
 
   return (
     <article className="mx-auto max-w-sm">
-      {/* <Anchor
-        component={Link}
-        href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
-      > */}
+      <Link
+        href={`/${author !== "anonimo" ? author.name : "anonimo"}/${postId}`}
+      >
+        <Card withBorder p="xs" radius="md">
+          {image && (
+            <Card.Section>
+              <Image src={image} alt={title} height={160} />
+            </Card.Section>
+          )}
+          {/* <Badge>{category}</Badge> */}
+          <Text className="mt-2 text-xl font-bold">{title}</Text>
 
-      <Card withBorder p="xs" radius="md">
-        {image && (
-          <Card.Section>
-            <Image src={image} alt={title} height={160} />
-          </Card.Section>
-        )}
-        {/* <Badge>{category}</Badge> */}
-        <Text className="mt-2 text-xl font-bold">{title}</Text>
-
-        {author !== "anonimo" ? (
-          <Group mt="md">
-            <Avatar size="md" src={author?.image} radius="xl" />
-            <Anchor component={Link} href={`/${author.id}`}>
-              {author?.name}
-            </Anchor>
-          </Group>
-        ) : (
-          <Text color="orange">Anónimo</Text>
-        )}
-
-        <Spoiler maxHeight={110} showLabel="Ver Más" hideLabel="Menos">
-          <Text>{description}</Text>
-        </Spoiler>
-
-        {event && (
-          <>
-            <Group grow my="sm">
-              <Button
-                size="lg"
-                onClick={(e: { stopPropagation: () => void }) => {
-                  e.stopPropagation();
-                  setExpanded(!expanded);
-                }}
-                variant="light"
-                color="orange"
-                disabled={aja()}
-                compact
-                // rightIcon={<ChevronsRight />}
-              >
-                Asistentes
-              </Button>
-              <Button
-                compact
-                size="lg"
-                onClick={(e: { stopPropagation: () => void }) => {
-                  e.stopPropagation();
-                }}
-                color="orange"
-                rightIcon={<Plus />}
-              >
-                Unirme
-              </Button>
+          {author !== "anonimo" ? (
+            <Group mt="md">
+              <Avatar size="md" src={author?.image} radius="xl" />
+              <Anchor component={Link} href={`/${author.id}`}>
+                {author?.name}
+              </Anchor>
             </Group>
+          ) : (
+            <Text color="orange">Anónimo</Text>
+          )}
 
-            <Collapse in={expanded}>
-              <Stack spacing="xs">
-                {/* <Spoiler
+          <Spoiler maxHeight={110} showLabel="Ver Más" hideLabel="Menos">
+            <Text>{description}</Text>
+          </Spoiler>
+
+          {event && (
+            <>
+              <Group grow my="sm">
+                <Button
+                  size="lg"
+                  onClick={(e: { stopPropagation: () => void }) => {
+                    e.stopPropagation();
+                    setExpanded(!expanded);
+                  }}
+                  variant="light"
+                  color="orange"
+                  disabled={aja()}
+                  compact
+                  // rightIcon={<ChevronsRight />}
+                >
+                  Asistentes
+                </Button>
+                <Button
+                  compact
+                  size="lg"
+                  onClick={(e: { stopPropagation: () => void }) => {
+                    e.stopPropagation();
+                  }}
+                  color="orange"
+                  rightIcon={<Plus />}
+                >
+                  Unirme
+                </Button>
+              </Group>
+
+              <Collapse in={expanded}>
+                <Stack spacing="xs">
+                  {/* <Spoiler
                     maxHeight={180}
                     showLabel="Ver Más"
                     hideLabel="Menos"
                   > */}
-                {asistants?.map((i, index) => (
-                  <SeeUser
-                    key={index}
-                    id={i.id}
-                    name={i.name}
-                    image={i.avatar}
-                  />
-                ))}
-                {/* </Spoiler> */}
-              </Stack>
-            </Collapse>
-          </>
-        )}
-      </Card>
-      {/* </Anchor> */}
+                  {asistants?.map((i, index) => (
+                    <SeeUser
+                      key={index}
+                      id={i.id}
+                      name={i.name}
+                      image={i.avatar}
+                    />
+                  ))}
+                  {/* </Spoiler> */}
+                </Stack>
+              </Collapse>
+            </>
+          )}
+        </Card>
+      </Link>
     </article>
   );
 };
