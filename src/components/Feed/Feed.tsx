@@ -9,7 +9,7 @@ export function Feed() {
   return (
     <>
       <Container className="p-0 lg:px-12">
-        <Title className={classes.title} align="center">
+        {/* <Title className={classes.title} align="center">
           Bienvenido A
           <Text
             inherit
@@ -18,7 +18,7 @@ export function Feed() {
           >
             SocialU
           </Text>
-        </Title>
+        </Title> */}
 
         <Space h="md" />
         <Stack spacing="lg">

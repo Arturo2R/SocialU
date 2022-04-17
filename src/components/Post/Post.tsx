@@ -75,7 +75,12 @@ export const Post = ({
             <Text color="orange">Anónimo</Text>
           )}
 
-          <Spoiler maxHeight={110} showLabel="Ver Más" hideLabel="Menos">
+          <Spoiler
+            onClick={(e) => e.stopPropagation()}
+            maxHeight={110}
+            showLabel="Ver Más"
+            hideLabel="Menos"
+          >
             <Text>{description}</Text>
           </Spoiler>
 
