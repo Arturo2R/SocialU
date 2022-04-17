@@ -7,12 +7,18 @@ type Props = {};
 const co = [
   {
     author: {
-      name: "John",
-      image:
-        "https://cr00.epimg.net/radio/imagenes/2021/01/02/tendencias/1609606240_435257_1609606414_noticia_normal.jpg",
+      name: "Juana",
+      image: "/perfil.jpg",
     },
-    body: "Esa vaina así esta muy jodida por lo que veo",
-    postedAt: "10 AM",
+    body: "Esto se va a poner buen",
+    postedAt: "Ayer 10 AM",
+    subComments: [
+      {
+        author: { name: "Anónimo", image: "/porsche.jpg" },
+        body: "Claro que sí, con la ayuda de Dios",
+        postedAt: "Hace 3 minutos",
+      },
+    ],
   },
 ];
 

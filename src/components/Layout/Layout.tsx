@@ -118,7 +118,7 @@ export default function Layout({ children }: LayoutProps) {
               <Group>
                 <Image src="/logologo.svg" width={30} height={30} />
                 <Title className=' {font-family:"inter";} text-2xl'>
-                  SocialU
+                  Social/U
                 </Title>
               </Group>
             </Link>

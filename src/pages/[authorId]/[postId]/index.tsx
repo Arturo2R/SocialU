@@ -15,10 +15,7 @@ const PostPage = (props: Props) => {
   return (
     <Layout>
       <Paper p="md" shadow="sm" radius="md">
-        <Image
-          radius="lg"
-          src="https://images.unsplash.com/photo-1647891941746-fe1d53ddc7a6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxzZWFyY2h8MXx8bGlmZXN0eWxlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
-        />
+        <Image radius="lg" src="/girl.jpg" />
         <Title className="mt-4 mb-2 text-3xl">Hola Que Hace Mundo</Title>
         <Text className="mb-2 cursive">21 de Julio del 2022</Text>
         <Text className="max-w-lg text-md">

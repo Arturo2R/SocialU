@@ -88,6 +88,7 @@ export const Post = ({
             <>
               <Group grow my="sm">
                 <Button
+                  className="text-sm sm:text-base"
                   size="lg"
                   onClick={(e: { stopPropagation: () => void }) => {
                     e.stopPropagation();
@@ -99,10 +100,11 @@ export const Post = ({
                   compact
                   // rightIcon={<ChevronsRight />}
                 >
-                  Asistentes
+                  {asistants?.length} Asistentes
                 </Button>
                 <Button
                   compact
+                  className="text-sm sm:text-base"
                   size="lg"
                   onClick={(e: { stopPropagation: () => void }) => {
                     e.stopPropagation();
