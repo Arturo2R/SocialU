@@ -3,7 +3,7 @@
 The modern social media for connecting people with similar interests and objectives. With the idea of developing a strong communities inside universities.
 ## Features
 
-This template comes with several essential features:
+This webApp have several essential features:
 
 - Server side rendering setup for Mantine
 - Color scheme is stored in cookie to avoid color scheme mismatch after hydration
