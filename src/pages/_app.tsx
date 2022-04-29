@@ -60,6 +60,15 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           async
           defer
         ></script>
+        <div
+          id="g_id_onload"
+          data-client_id="931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com"
+          data-context="signup"
+          data-ux_mode="popup"
+          data-callback="console.log"
+          data-auto_select="true"
+          data-close_on_tap_outside="false"
+        ></div>
       </Head>
 
       <ColorSchemeProvider
