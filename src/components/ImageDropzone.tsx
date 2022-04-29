@@ -34,7 +34,7 @@ const dropzoneChildren = (status: DropzoneStatus, theme: MantineTheme) => (
 
     <div className="text-gray-400">
       <Text size="xl" inline>
-        Imagén Principal
+        Imagén Principal (Opcional)
       </Text>
       <Text size="sm" color="dimmed" inline mt={7}>
         Envia solo una imagen de máximo 5 Mb

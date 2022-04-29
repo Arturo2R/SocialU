@@ -1,40 +1,3 @@
-// import { Button, Group, Navbar } from "@mantine/core";
-// import { NextLink } from "@mantine/next";
-// import Link from "next/link";
-// import React from "react";
-// import { Send } from "tabler-icons-react";
-
-// type Props = {
-//   opened: boolean;
-// };
-
-// const AppNavbar = ({ opened }: Props) => {
-//   return (
-//     <Navbar
-//       p="md"
-//       hiddenBreakpoint="sm"
-//       hidden={!opened}
-//       width={{ sm: 200, lg: 300 }}
-//     >
-//       <Group spacing={5}>
-//         <Link href="/crear">
-//           <Button
-//             className="w-full"
-//             rightIcon={<Send />}
-//             variant="subtle"
-//             color="orange"
-//             size="md"
-//           >
-//             Crear Post
-//           </Button>
-//         </Link>
-//       </Group>
-//     </Navbar>
-//   );
-// };
-
-// export default AppNavbar;
-
 import React, { MouseEvent, useState } from "react";
 import { createStyles, Navbar, Group, Code } from "@mantine/core";
 import {
@@ -168,30 +131,17 @@ export default function NavbarSimple({ opened }: Props) {
 
   return (
     <Navbar
-      height={700}
+      // height={700}
       width={{ sm: 300 }}
       p="md"
       hiddenBreakpoint="sm"
       hidden={!opened}
     >
-      <Navbar.Section>
-        <Group className={classes.header} position="apart">
-          {/* <MantineLogo /> */}
-          <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
-        </Group>
+      <Navbar.Section grow mt="md">
         {links}
       </Navbar.Section>
 
       <Navbar.Section className={classes.footer}>
-        {/* <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <SwitchHorizontal className={classes.linkIcon} />
-          <span>Change account</span>
-        </a> */}
-
         <a
           href="#"
           className={classes.link}
@@ -200,6 +150,11 @@ export default function NavbarSimple({ opened }: Props) {
           <Logout className={classes.linkIcon} />
           <span>Salir de la cuenta</span>
         </a>
+
+        <Group className={cx(classes.header, "bottom-0")} position="apart">
+          {/* <MantineLogo /> */}
+          <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
+        </Group>
       </Navbar.Section>
     </Navbar>
   );

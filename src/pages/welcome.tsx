@@ -15,6 +15,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
+import { googleHandler } from "../firebaseAuth.config";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -57,6 +58,9 @@ const useStyles = createStyles((theme) => ({
 
 function AuthenticationImage() {
   const { classes } = useStyles();
+
+  const handleGoogletication = () => googleHandler();
+
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} radius={0} p={30}>
@@ -73,9 +77,26 @@ function AuthenticationImage() {
         <Text mb={25}>La red social que te conecta en la universidad</Text>
 
         <Group grow mb="md" mt="md">
-          <Button color="orange" radius="xl">
-            Google
-          </Button>
+          <div
+            id="g_id_onload"
+            data-client_id="931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com"
+            data-context="signup"
+            data-ux_mode="popup"
+            data-callback="console.log"
+            data-auto_select="true"
+            data-close_on_tap_outside="false"
+          ></div>
+
+          <div
+            className="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="$ {button.text}"
+            data-size="large"
+            data-locale="es-419"
+            data-logo_alignment="left"
+          ></div>
           {/* <GoogleButton radius="xl">Google</GoogleButton>
           <TwitterButton radius="xl">Twitter</TwitterButton> */}
         </Group>
