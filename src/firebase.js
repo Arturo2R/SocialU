@@ -4,13 +4,13 @@ import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getFirestore } from 'firebase/firestore'
-import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfig = {
   apiKey: "AIzaSyAmlz9P2IVzUnlLMKZt12yhGlOzvOGFHTY",
-  authDomain: "3000-arturo2r-socialu-nywhtokcuba.ws-us43.gitpod.io",
+  authDomain: "socialu-c62e6.firebaseapp.com",
   projectId: "socialu-c62e6",
   storageBucket: "socialu-c62e6.appspot.com",
   messagingSenderId: "931771205523",
@@ -20,22 +20,24 @@ export const firebaseConfig = {
 
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
+const app = initializeApp(firebaseConfig)
 
 // const analytics = getAnalytics(app);
 
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
+
 auth.languageCode = 'es';
 
 const db = getFirestore(app);
 
 const provider = new GoogleAuthProvider();
 
+const letSignOut = signOut(auth);
+
 // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-export { auth, app, db, provider }
+export { auth, app, db, provider, letSignOut }
 
 
 // provider.setCustomParameters({

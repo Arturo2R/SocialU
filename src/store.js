@@ -1,17 +1,16 @@
 import create from 'zustand'
+import { db } from './firebase'; // update with your path to firestore config
+import { doc, setDoc } from "firebase/firestore";
+
+
 
 export const useStore = create(set => ({
   count: 1,
-  image: "",
-  inc: () => set(state => ({ count: state.count + 1 })),
+  profileImage: "",
+  valid: "unset",
+  userName: "",
+  displayName: "",
+  uid: "",
+  profileDescription: "",
+  university: "",
 }))
-
-function Controls() {
-  const inc = useStore(state => state.inc)
-  return <button onClick={inc}>one up</button>
-}
-
-function Counter() {
-  const count = useStore(state => state.count)
-  return <h1>{count}</h1>
-}
