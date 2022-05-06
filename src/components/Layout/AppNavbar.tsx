@@ -1,19 +1,9 @@
 import React, { MouseEvent, useState } from "react";
 import { createStyles, Navbar, Group, Code } from "@mantine/core";
-import {
-  BellRinging,
-  Fingerprint,
-  Key,
-  Settings,
-  TwoFA,
-  DatabaseImport,
-  Receipt2,
-  SwitchHorizontal,
-  Logout,
-  Send,
-} from "tabler-icons-react";
+import { BellRinging, Settings, Logout, Send } from "tabler-icons-react";
 import Link from "next/link";
 // import { MantineLogo } from "../../shared/MantineLogo";
+import Protected from "../Protected";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -137,25 +127,29 @@ export default function NavbarSimple({ opened }: Props) {
       hiddenBreakpoint="sm"
       hidden={!opened}
     >
-      <Navbar.Section grow mt="md">
-        {links}
-      </Navbar.Section>
+      <Protected.Component>
+        <>
+          <Navbar.Section grow mt="md">
+            {links}
+          </Navbar.Section>
 
-      <Navbar.Section className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <Logout className={classes.linkIcon} />
-          <span>Salir de la cuenta</span>
-        </a>
+          <Navbar.Section className={classes.footer}>
+            <a
+              href="#"
+              className={classes.link}
+              onClick={(event) => event.preventDefault()}
+            >
+              <Logout className={classes.linkIcon} />
+              <span>Salir de la cuenta</span>
+            </a>
 
-        <Group className={cx(classes.header, "bottom-0")} position="apart">
-          {/* <MantineLogo /> */}
-          <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
-        </Group>
-      </Navbar.Section>
+            <Group className={cx(classes.header, "bottom-0")} position="apart">
+              {/* <MantineLogo /> */}
+              <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
+            </Group>
+          </Navbar.Section>
+        </>
+      </Protected.Component>
     </Navbar>
   );
 }

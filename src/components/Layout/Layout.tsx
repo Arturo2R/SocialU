@@ -71,9 +71,9 @@ export default function Layout({ children }: LayoutProps) {
   const { loginWithGoogleOneTap } = useAuth();
   const theme = useMantineTheme();
 
-  const [opened, setOpened] = useState(false);
-  const [active, setActive] = useState();
-
+  const [opened, setOpened] = useState<boolean>(false);
+  const [active, setActive] = useState<boolean>();
+  const [hecho, setHecho] = useState<boolean>(false);
   // const items = navLinks.map((link) => (
   //   <a
   //     key={link.label}
@@ -92,11 +92,15 @@ export default function Layout({ children }: LayoutProps) {
     globalThis?.window?.google?.accounts?.id?.initialize({
       client_id:
         "931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com",
-      callback: loginWithGoogleOneTap,
+      callback: console.log,
       auto_select: true,
     });
+    console.log("Tirado");
     globalThis?.window?.google?.accounts?.id?.prompt();
-  }, []);
+    return () => {
+      setHecho(true);
+    };
+  }, [hecho]);
 
   return (
     <AppShell
@@ -116,7 +120,7 @@ export default function Layout({ children }: LayoutProps) {
       footer={router.pathname === "/" ? <AppFooter /> : <></>}
       header={
         <Header height={70} p="md">
-          <div className="flex items-center justify-between h-full">
+          <div className="flex h-full items-center justify-between">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
               <Burger
                 opened={opened}
