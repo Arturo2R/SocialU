@@ -89,16 +89,15 @@ export default function Layout({ children }: LayoutProps) {
   // ));
 
   useEffect(() => {
-    global.google.accounts.id.initialize({
+    globalThis?.window?.google?.accounts?.id?.initialize({
       client_id:
         "931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com",
       callback: loginWithGoogleOneTap,
       auto_select: true,
     });
-    global.google.accounts.id.prompt();
+    globalThis?.window?.google?.accounts?.id?.prompt();
   }, []);
 
-  console.log(router.pathname);
   return (
     <AppShell
       styles={{

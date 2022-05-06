@@ -13,25 +13,19 @@ import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
 
 import Layout from "../components/Layout/Layout";
-import { useStore } from "../store";
 
 type Props = {};
 
-const subscribe = useStore.subscribe(console.log);
-
 const CrearPost = (props: Props) => {
+  // Event state
   const [event, setEvent] = useState(false);
-  const image = useStore((state) => state.image);
+
   return (
     <Layout>
       <Container className="h-full">
         <form className="flex flex-col justify-between h-full" action="">
           <div>
-            {image ? (
-              <Image src={`/${image}`} width={300} height={200} />
-            ) : (
-              <ImageDropzone />
-            )}
+            <ImageDropzone />
 
             <Textarea
               // icon={<At />}
@@ -84,7 +78,7 @@ const CrearPost = (props: Props) => {
             variant="filled"
             color="orange"
             size="md"
-            className="mt-4 w-full"
+            className="w-full mt-4"
           >
             Enviar Post
           </Button>

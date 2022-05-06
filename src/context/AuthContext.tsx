@@ -9,6 +9,7 @@ import {
   sendPasswordResetEmail,
   deleteUser,
   signInWithCredential,
+  UserCredential,
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -43,14 +44,14 @@ interface User {
 }
 
 interface AuthContextInterface {
-  signup(email: string, password: string): Promise<void>;
-  login(email: string, password: string): Promise<void>;
+  signup(email: string, password: string): Promise<UserCredential>;
+  login(email: string, password: string): Promise<UserCredential>;
   user: User;
   logout(): void;
   loading: boolean;
-  loginWithGoogle(): Promise<void>;
+  loginWithGoogle(): Promise<UserCredential>;
   resetPassword(email: string): Promise<void>;
-  loginWithGoogleOneTap(): Promise<void>;
+  loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
 }
 
 export const authContext = createContext<AuthContextInterface | undefined>(
@@ -112,7 +113,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return signInWithPopup(auth, googleProvider);
   };
 
-  const loginWithGoogleOneTap = (response: googleResponse) => {
+  const loginWithGoogleOneTap = (
+    response: googleResponse
+  ): Promise<UserCredential> => {
     console.log("google one tap");
     const data: googleDecodedResponse = jwt_decode(response.credential);
     console.log(data);
@@ -124,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => signOut(auth);
 
-  const resetPassword = async (email: string) =>
+  const resetPassword = async (email: string): Promise<void> =>
     sendPasswordResetEmail(auth, email);
 
   useEffect(() => {
