@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Paper,
   createStyles,
   TextInput,
   PasswordInput,
-  Checkbox,
   Button,
   Title,
   Text,
@@ -15,14 +14,7 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
-import { googleHandler } from "../firebaseAuth.config";
-import { cookies } from "cookies-next";
-import { auth, letSignOut } from "../firebase";
-import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth";
-import { showNotification } from "@mantine/notifications";
-import { Cross1Icon } from "@modulz/radix-icons";
-import { useRouter } from "next/router";
-import { deleteUser } from "firebase/auth";
+import { useAuth } from "../context/AuthContext";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -63,131 +55,14 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
-
-const allowedUniversities = [
-  { name: "Universidad Del Norte", domain: "uninorte.edu.co" },
-];
-
 function AuthenticationPage() {
-  const router = useRouter();
-
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
-  let thisUser = auth.currentUser;
+  const { loginWithGoogle } = useAuth();
 
   const { classes } = useStyles();
-  const [allowed, setAllowed] = useState<string>("unset");
-
-  useEffect(() => {
-    console.log("EL usuario cambio a" + allowed);
-  }, [user]);
-
-  // Validar si el usuario hace parte de una universidad
-  const validationOfMembership = (email: string): boolean => {
-    let validated: boolean = false;
-
-    const emailDomain: string[] = emailDomainRegex.exec(email) || [
-      "lalama.com",
-      "lalalama.com",
-      "lalama.com",
-    ];
-    console.log("=========");
-
-    console.log(emailDomain);
-
-    validated = allowedUniversities.some((item) => {
-      return item.domain === emailDomain[2];
-    });
-
-    console.log(validated);
-    console.log("---------");
-
-    return validated;
-  };
 
   const handleGoogletication = async () => {
-    signInWithGoogle();
+    loginWithGoogle();
   };
-
-  useEffect(() => {
-    if (user) {
-      console.log(user.user.email);
-      let valid = validationOfMembership(user.user.email) ? "yes" : "no";
-      setAllowed(valid);
-      // allowed === false ? signOut() : console.log(allowed);
-      console.log("allowed state is " + allowed);
-    }
-  }, [thisUser]);
-
-  useEffect(() => {
-    if (allowed === "yes") {
-      router.push("/");
-
-      showNotification({
-        id: "welcome",
-        disallowClose: true,
-        onClose: () => console.log("unmounted"),
-        onOpen: () => console.log("mounted"),
-        autoClose: 5000,
-        title: "Bienvenido",
-        message: "Bienvenido a la aplicación",
-        color: "orange",
-        className: "my-notification-class",
-        style: {},
-        sx: {},
-        loading: false,
-      });
-    }
-    if (allowed === "no") {
-      // signOut();
-
-      deleteUser(thisUser)
-        .then(() => {
-          console.log("Deleted el caremonda");
-        })
-        .catch((error) => {
-          // An error ocurred
-          // ...
-        });
-
-      showNotification({
-        id: "hello-there",
-        disallowClose: true,
-        onClose: () => console.log("unmounted"),
-        onOpen: () => console.log("mounted"),
-        autoClose: 5000,
-        title: "No Estas Permitido",
-        message:
-          "No estas usando un correo universtario de una de nuestras universidades permitidas",
-        color: "red",
-        icon: <Cross1Icon />,
-        className: "my-notification-class",
-        style: {},
-        sx: {},
-        loading: false,
-      });
-    }
-  }, [allowed]);
-
-  // const handleCallback = (user) => console.log(user);
-
-  // function handleCredentialResponse(response) {
-  //   console.log("Encoded JWT ID token: " + response.credential);
-  //   const allCookies = cookies(ctx);
-  //   console.log(allCookies);
-  // }
-
-  // window.onload = function () {
-  //   google.accounts.id.initialize({
-  //     client_id: "YOUR_GOOGLE_CLIENT_ID",
-  //     callback: handleCredentialResponse,
-  //   });
-  //   google.accounts.id.renderButton(
-  //     document.getElementById("buttonDiv"),
-  //     { theme: "outline", size: "large" } // customization attributes
-  //   );
-  //   google.accounts.id.prompt(); // also display the One Tap dialog
-  // };
 
   return (
     <div className={classes.wrapper}>

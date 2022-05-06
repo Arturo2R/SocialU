@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AppProps } from "next/app";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
@@ -11,6 +11,8 @@ import {
 import { NotificationsProvider } from "@mantine/notifications";
 // import GlobalStyles from '../lib/globalStyles'
 import "../styles/globals.css";
+import { AuthProvider } from "../context/AuthContext";
+// import { allowedUniversities, emailDomainRegex } from "../hooks";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -26,8 +28,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       maxAge: 60 * 60 * 24 * 30,
     });
   };
-
-  // const handleResponse = (response) => console.log(response);
 
   return (
     <>
@@ -62,15 +62,6 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           async
           defer
         ></script>
-        <div
-          id="g_id_onload"
-          data-client_id="931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com"
-          data-context="signup"
-          data-ux_mode="popup"
-          data-callback="handleResponse"
-          data-auto_select="true"
-          data-close_on_tap_outside="false"
-        ></div>
       </Head>
 
       <ColorSchemeProvider
@@ -83,8 +74,10 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           withNormalizeCSS
         >
           <NotificationsProvider>
-            {/* <GlobalStyles /> */}
-            <Component {...pageProps} />
+            <AuthProvider>
+              {/* <GlobalStyles /> */}
+              <Component {...pageProps} />
+            </AuthProvider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

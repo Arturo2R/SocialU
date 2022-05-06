@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   AppShell,
   Navbar,
@@ -20,6 +20,7 @@ import AppSidebar from "./AppSidebar";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAuth } from "../../context/AuthContext";
 
 const classes = createStyles((theme) => ({
   links: {
@@ -67,8 +68,9 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
-
+  const { loginWithGoogleOneTap } = useAuth();
   const theme = useMantineTheme();
+
   const [opened, setOpened] = useState(false);
   const [active, setActive] = useState();
 
@@ -85,6 +87,17 @@ export default function Layout({ children }: LayoutProps) {
   //     {link.label}
   //   </a>
   // ));
+
+  useEffect(() => {
+    global.google.accounts.id.initialize({
+      client_id:
+        "931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com",
+      callback: loginWithGoogleOneTap,
+      auto_select: true,
+    });
+    global.google.accounts.id.prompt();
+  }, []);
+
   console.log(router.pathname);
   return (
     <AppShell
@@ -104,7 +117,7 @@ export default function Layout({ children }: LayoutProps) {
       footer={router.pathname === "/" ? <AppFooter /> : <></>}
       header={
         <Header height={70} p="md">
-          <div className="flex justify-between items-center h-full">
+          <div className="flex items-center justify-between h-full">
             <MediaQuery largerThan="sm" styles={{ display: "none" }}>
               <Burger
                 opened={opened}

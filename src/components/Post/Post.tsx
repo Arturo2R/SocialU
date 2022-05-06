@@ -14,11 +14,10 @@ import {
 import { NextLink } from "@mantine/next";
 import Link from "next/link";
 // import Image from "next/image";
-// import { title } from 'process'
 import React, { useState } from "react";
 import { ChevronsRight, Plus } from "tabler-icons-react";
+import { useStore } from "../../store";
 import SeeUser from "./SeeUser";
-// import { theme } from 'twin.macro'
 
 interface PostProps {
   author: { image?: string; name: string; id: string } | "anonimo";
@@ -51,7 +50,7 @@ export const Post = ({
   };
 
   return (
-    <article className="mx-auto max-w-sm">
+    <article className="max-w-sm mx-auto">
       <Link
         href={`/${author !== "anonimo" ? author.name : "anonimo"}/${postId}`}
       >
