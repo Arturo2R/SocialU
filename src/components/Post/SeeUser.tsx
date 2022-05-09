@@ -1,6 +1,6 @@
-import { Anchor, Avatar, Group, Text } from "@mantine/core";
-import Link from "next/link";
-import React from "react";
+import { Anchor, Avatar, Group, Text } from '@mantine/core';
+import Link from 'next/link';
+import React from 'react';
 // import { Url } from "url";
 
 type Props = {
@@ -9,9 +9,8 @@ type Props = {
   image?: string;
 };
 
-const SeeUser = ({ id, name, image }: Props) => {
-  return (
-    <Anchor component={Link} href={"/" + id}>
+const SeeUser = ({ id, name, image }: Props) => (
+    <Anchor component={Link} href={`/${id}`}>
       <Group>
         {image ? (
           <Avatar
@@ -32,6 +31,5 @@ const SeeUser = ({ id, name, image }: Props) => {
       </Group>
     </Anchor>
   );
-};
 
 export default SeeUser;

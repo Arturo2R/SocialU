@@ -1,4 +1,4 @@
-import { MediaQuery, Aside, Text } from "@mantine/core";
+import { Aside, MediaQuery } from "@mantine/core";
 import React from "react";
 import CommentWall from "../Comment/CommentWall";
 
@@ -22,14 +22,12 @@ const co = [
   },
 ];
 
-const AppSidebar = (props: Props) => {
-  return (
-    <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
-      <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-        <CommentWall comments={co} />
-      </Aside>
-    </MediaQuery>
-  );
-};
+const AppSidebar = (props: Props) => (
+  <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+    <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
+      <CommentWall comments={co} />
+    </Aside>
+  </MediaQuery>
+);
 
 export default AppSidebar;

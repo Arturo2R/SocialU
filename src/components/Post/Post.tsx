@@ -1,22 +1,19 @@
 import {
-  Card,
-  Group,
-  Avatar,
-  ActionIcon,
-  Text,
-  Image,
-  Button,
   Anchor,
+  Avatar,
+  Button,
+  Card,
   Collapse,
-  Stack,
+  Group,
+  Image,
   Spoiler,
+  Stack,
+  Text,
 } from "@mantine/core";
-import { NextLink } from "@mantine/next";
 import Link from "next/link";
 // import Image from "next/image";
 import React, { useState } from "react";
-import { ChevronsRight, Plus } from "tabler-icons-react";
-import { useStore } from "../../store";
+import { Plus } from "tabler-icons-react";
 import SeeUser from "./SeeUser";
 
 interface PostProps {
@@ -44,9 +41,8 @@ export const Post = ({
   const aja = () => {
     if (asistants === undefined || asistants.length === 0) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   return (

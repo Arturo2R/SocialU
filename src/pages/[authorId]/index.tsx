@@ -1,7 +1,7 @@
-import React from "react";
-import { Avatar, Text, Button, Paper } from "@mantine/core";
-import Layout from "../../components/Layout/Layout";
-import { useRouter } from "next/router";
+import React from 'react';
+import { Avatar, Text, Button, Paper } from '@mantine/core';
+import { useRouter } from 'next/router';
+import Layout from '../../components/Layout/Layout';
 
 // interface UserInfoActionProps {
 //   avatar: string;
@@ -14,9 +14,9 @@ export default function UserInfoAction() {
   const router = useRouter();
   const { authorId } = router.query;
 
-  const avatar: string = "/perfil.jpg";
+  const avatar: string = '/perfil.jpg';
   const email: string = `${authorId}@uninorte.edu.co`;
-  const job: string = "Economía";
+  const job: string = 'Economía';
   return (
     <Layout>
       <Paper
@@ -25,7 +25,7 @@ export default function UserInfoAction() {
         p="lg"
         sx={(theme) => ({
           backgroundColor:
-            theme.colorScheme === "dark" ? theme.colors.dark[8] : theme.white,
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
         })}
       >
         <Avatar src={avatar} size={120} radius={120} mx="auto" />

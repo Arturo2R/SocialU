@@ -1,17 +1,15 @@
-import React, { useState } from "react";
 import {
-  createStyles,
-  Text,
-  Avatar,
-  Group,
-  Anchor,
-  Stack,
-  Textarea,
-  Button,
   ActionIcon,
+  Anchor,
+  Avatar,
   Collapse,
+  Group,
+  Stack,
+  Text,
+  Textarea,
 } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
+import React, { useState } from "react";
 import { Send } from "tabler-icons-react";
 
 export interface CommentProps {

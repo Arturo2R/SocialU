@@ -1,32 +1,25 @@
-import React, { ReactNode, useEffect, useState } from "react";
 import {
   AppShell,
-  Navbar,
-  Header,
-  Footer,
-  Aside,
-  Text,
-  Button,
-  MediaQuery,
-  Burger,
-  useMantineTheme,
-  Group,
-  createStyles,
-  Title,
   Avatar,
+  Burger,
+  Button,
+  createStyles,
+  Group,
+  Header,
+  MediaQuery,
+  Text,
+  Title,
+  useMantineTheme,
 } from "@mantine/core";
-import AppNavbar from "./AppNavbar";
-import AppFooter from "./AppFooter";
 import Image from "next/image";
-import AppSidebar from "./AppSidebar";
-import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import ReactDOM from "react-dom";
-import GoogleOneTapLogin from "react-google-one-tap-login";
-import Script from "next/script";
-import { setInterval } from "timers";
+import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
+import AppFooter from "./AppFooter";
+import AppNavbar from "./AppNavbar";
+import AppSidebar from "./AppSidebar";
 
 const classes = createStyles((theme) => ({
   links: {
@@ -135,7 +128,7 @@ export default function Layout({ children }: LayoutProps) {
         footer={router.pathname === "/" ? <AppFooter /> : <></>}
         header={
           <Header height={70} p="md">
-            <div className="flex h-full items-center justify-between">
+            <div className="flex items-center justify-between h-full">
               <MediaQuery largerThan="sm" styles={{ display: "none" }}>
                 <Burger
                   opened={opened}
@@ -155,9 +148,7 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
               <Group>
                 {user?.displayName && <Text>{user?.displayName}</Text>}
-                {user?.photoURL && (
-                  <Avatar radius="xl" src={user?.photoURL}></Avatar>
-                )}
+                {user?.photoURL && <Avatar radius="xl" src={user?.photoURL} />}
                 {user === null && (
                   <Button onClick={loginWithGoogle} color="orange">
                     Iniciar Sesión

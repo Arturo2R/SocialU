@@ -1,5 +1,5 @@
-import Head from "next/head";
-import configData from "../config";
+import Head from 'next/head';
+import configData from '../config';
 
 const config = configData();
 
@@ -18,7 +18,7 @@ const SEO = ({
   canonical,
   twitterCreator,
 }: SEOp) => {
-  const url = "https://" + config.domain + canonical;
+  const url = `https://${config.domain}${canonical}`;
 
   // function addProductJsonLd() {
   //   return {
@@ -87,7 +87,7 @@ const SEO = ({
       <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
-      ></meta>
+      />
       <title>{`${title} | ${config.siteName}`}</title>
       <meta name="description" content={description} />
       <link
@@ -118,10 +118,10 @@ const SEO = ({
 };
 
 SEO.defaultProps = {
-  title: "Eso Pasó",
-  description: "La Cosa",
-  canonical: "",
-  mainImage: "/barrios.jpg",
+  title: 'Eso Pasó',
+  description: 'La Cosa',
+  canonical: '',
+  mainImage: '/barrios.jpg',
 };
 
 export default SEO;

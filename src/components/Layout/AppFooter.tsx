@@ -1,9 +1,8 @@
 import { Button, Footer, Group } from "@mantine/core";
-import React from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
+import React from "react";
 import { Send } from "tabler-icons-react";
-import Protected from "../Protected";
 
 const AppFooter = () => {
   const matches = useMediaQuery("(min-width: 700px)");

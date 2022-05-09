@@ -1,7 +1,7 @@
-import { Feed } from "./Feed";
+import { Feed } from './Feed';
 
 export default {
-  title: "Feed",
+  title: 'Feed',
 };
 
 export const Usage = () => <Feed />;

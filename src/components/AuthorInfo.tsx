@@ -1,25 +1,20 @@
-import React from "react";
 import {
-  UnstyledButton,
-  UnstyledButtonProps,
-  Group,
-  Avatar,
-  Text,
-  createStyles,
-} from "@mantine/core";
-import { ChevronRight } from "tabler-icons-react";
-import Link from "next/link";
+  Avatar, createStyles, Group, Text, UnstyledButton
+} from '@mantine/core';
+import Link from 'next/link';
+import React from 'react';
+import { ChevronRight } from 'tabler-icons-react';
 
 const useStyles = createStyles((theme) => ({
   user: {
-    display: "block",
-    width: "100%",
+    display: 'block',
+    width: '100%',
     padding: theme.spacing.md,
-    color: theme.colorScheme === "dark" ? theme.colors.dark[0] : theme.black,
+    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 
-    "&:hover": {
+    '&:hover': {
       backgroundColor:
-        theme.colorScheme === "dark"
+        theme.colorScheme === 'dark'
           ? theme.colors.dark[8]
           : theme.colors.gray[0],
     },
