@@ -1,7 +1,13 @@
-import { Group, Text, useMantineTheme, MantineTheme } from "@mantine/core";
-import { Upload, Photo, X, Icon as TablerIcon } from "tabler-icons-react";
+import {
+  Group,
+  Image,
+  MantineTheme,
+  Text,
+  useMantineTheme,
+} from "@mantine/core";
 import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { useStore } from "../store";
+import { useState } from "react";
+import { Icon as TablerIcon, Photo, Upload, X } from "tabler-icons-react";
 
 function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
   return status.accepted
@@ -44,21 +50,40 @@ const dropzoneChildren = (status: DropzoneStatus, theme: MantineTheme) => (
 );
 
 export default function ImageDropzone() {
-  const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
+  // image state
+  const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
+
+  const addImage = (file: File[]) => {
+    console.log(file);
+    setImage(file[0]);
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      if (typeof reader.result === "string") setImageUrl(reader.result);
+    };
+    reader.readAsDataURL(file[0]);
+  };
 
   const theme = useMantineTheme();
   return (
-    <Dropzone
-      onDrop={(files: File[]) => {
-        addImage(files);
-        console.log("accepted files", files);
-      }}
-      onReject={(files: unknown) => console.log("rejected files", files)}
-      maxSize={3 * 1024 ** 2}
-      multiple={false}
-      accept={IMAGE_MIME_TYPE}
-    >
-      {(status: DropzoneStatus) => dropzoneChildren(status, theme)}
-    </Dropzone>
+    <>
+      {imageUrl && image ? (
+        <Image radius="md" src={imageUrl} alt={image.name} />
+      ) : (
+        <Dropzone
+          onDrop={(files: File[]) => {
+            addImage(files);
+            console.log("accepted files", files);
+          }}
+          onReject={(files: unknown) => console.log("rejected files", files)}
+          maxSize={3 * 1024 ** 2}
+          multiple={false}
+          accept={IMAGE_MIME_TYPE}
+        >
+          {(status: DropzoneStatus) => dropzoneChildren(status, theme)}
+        </Dropzone>
+      )}
+    </>
   );
 }

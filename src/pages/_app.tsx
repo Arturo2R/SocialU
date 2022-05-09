@@ -1,18 +1,18 @@
-import { GetServerSidePropsContext } from "next";
-import React, { useEffect, useState } from "react";
-import { AppProps } from "next/app";
-import { getCookie, setCookies } from "cookies-next";
-import Head from "next/head";
 import {
-  MantineProvider,
   ColorScheme,
   ColorSchemeProvider,
-} from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
+  MantineProvider,
+} from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
+import { getCookie, setCookies } from 'cookies-next';
+import { GetServerSidePropsContext } from 'next';
+import { AppProps } from 'next/app';
+import Head from 'next/head';
+import Script from 'next/script';
+import React, { useState } from 'react';
+import { AuthProvider } from '../context/AuthContext';
 // import GlobalStyles from '../lib/globalStyles'
-import "../styles/globals.css";
-import { AuthProvider } from "../context/AuthContext";
-import Script from "next/script";
+import '../styles/globals.css';
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
@@ -23,9 +23,9 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme =
-      value || (colorScheme === "dark" ? "light" : "dark");
+      value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
-    setCookies("mantine-color-scheme", nextColorScheme, {
+    setCookies('mantine-color-scheme', nextColorScheme, {
       maxAge: 60 * 60 * 24 * 30,
     });
   };
@@ -68,12 +68,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           href="/favicon-16x16.png"
         />
 
-        <link rel="manifest" href="/site.webmanifest"></link>
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <Script
         src="https://accounts.google.com/gsi/client"
-        // strategy="lazyOnload"
-      ></Script>
+      />
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
@@ -96,5 +95,5 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 }
 
 App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
+  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
 });

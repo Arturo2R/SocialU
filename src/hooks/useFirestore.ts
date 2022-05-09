@@ -1,8 +1,6 @@
+import { collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
-import { getDocs, collection } from "firebase/firestore/lite";
 import { db } from "../firebase";
-import Error from "next/error";
-// import { f } from "firebase/firestore/lite";
 
 interface DocPost {
   id: any;

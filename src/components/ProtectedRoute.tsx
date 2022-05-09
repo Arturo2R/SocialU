@@ -1,5 +1,5 @@
-import { useAuth } from "../context/AuthContext";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import { useAuth } from '../context/AuthContext';
 // import { useEffect } from "react";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -9,7 +9,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   // useEffect(() => {
   if (!user) {
-    router.push("/welcome");
+    router.push('/welcome');
   }
   // }, [user, loading]);
 

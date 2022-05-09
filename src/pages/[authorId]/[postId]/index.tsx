@@ -1,10 +1,10 @@
-import { Container, Image, Stack, Title, Text, Paper } from "@mantine/core";
-import { useRouter } from "next/router";
-import React from "react";
-import { AuthorInfo } from "../../../components/AuthorInfo";
-import CommentWall from "../../../components/Comment/CommentWall";
-import Layout from "../../../components/Layout/Layout";
-import SeeUser from "../../../components/Post/SeeUser";
+import { Image, Paper, Stack, Text, Title } from '@mantine/core';
+import { useRouter } from 'next/router';
+import React from 'react';
+import { AuthorInfo } from '../../../components/AuthorInfo';
+import CommentWall from '../../../components/Comment/CommentWall';
+import Layout from '../../../components/Layout/Layout';
+import SeeUser from '../../../components/Post/SeeUser';
 
 type Props = {};
 
@@ -17,8 +17,8 @@ const PostPage = (props: Props) => {
       <Paper p="md" shadow="sm" radius="md">
         <Image radius="lg" src="/girl.jpg" />
         <Title className="mt-4 mb-2 text-3xl">Hola Que Hace Mundo</Title>
-        <Text className="mb-2 cursive">21 de Julio del 2022</Text>
-        <Text className="max-w-lg text-md">
+        <Text className="cursive mb-2">21 de Julio del 2022</Text>
+        <Text className="text-md max-w-lg">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Explicabo
           molestiae itaque illo neque. Unde, fuga sequi voluptas earum
           temporibus libero! Eum quae natus mollitia nihil. Ipsa, rem culpa!
@@ -49,12 +49,12 @@ const PostPage = (props: Props) => {
             // postId={postId}
             comments={[
               {
-                author: "anonimo",
-                body: "Hola Que Hace",
-                postedAt: "Hace 10 Min",
+                author: 'anonimo',
+                body: 'Hola Que Hace',
+                postedAt: 'Hace 10 Min',
               },
             ]}
-          ></CommentWall>
+          />
         </div>
       </Paper>
     </Layout>

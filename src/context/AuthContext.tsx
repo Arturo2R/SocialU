@@ -60,15 +60,25 @@ interface AuthContextInterface {
   resetPassword(email: string): Promise<void>;
   loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
 }
-
-export const authContext = createContext<AuthContextInterface | undefined>(
-  undefined
-);
-
 interface University {
   name: string;
   domain: string;
 }
+interface superUser {
+  email: string;
+  uid: string;
+  displayName?: string;
+  photoURL?: string;
+  username?: string;
+  phoneNumber?: number;
+  university: University;
+  description?: string;
+  carrer?: string;
+}
+
+export const authContext = createContext<AuthContextInterface | undefined>(
+  undefined
+);
 
 const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
 
@@ -104,18 +114,6 @@ export const useAuth = () => {
   if (!context) throw new Error("There is no Auth provider");
   return context;
 };
-
-interface superUser {
-  email: string;
-  uid: string;
-  displayName?: string;
-  photoURL?: string;
-  username?: string;
-  phoneNumber?: number;
-  university: University;
-  description?: string;
-  carrer?: string;
-}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

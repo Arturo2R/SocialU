@@ -1,17 +1,8 @@
-import {
-  Button,
-  Container,
-  Input,
-  Switch,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
-import Image from "next/image";
+import { Button, Container, Switch, Textarea } from "@mantine/core";
+import { DatePicker, TimeInput } from "@mantine/dates";
 import React, { useState } from "react";
 import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
-
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 
@@ -65,13 +56,24 @@ const CrearPost = (props: Props) => {
                 // offLabel="No"
               />
               {event && (
-                <DatePicker
-                  transition="pop-bottom-left"
-                  placeholder="Escojer Dia De Reunion"
-                  label="Día De Reunion"
-                  required={event}
-                  locale="es"
-                />
+                <>
+                  <DatePicker
+                    transition="pop-bottom-left"
+                    placeholder="Escojer Dia De Reunion"
+                    label="Día De Reunion"
+                    required={event}
+                    locale="es"
+                  />
+                  <TimeInput
+                    defaultValue={new Date()}
+                    label="Hora"
+                    // error="No permitimos viajes en el tiempo, la hora tiene que ser en el futuro"
+                    format="12"
+                    required={event}
+                    clearable
+                  />
+                  {/* <input type="time" name="time" id="time-is-value" /> */}
+                </>
               )}
             </div>
             <Button
