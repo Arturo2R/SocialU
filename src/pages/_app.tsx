@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppProps } from "next/app";
 import { getCookie, setCookies } from "cookies-next";
 import Head from "next/head";
@@ -12,6 +12,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 // import GlobalStyles from '../lib/globalStyles'
 import "../styles/globals.css";
 import { AuthProvider } from "../context/AuthContext";
+import Script from "next/script";
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
@@ -28,6 +29,17 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       maxAge: 60 * 60 * 24 * 30,
     });
   };
+
+  // useEffect(() => {
+  //   globalThis?.window?.google?.accounts?.id?.initialize({
+  //     client_id:
+  //       "931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com",
+  //     callback: console.log,
+  //     auto_select: true,
+  //   });
+  //   console.log("Tirado");
+  //   globalThis?.window?.google?.accounts?.id?.prompt();
+  // }, []);
 
   return (
     <>
@@ -57,13 +69,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
         />
 
         <link rel="manifest" href="/site.webmanifest"></link>
-        <script
-          src="https://accounts.google.com/gsi/client"
-          async
-          defer
-        ></script>
       </Head>
-
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        // strategy="lazyOnload"
+      ></Script>
       <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}

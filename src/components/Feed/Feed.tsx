@@ -1,10 +1,33 @@
-import { Container, Space, Stack, Text, Title } from "@mantine/core";
+import {
+  Container,
+  Space,
+  Stack,
+  Loader,
+  Text,
+  Title,
+  Center,
+} from "@mantine/core";
+import { useState } from "react";
+import { useFirestore } from "../../hooks/useFirestore";
 
 import { Post } from "../Post/Post";
 import useStyles from "./Feed.styles";
 
 export function Feed() {
   const { classes } = useStyles();
+
+  // error state
+  const [error, setError] = useState<Error | null>(null);
+
+  const { data, error: dataError, loading } = useFirestore();
+  console.log(data);
+  if (loading)
+    return (
+      <Center className="my-auto h-full">
+        <Loader color="orange" size="lg" variant="bars" />
+      </Center>
+    );
+  if (error) return <Text>{error}</Text>;
 
   return (
     <>
@@ -20,8 +43,24 @@ export function Feed() {
           </Text>
         </Title> */}
 
+        {/* // !TODO: Use React Suspense */}
+
         <Space h="md" />
         <Stack spacing="lg">
+          {data &&
+            data.map((post) => (
+              <Post
+                description={post.message}
+                author={{ name: post.authorName, id: post.userUID }}
+                title={post.title}
+                image={post.image}
+                // asistants={post.asistants} // Añadir asistentes
+                postId={post.id}
+                event={post.isEvent}
+                key={post.id}
+              />
+            ))}
+
           <Post
             description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque laudantium officia, ipsum enim tempore molestias architecto itaque? Vel aut nam at voluptatem, sunt, quo laudantium similique dolore, asperiores laborum nostrum."
             author={{
@@ -86,21 +125,6 @@ export function Feed() {
                 avatar: "/perfil.jpg",
               },
             ]}
-          />
-          <Post
-            description="Now that there is the Tec-9, a crappy spray gun from South Miami. This gun is advertised as the most popular gun in American crime. Do you believe that shit? It actually says that in the little book that comes with it: the most popular gun in American crime. Like they're actually proud of that shit. "
-            author="anonimo"
-            title="crappy spray gun from South Miami"
-            image="/porsche.jpg"
-            postId="fskdsl"
-          />
-          <Post
-            description="The path of the righteous man is beset on all sides by the iniquities of the selfish and the tyranny of evil men. Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children "
-            author="anonimo"
-            title="The path of the righteous man"
-            image="/porsche.jpg"
-            postId="fskdsl"
-            event
           />
         </Stack>
       </Container>

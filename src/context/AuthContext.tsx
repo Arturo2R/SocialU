@@ -16,6 +16,7 @@ import { auth } from "../firebase";
 import { Cross1Icon } from "@modulz/radix-icons";
 import jwt_decode from "jwt-decode";
 import { showNotification } from "@mantine/notifications";
+import { useRouter } from "next/router";
 
 interface googleResponse {
   credential: string;
@@ -40,13 +41,19 @@ interface Login {
 }
 
 interface User {
-  email: string;
+  email?: string;
+  uid?: string;
+  displayName?: string;
+  photoURL?: string;
+  username?: string;
+  phoneNumber?: number;
+  description?: string;
 }
 
 interface AuthContextInterface {
   signup(email: string, password: string): Promise<UserCredential>;
   login(email: string, password: string): Promise<UserCredential>;
-  user: User;
+  user: User | null;
   logout(): void;
   loading: boolean;
   loginWithGoogle(): Promise<UserCredential>;
@@ -58,13 +65,18 @@ export const authContext = createContext<AuthContextInterface | undefined>(
   undefined
 );
 
+interface University {
+  name: string;
+  domain: string;
+}
+
 const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
 
-const allowedUniversities = [
+const allowedUniversities: University[] = [
   { name: "Universidad Del Norte", domain: "uninorte.edu.co" },
 ];
 
-const StudentValidation = (email: string): boolean => {
+export const StudentValidation = (email: string): boolean => {
   let validated: boolean = false;
   let hostDomain = email;
 
@@ -82,6 +94,7 @@ const StudentValidation = (email: string): boolean => {
   validated = allowedUniversities.some((item) => {
     return item.domain === hostDomain;
   });
+
   console.log("funcion student validation escupe ", validated);
   return validated;
 };
@@ -92,12 +105,26 @@ export const useAuth = () => {
   return context;
 };
 
+interface superUser {
+  email: string;
+  uid: string;
+  displayName?: string;
+  photoURL?: string;
+  username?: string;
+  phoneNumber?: number;
+  university: University;
+  description?: string;
+  carrer?: string;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>({ email: "" });
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState<boolean | "unset">("unset");
+  // state for superUser
+  const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const signup = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -125,30 +152,76 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return signInWithCredential(auth, cred);
   };
 
-  const logout = () => signOut(auth);
+  // globalThis.window.loginWithGoogleOneTap = (
+  //   response: googleResponse
+  // ): Promise<UserCredential> => {
+  //   console.log("google one tap");
+  //   const data: googleDecodedResponse = jwt_decode(response.credential);
+  //   console.log(data);
+  //   const cred = GoogleAuthProvider.credential(response.credential);
+  //   // Sign in with credential from the Google user.
+  //   // console.log(user)
+  //   return signInWithCredential(auth, cred);
+  // };
+
+  const logout = () => {
+    setValid("unset");
+    signOut(auth);
+    showNotification({
+      id: "log-out",
+      disallowClose: true,
+      autoClose: 5000,
+      title: "Has cerrado Sesión",
+      color: "red",
+      message: "Hasta pronto",
+      icon: <Cross1Icon />,
+    });
+  };
 
   const resetPassword = async (email: string): Promise<void> =>
     sendPasswordResetEmail(auth, email);
 
   useEffect(() => {
-    console.log("unsubuscribe effect");
+    console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       console.log({ currentUser });
       setUser(currentUser);
       setLoading(false);
     });
+    console.log(superUser);
     return () => unsubuscribe();
   }, []);
 
   useEffect(() => {
+    console.log("antes de validar el correo ", user?.email, " es", valid);
     if (user?.email) {
-      setValid(StudentValidation(user.email));
+      const quees = StudentValidation(user.email);
+      console.log("la validacion es", quees);
+      setValid(quees);
     }
+    console.log("despues de validar el correo ", user?.email, " es", valid);
   }, [user]);
 
   useEffect(() => {
+    console.log("valid cambió a ", valid);
     if (valid === true) {
       console.log("is valid");
+      router.push("/");
+      // setSuperUser({
+      //   //ts-ignore
+      //   email: user.email,
+      //   uid: user.uid,
+      //   displayName: user.displayName,
+      //   photoURL: user.photoURL,
+      //   // username: user.username,
+      //   phoneNumber: user.phoneNumber || undefined,
+      //   university: {
+      //     name: "Universidad Del Norte",
+      //     domain: "uninorte.edu.co",
+      //   },
+      //   // description: currentUser.description,
+      // });
+      console.log(superUser);
       showNotification({
         id: "welcome",
         disallowClose: true,
@@ -161,14 +234,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     if (valid === false) {
       logout();
-      // deleteUser(thisUser)
-      //   .then(() => {
-      //     console.log("Deleted el caremonda");
-      //   })
-      //   .catch((error) => {
-      //     // An error ocurred
-      //     // ...
-      //   });
       showNotification({
         id: "get-out",
         disallowClose: true,

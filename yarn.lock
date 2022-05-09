@@ -7115,6 +7115,11 @@ globby@^9.2.0:
     pify "^4.0.1"
     slash "^2.0.0"
 
+google-one-tap@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/google-one-tap/-/google-one-tap-1.0.3.tgz#9917d085529bd68f52575831c019be4fdaf8cf43"
+  integrity sha512-gVTJtknvD6nqjPKF/N5k4PeKuasMGFnlZYAZSbubu6dQgPTLZFKs7g9sSY1AimXccVcqVBJQru0samX1zd2RsQ==
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.1.9, graceful-fs@^4.2.0, graceful-fs@^4.2.9:
   version "4.2.9"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.9.tgz"
@@ -10492,6 +10497,11 @@ react-firebaseui@^6.0.0:
   integrity sha512-VzLMiW7DBZCsW/qpP9nky/pPlAoIjDxA2Qyc+QAPf+RjelIkvPPiCBXR2aAz+Upy+ujrx6pYDXj547DW5uC4ww==
   dependencies:
     firebaseui "^6.0.0"
+
+react-google-one-tap-login@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-google-one-tap-login/-/react-google-one-tap-login-0.1.1.tgz#12a61e63e19251622cf1575b601d79fd4d07847a"
+  integrity sha512-RCbOfR3Z7VcRae4AzrLoBfY/aqqdN24pkQeNz9CJ0W65C9SY3vAwF0Yp8mwpeFwsugaZ5b1HZsfhUYWtb3IMrw==
 
 react-helmet-async@^1.0.7:
   version "1.2.3"

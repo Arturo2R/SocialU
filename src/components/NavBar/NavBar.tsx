@@ -50,7 +50,7 @@ export function NavBar({ user, tabs }: NavBarProps) {
 
   return (
     <div className={classes.header}>
-      <Protected.Component>
+      {/* <Protected.Component> */}
         <Container className={classes.mainSection}>
           <Group position="apart">
             {/* <MantineLogo /> */}
@@ -121,7 +121,7 @@ export function NavBar({ user, tabs }: NavBarProps) {
             </Menu>
           </Group>
         </Container>
-      </Protected.Component>
+      {/* </Protected.Component> */}
       <Container>
         <Tabs
           variant="outline"

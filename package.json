@@ -1,6 +1,6 @@
 {
-  "name": "mantine-next-template",
-  "version": "1.0.0",
+  "name": "social-u",
+  "version": "0.0.15",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,7 +14,7 @@
     "jest:watch": "jest --watch",
     "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
     "prettier:write": "prettier --write \"**/*.{ts,tsx}\"",
-    "test": "npm run prettier:check && npm run lint && npm run typecheck && npm run jest",
+    "test": "yarn run prettier:check && yarn run lint && yarn run typecheck && yarn run jest",
     "storybook": "start-storybook -p 7001",
     "storybook:build": "build-storybook"
   },
@@ -31,6 +31,7 @@
     "cx": "^22.4.1",
     "dayjs": "^1.11.0",
     "firebase": "^9.7.0",
+    "google-one-tap": "^1.0.3",
     "jwt-decode": "^3.1.2",
     "next": "12.1.4",
     "prism-react-renderer": "^1.3.1",
