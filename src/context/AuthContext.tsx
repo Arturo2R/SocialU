@@ -40,15 +40,15 @@ interface Login {
   password: string;
 }
 
-interface User {
-  email?: string;
-  uid?: string;
-  displayName?: string;
-  photoURL?: string;
-  username?: string;
-  phoneNumber?: number;
-  description?: string;
-}
+// interface User {
+//   email?: string;
+//   uid?: string;
+//   displayName?: string;
+//   photoURL?: string;
+//   username?: string;
+//   phoneNumber?: number;
+//   description?: string;
+// }
 
 interface AuthContextInterface {
   signup(email: string, password: string): Promise<UserCredential>;
@@ -186,9 +186,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(currentUser);
       setLoading(false);
     });
-    console.log(superUser);
     return () => unsubuscribe();
-  }, []);
+  }, [auth]);
 
   useEffect(() => {
     console.log("antes de validar el correo ", user?.email, " es", valid);

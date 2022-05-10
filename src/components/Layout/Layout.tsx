@@ -1,23 +1,9 @@
-import {
-  AppShell,
-  Avatar,
-  Burger,
-  Button,
-  createStyles,
-  Group,
-  Header,
-  MediaQuery,
-  Text,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
-import Image from "next/image";
-import Link from "next/link";
+import { AppShell, createStyles, useMantineTheme } from "@mantine/core";
 import { useRouter } from "next/router";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import AppFooter from "./AppFooter";
+import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 import AppSidebar from "./AppSidebar";
 
@@ -71,8 +57,8 @@ export default function Layout({ children }: LayoutProps) {
   const theme = useMantineTheme();
 
   const [opened, setOpened] = useState<boolean>(false);
-  const [active, setActive] = useState<boolean>();
-  const [hecho, setHecho] = useState<boolean>(false);
+  // const [active, setActive] = useState<boolean>();
+  // const [hecho, setHecho] = useState<boolean>(false);
   // const items = navLinks.map((link) => (
   //   <a
   //     key={link.label}
@@ -107,7 +93,7 @@ export default function Layout({ children }: LayoutProps) {
     // }
 
     // return () => clearInterval(thatGoogle);
-  });
+  }, [user]);
 
   return (
     <>
@@ -127,47 +113,15 @@ export default function Layout({ children }: LayoutProps) {
         aside={<AppSidebar />}
         footer={router.pathname === "/" ? <AppFooter /> : <></>}
         header={
-          <Header height={70} p="md">
-            <div className="flex items-center justify-between h-full">
-              <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-                <Burger
-                  opened={opened}
-                  onClick={() => setOpened((o) => !o)}
-                  size="sm"
-                  color={theme.colors.gray[6]}
-                  mr="xl"
-                />
-              </MediaQuery>
-              <Link href="/">
-                <Group>
-                  <Image src="/logologo.svg" width={30} height={30} />
-                  <Title className=' {font-family:"inter";} text-2xl'>
-                    Social/U
-                  </Title>
-                </Group>
-              </Link>
-              <Group>
-                {user?.displayName && <Text>{user?.displayName}</Text>}
-                {user?.photoURL && <Avatar radius="xl" src={user?.photoURL} />}
-                {user === null && (
-                  <Button onClick={loginWithGoogle} color="orange">
-                    Iniciar Sesión
-                  </Button>
-                )}
-                <ColorSchemeToggle />
-              </Group>
-            </div>
-          </Header>
+          <AppHeader
+            opened={opened}
+            setOpened={setOpened}
+            color={theme.colors.gray[6]}
+            user={user}
+            loginWithGoogle={loginWithGoogle}
+          />
         }
       >
-        {/* <div
-          id="g_id_onload"
-          data-client_id="931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com"
-          data-context="use"
-          data-callback="window.loginWithGoogleOneTap"
-          data-nonce=""
-          data-auto_select="true"
-        ></div> */}
         {children}
       </AppShell>
     </>

@@ -1,24 +1,100 @@
 import { Button, Container, Switch, Textarea } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+
 import { DatePicker, TimeInput } from "@mantine/dates";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
+import { useForm } from "@mantine/form";
+
+import { useDebouncedValue } from "@mantine/hooks";
+import { useFirestore } from "../hooks/useFirestore";
+
+import { useRouter } from "next/router";
+
+import { FileCheck } from "tabler-icons-react";
 
 type Props = {};
 
 const CrearPost = (props: Props) => {
   // Event state
   const [event, setEvent] = useState(false);
+  //image state
+  const [image, setImage] = useState<File | null>(null);
+
+  // const [messageValue, setMessageValue] = useState("");
+  // const [debouncedMessage] = useDebouncedValue(messageValue, 200);
+
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const { createPost } = useFirestore();
+
+  const router = useRouter();
+
+  const form = useForm({
+    initialValues: {
+      title: "",
+      message: "",
+      date: "",
+      time: "",
+      image: "",
+      isEvent: false,
+      anonimo: false,
+    },
+    // validate: {
+    //   title: {
+    //     minLength: 3,
+    //     maxLength: 50,
+    //   },
+    //   message: {
+    //     minLength: 3,
+    //     maxLength: 200,
+    //   },
+    //   date: {},
+    //   time: {},
+    //   image: {},
+    // },
+  });
+
+  // form.setFieldValue("image", image);
+  useEffect(() => {
+    imageUrl && form.setFieldValue("image", imageUrl);
+  }, [imageUrl]);
+
+  // form.setFieldValue("message", debouncedMessage);
+
+  const submitPost = (postValues: any) => {
+    showNotification({
+      id: "created-post",
+      disallowClose: true,
+      autoClose: 4000,
+      title: "Post creado",
+      message: "La publicación fue creada exitosamente",
+      color: "orange",
+      className: "my-notification-class",
+      icon: <FileCheck />,
+    });
+    createPost(postValues);
+    router.push("/");
+  };
 
   return (
     <Layout>
       <Protected.Route>
         <Container className="h-full">
-          <form className="flex flex-col justify-between h-full" action="">
+          <form
+            onSubmit={form.onSubmit((values) => submitPost(values))}
+            className="flex flex-col justify-between h-full"
+          >
             <div>
-              <ImageDropzone />
+              <ImageDropzone
+                imageUrl={imageUrl}
+                setImageUrl={setImageUrl}
+                image={image}
+                setImage={setImage}
+              />
               <Textarea
                 // icon={<At />}
                 variant="unstyled"
@@ -30,6 +106,7 @@ const CrearPost = (props: Props) => {
                 classNames={{
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
+                {...form.getInputProps("title")}
               />
               <Textarea
                 placeholder="Mensaje"
@@ -39,21 +116,24 @@ const CrearPost = (props: Props) => {
                 minRows={5}
                 required
                 autosize
+                // value={messageValue}
+                {...form.getInputProps("message")}
               />
               <Switch
                 label="Post Anónimo"
                 color="orange"
-                // onLabel="Si"
-                // offLabel="No"
+                {...form.getInputProps("anonimo")}
               />
               <Switch
                 mt="sm"
                 label="Evento"
                 color="orange"
                 checked={event}
-                onChange={(event) => setEvent(event.currentTarget.checked)}
-                // onLabel="Si"
-                // offLabel="No"
+                onChange={(event) => {
+                  setEvent(event.currentTarget.checked);
+                  form.setFieldValue("isEvent", event.currentTarget.checked);
+                }}
+                // {...form.getInputProps("isEvent", { type: "checkbox" })}
               />
               {event && (
                 <>
@@ -63,6 +143,7 @@ const CrearPost = (props: Props) => {
                     label="Día De Reunion"
                     required={event}
                     locale="es"
+                    {...form.getInputProps("date")}
                   />
                   <TimeInput
                     defaultValue={new Date()}
@@ -71,6 +152,12 @@ const CrearPost = (props: Props) => {
                     format="12"
                     required={event}
                     clearable
+                    onChange={(event) =>
+                      form.setFieldValue(
+                        "time",
+                        event.getHours() + ":" + event.getMinutes()
+                      )
+                    }
                   />
                   {/* <input type="time" name="time" id="time-is-value" /> */}
                 </>

@@ -16,13 +16,13 @@ import React, { useState } from "react";
 import { Plus } from "tabler-icons-react";
 import SeeUser from "./SeeUser";
 
-interface PostProps {
+export interface PostProps {
   author: { image?: string; name: string; id: string } | "anonimo";
   image?: string;
   description: string;
   title: string;
   event?: boolean;
-  postId: string;
+  postId?: string;
   // relevantCommentary?: Object;
   asistants?: { id: string; name: string; avatar: string }[];
 }
@@ -46,9 +46,11 @@ export const Post = ({
   };
 
   return (
-    <article className="max-w-sm mx-auto">
+    <article className="">
       <Link
-        href={`/${author !== "anonimo" ? author.name : "anonimo"}/${postId}`}
+        href={`/${
+          author !== "anonimo" ? author.name : "anonimo"
+        }/${"fsdkjfaldd"}`}
       >
         <Card withBorder p="xs" radius="md">
           {image && (

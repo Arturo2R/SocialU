@@ -49,10 +49,19 @@ const dropzoneChildren = (status: DropzoneStatus, theme: MantineTheme) => (
   </Group>
 );
 
-export default function ImageDropzone() {
+export default function ImageDropzone({
+  image,
+  setImage,
+  imageUrl,
+  setImageUrl,
+}: {
+  image: File | null | string;
+  setImage: (image: File | null) => void;
+  imageUrl: string | null;
+  setImageUrl: (imageUrl: string | null) => void;
+}) {
   // image state
-  const [image, setImage] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
   const addImage = (file: File[]) => {
@@ -69,7 +78,7 @@ export default function ImageDropzone() {
   return (
     <>
       {imageUrl && image ? (
-        <Image radius="md" src={imageUrl} alt={image.name} />
+        <Image radius="md" src={imageUrl} />
       ) : (
         <Dropzone
           onDrop={(files: File[]) => {

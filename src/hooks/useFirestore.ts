@@ -1,23 +1,24 @@
-import { collection, getDocs } from "firebase/firestore/lite";
+import { addDoc, collection, getDocs } from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 
-interface DocPost {
-  id: any;
+interface FormPost {
   title: string;
   message: string; // !TODO: Change property name to content
-  createdAt: string; // !TODO: Change to Date
-  author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
   image?: string;
-  // comments: string[]; ////Comments are not implemented yet
   isEvent?: boolean;
-  userUID: string;
-  authorName: string;
-  data: () => Object;
+  date: string;
+  anonimo: boolean;
+  // author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
+  // comments: string[]; ////Comments are not implemented yet
+  // suscribed: string[];
 }
-
-interface Post extends DocPost {
-  id: string;
+interface Post extends FormPost {
+  id?: string;
+  createdAt: number | string; // !TODO: Change string to Date type
+  userUID?: string;
+  authorRef?: string;
+  authorName?: string | null;
 }
 
 interface anything {
@@ -25,7 +26,7 @@ interface anything {
 }
 
 export const useFirestore = () => {
-  const [data, setData] = useState<Post[] | null>([]);
+  const [data, setData] = useState<Post[] | []>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -56,5 +57,35 @@ export const useFirestore = () => {
     }
   };
 
-  return { data, error, loading };
+  const createPost = async (formData: FormPost) => {
+    try {
+      setLoading(true);
+
+      const postsRef = collection(db, "posts");
+
+      const newPost: Post = {
+        // id: formData.id,
+        // title: formData.title,
+        // message: formData.message,
+        // image: formData.image,
+        // isEvent: formData.isEvent,
+        // date: formData.date,
+        // anonimo: formData.anonimo,
+        ...formData,
+        createdAt: Date.now(),
+        userUID: auth?.currentUser?.uid,
+        authorRef: `user/${auth?.currentUser?.uid}`,
+        authorName: auth?.currentUser?.displayName,
+      };
+      setData([...data, newPost]);
+
+      console.log(data);
+
+      await addDoc(postsRef, newPost);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  return { data, error, loading, createPost };
 };

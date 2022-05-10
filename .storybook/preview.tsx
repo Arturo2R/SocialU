@@ -1,7 +1,7 @@
 import { useDarkMode } from "storybook-dark-mode";
 import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
-
+import "../src/styles/globals.css";
 export const parameters = { layout: "fullscreen" };
 
 function ThemeWrapper(props: { children: React.ReactNode }) {
