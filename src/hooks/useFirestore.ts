@@ -1,5 +1,7 @@
 import {
   addDoc,
+  doc,
+  setDoc,
   collection,
   getDocs,
   // QuerySnapshot,
@@ -8,6 +10,7 @@ import {
   limit,
   serverTimestamp,
 } from "firebase/firestore/lite";
+import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 
@@ -76,7 +79,9 @@ export const useFirestore = () => {
       try {
         setLoading(true);
 
-        const postsRef = collection(db, "posts");
+        const generatedPostId = await nanoid(7);
+
+        const postsRef = doc(db, "posts", generatedPostId);
 
         const newPost: Post = {
           // id: formData.id,
@@ -95,8 +100,7 @@ export const useFirestore = () => {
         setData([...data, newPost]);
 
         console.log(data);
-
-        await addDoc(postsRef, newPost);
+        await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
         console.log(thiserror.message);
       }
