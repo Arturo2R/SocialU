@@ -1,4 +1,13 @@
-import { addDoc, collection, getDocs } from "firebase/firestore/lite";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  // QuerySnapshot,
+  query,
+  orderBy,
+  limit,
+  serverTimestamp,
+} from "firebase/firestore/lite";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 
@@ -15,7 +24,7 @@ interface FormPost {
 }
 interface Post extends FormPost {
   id?: string;
-  createdAt: number | string; // !TODO: Change string to Date type
+  createdAt: any; // !TODO: Change string to Date type
   userUID?: string;
   authorRef?: string;
   authorName?: string | null;
@@ -30,16 +39,20 @@ export const useFirestore = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    console.log("useFirestore to getData");
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
       setLoading(true);
       // querysnapshot function to get docs from firestore
-      const querySnapshot = await getDocs(collection(db, "posts"));
+      // const dataRef = collection(db, "posts");
+
+      // const snapshot = await query(dataRef, {
+      //   collection: "posts",
+      //   orderBy: ["createdAt", "desc"],
+      //   limit: 10,
+      // });
+
+      const q = query(collection(db, "posts"), orderBy("createdAt"), limit(30));
+      const querySnapshot = await getDocs(q);
 
       const dataDB = querySnapshot.docs.map((doc: anything) => ({
         id: doc.id,
@@ -47,45 +60,55 @@ export const useFirestore = () => {
       }));
 
       setData(dataDB);
-    } catch (error: any) {
-      console.log(error);
+      console.log(dataDB);
+    } catch (thiserror: any) {
+      console.log(thiserror);
 
       //ts-ignore
-      setError(error.message);
+      setError(thiserror.message);
     } finally {
       setLoading(false);
     }
   };
 
   const createPost = async (formData: FormPost) => {
-    try {
-      setLoading(true);
+    if (auth.currentUser) {
+      try {
+        setLoading(true);
 
-      const postsRef = collection(db, "posts");
+        const postsRef = collection(db, "posts");
 
-      const newPost: Post = {
-        // id: formData.id,
-        // title: formData.title,
-        // message: formData.message,
-        // image: formData.image,
-        // isEvent: formData.isEvent,
-        // date: formData.date,
-        // anonimo: formData.anonimo,
-        ...formData,
-        createdAt: Date.now(),
-        userUID: auth?.currentUser?.uid,
-        authorRef: `user/${auth?.currentUser?.uid}`,
-        authorName: auth?.currentUser?.displayName,
-      };
-      setData([...data, newPost]);
+        const newPost: Post = {
+          // id: formData.id,
+          // title: formData.title,
+          // message: formData.message,
+          // image: formData.image,
+          // isEvent: formData.isEvent,
+          // date: formData.date,
+          // anonimo: formData.anonimo,
+          ...formData,
+          createdAt: serverTimestamp(),
+          userUID: auth.currentUser.uid,
+          authorRef: `user/${auth?.currentUser?.uid}`,
+          authorName: auth.currentUser.displayName,
+        };
+        setData([...data, newPost]);
 
-      console.log(data);
+        console.log(data);
 
-      await addDoc(postsRef, newPost);
-    } catch (error: any) {
-      console.log(error.message);
+        await addDoc(postsRef, newPost);
+      } catch (thiserror: any) {
+        console.log(thiserror.message);
+      }
+    } else {
+      console.log("Inautorizado");
     }
   };
+
+  useEffect(() => {
+    console.log("useFirestore to getData");
+    fetchData();
+  }, []);
 
   return { data, error, loading, createPost };
 };

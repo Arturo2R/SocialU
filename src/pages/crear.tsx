@@ -1,31 +1,27 @@
+/* eslint-disable @typescript-eslint/quotes */
 import { Button, Container, Switch, Textarea } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 
 import { DatePicker, TimeInput } from "@mantine/dates";
 import React, { useEffect, useState } from "react";
+import { useForm } from "@mantine/form";
+// import { useDebouncedValue } from "@mantine/hooks";
+import { useRouter } from "next/router";
+import { FileCheck } from "tabler-icons-react";
 import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
-import { useForm } from "@mantine/form";
 
-import { useDebouncedValue } from "@mantine/hooks";
 import { useFirestore } from "../hooks/useFirestore";
 
-import { useRouter } from "next/router";
+// type Props = {};
 
-import { FileCheck } from "tabler-icons-react";
-
-type Props = {};
-
-const CrearPost = (props: Props) => {
+const CrearPost = () => {
   // Event state
   const [event, setEvent] = useState(false);
   //image state
   const [image, setImage] = useState<File | null>(null);
-
-  // const [messageValue, setMessageValue] = useState("");
-  // const [debouncedMessage] = useDebouncedValue(messageValue, 200);
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
@@ -129,9 +125,9 @@ const CrearPost = (props: Props) => {
                 label="Evento"
                 color="orange"
                 checked={event}
-                onChange={(event) => {
-                  setEvent(event.currentTarget.checked);
-                  form.setFieldValue("isEvent", event.currentTarget.checked);
+                onChange={(e) => {
+                  setEvent(e.currentTarget.checked);
+                  form.setFieldValue("isEvent", e.currentTarget.checked);
                 }}
                 // {...form.getInputProps("isEvent", { type: "checkbox" })}
               />
@@ -152,10 +148,10 @@ const CrearPost = (props: Props) => {
                     format="12"
                     required={event}
                     clearable
-                    onChange={(event) =>
+                    onChange={(e) =>
                       form.setFieldValue(
                         "time",
-                        event.getHours() + ":" + event.getMinutes()
+                        `${e.getHours()}:${e.getMinutes()}`
                       )
                     }
                   />

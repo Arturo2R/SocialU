@@ -20,7 +20,7 @@ export function Feed() {
   const [error, setError] = useState<Error | null>(null);
 
   const { data, error: dataError, loading } = useFirestore();
-  console.log(data);
+  // console.log(data);
   if (loading) {
     return (
       <Center className="h-full my-auto">
@@ -55,7 +55,11 @@ export function Feed() {
                 author={
                   post.anonimo
                     ? "anonimo"
-                    : { name: post.authorName, id: post.userUID, image: "fsl" }
+                    : {
+                        name: post.authorName,
+                        id: post.userUID,
+                        image: "https://source.unsplash.com/random/30x40",
+                      }
                 }
                 title={post.title}
                 image={post.image}

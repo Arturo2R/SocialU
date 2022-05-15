@@ -1,13 +1,13 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
-import { Post, PostProps } from "./Post";
+import { Post } from "./Post";
 
 export default {
   component: Post,
   title: "Post",
 };
 
-const Template = (args: PostProps) => <Post {...args} />;
+const Template = (args) => <Post {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

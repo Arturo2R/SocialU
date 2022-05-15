@@ -8,6 +8,8 @@ import {
 import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { useState } from "react";
 import { Icon as TablerIcon, Photo, Upload, X } from "tabler-icons-react";
+import { postsBanners } from "../firebase";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
 function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
   return status.accepted
@@ -61,27 +63,39 @@ export default function ImageDropzone({
   setImageUrl: (imageUrl: string | null) => void;
 }) {
   // image state
+  const [i64, set64] = useState<string | null>(null);
 
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
   const addImage = (file: File[]) => {
     console.log(file);
+
     setImage(file[0]);
     const reader = new FileReader();
     reader.onloadend = function () {
-      if (typeof reader.result === "string") setImageUrl(reader.result);
+      if (typeof reader.result === "string") set64(reader.result);
     };
     reader.readAsDataURL(file[0]);
+
+    const imageRef = ref(postsBanners, file[0].name);
+
+    uploadBytes(imageRef, file[0], {
+      contentType: "image/webp",
+    }).then((image) => {
+      // put the image url in the state
+      getDownloadURL(image.ref).then((url) => setImageUrl(url));
+    });
   };
 
   const theme = useMantineTheme();
   return (
     <>
-      {imageUrl && image ? (
-        <Image radius="md" src={imageUrl} />
+      {i64 && image ? (
+        <Image radius="md" src={i64} />
       ) : (
         <Dropzone
           onDrop={(files: File[]) => {
+            // uploadBytes(storageRef, file);
             addImage(files);
             console.log("accepted files", files);
           }}

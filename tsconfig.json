@@ -20,7 +20,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/context/AuthContext.tsx"
+    "src/context/AuthContext.tsx",
+    "src/components/Post/Post.story.jsx"
   ],
   "exclude": ["node_modules"]
 }

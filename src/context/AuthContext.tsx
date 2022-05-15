@@ -1,22 +1,20 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { showNotification } from "@mantine/notifications";
+import { Cross1Icon } from "@modulz/radix-icons";
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup,
+  onAuthStateChanged,
   sendPasswordResetEmail,
-  deleteUser,
   signInWithCredential,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
   UserCredential,
 } from "firebase/auth";
-import { auth } from "../firebase";
-
-import { Cross1Icon } from "@modulz/radix-icons";
 import jwt_decode from "jwt-decode";
-import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
+import { createContext, useContext, useEffect, useState } from "react";
+import { auth } from "../firebase";
 
 interface googleResponse {
   credential: string;
@@ -120,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
-  const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
+  // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
   const router = useRouter();
 
@@ -135,6 +133,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = () => {
     console.log("google provider");
     const googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({
+      login_hint: "usuario@uninorte.edu.com",
+      login_type: "popup",
+      prompt: "select_account",
+      select_account: "true",
+      use_account: "true",
+      hd: "uninorte.edu.co",
+    });
     return signInWithPopup(auth, googleProvider);
   };
 
@@ -150,19 +156,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return signInWithCredential(auth, cred);
   };
 
-  // globalThis.window.loginWithGoogleOneTap = (
-  //   response: googleResponse
-  // ): Promise<UserCredential> => {
-  //   console.log("google one tap");
-  //   const data: googleDecodedResponse = jwt_decode(response.credential);
-  //   console.log(data);
-  //   const cred = GoogleAuthProvider.credential(response.credential);
-  //   // Sign in with credential from the Google user.
-  //   // console.log(user)
-  //   return signInWithCredential(auth, cred);
-  // };
 
   const logout = () => {
+    console.log("Se fue");
     setValid("unset");
     signOut(auth);
     showNotification({
@@ -182,9 +178,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
-      console.log({ currentUser });
-      setUser(currentUser);
-      setLoading(false);
+      if (currentUser) {
+        console.log({ currentUser });
+        setUser(currentUser);
+        setLoading(false);
+      } else {
+        console.log("No hay usuario");
+      }
     });
     return () => unsubuscribe();
   }, [auth]);
@@ -204,21 +204,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (valid === true) {
       console.log("is valid");
       router.push("/");
-      // setSuperUser({
-      //   //ts-ignore
-      //   email: user.email,
-      //   uid: user.uid,
-      //   displayName: user.displayName,
-      //   photoURL: user.photoURL,
-      //   // username: user.username,
-      //   phoneNumber: user.phoneNumber || undefined,
-      //   university: {
-      //     name: "Universidad Del Norte",
-      //     domain: "uninorte.edu.co",
-      //   },
-      //   // description: currentUser.description,
-      // });
-      console.log(superUser);
       showNotification({
         id: "welcome",
         disallowClose: true,

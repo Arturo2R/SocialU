@@ -1,6 +1,7 @@
 # Social U
 
 The modern social media for connecting people with similar interests and objectives. With the idea of developing a strong communities inside universities.
+
 ## Features
 
 This webApp have several essential features:
@@ -34,3 +35,28 @@ This webApp have several essential features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+
+## TO DO
+
+### V1 First Version
+
+All the things that is left to finish the first version of the app
+
+- [x] Session auth persistance
+- [ ] Session state persistance
+- [ ] Rendering optimization
+- [ ] SEO optimization
+- [ ] Post page Connection with API
+- [ ] Profile connection with API
+- [ ] Real anonimity
+- [ ] Sidebar
+- [ ] Sign In with email
+- [ ] Sign up with email
+- [ ] Complete the profile
+- [ ] Restart password
+- [ ] User app configuration
+- [ ] Meeting asistantts #Feature
+- [ ] Commentaries #Feature
+- [ ] Image Procesing #Feature
+- [ ] Adult content filtering
+- [ ] Ordering of the Posts

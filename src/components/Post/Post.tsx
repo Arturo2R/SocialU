@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/quotes */
 import {
   Anchor,
   Avatar,
@@ -17,7 +18,9 @@ import { Plus } from "tabler-icons-react";
 import SeeUser from "./SeeUser";
 
 export interface PostProps {
-  author: { image?: string; name: string; id: string } | "anonimo";
+  author:
+    | { image?: string | null; name?: string | null; id?: string | null }
+    | "anonimo";
   image?: string;
   description: string;
   title: string;
@@ -32,7 +35,7 @@ export const Post = ({
   title,
   image,
   description,
-  postId,
+  // postId,
   asistants,
   event,
 }: PostProps) => {
@@ -51,6 +54,7 @@ export const Post = ({
         href={`/${
           author !== "anonimo" ? author.name : "anonimo"
         }/${"fsdkjfaldd"}`}
+        passhref
       >
         <Card withBorder p="xs" radius="md">
           {image && (

@@ -76,6 +76,7 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     // console.log("antesdel intervalor");
     console.log("en el efecto", user);
+    console.log(user);
     if (user === null) {
       console.log("en el intervalor");
       globalThis?.window?.google?.accounts?.id?.initialize({

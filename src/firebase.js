@@ -4,7 +4,8 @@ import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getFirestore } from 'firebase/firestore/lite'
-import { getAuth, signOut, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
+import { ref, getStorage } from 'firebase/storage'
+import { getAuth, signOut, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,68 +25,24 @@ const app = initializeApp(firebaseConfig)
 
 // const analytics = getAnalytics(app);
 
-
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-
 auth.languageCode = 'es';
+// make the auth state persitence local
+setPersistence(auth, browserLocalPersistence)
+const letSignOut = signOut(auth);
+
+
 
 const db = getFirestore(app);
 
-const provider = new GoogleAuthProvider();
 
-const letSignOut = signOut(auth);
+const storage = getStorage(app, "gs://socialu-c62e6.appspot.com");
+const storageRef = ref(storage);
+// Create a child reference
+const profilesImages = ref(storage, 'profiles');
+const postsBanners = ref(storage, 'postsBanners');
+
 
 // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-export { auth, app, db, provider, letSignOut }
-
-
-// provider.setCustomParameters({
-//   'login_hint': 'user@example.com'
-// });
-
-// onAuthStateChanged(auth, user => console.log(`Hi ${user}`))
-
-// signInWithPopup(auth, provider)
-//   .then((result) => {
-//     // This gives you a Google Access Token. You can use it to access the Google API.
-//     const credential = GoogleAuthProvider.credentialFromResult(result);
-//     const token = credential.accessToken;
-//     // The signed-in user info.
-//     const user = result.user;
-//     // ...
-//   }).catch((error) => {
-//     // Handle Errors here.
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // The email of the user's account used.
-//     const email = error.email;
-//     // The AuthCredential type that was used.
-//     const credential = GoogleAuthProvider.credentialFromError(error);
-//     // ...
-//   });
-
-// createUserWithEmailAndPassword(auth, email, password)
-//   .then((userCredential) => {
-//     // Signed in
-//     const user = userCredential.user;
-//     // ...
-//   })
-//   .catch((error) => {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // ..
-//   });
-
-
-// export const uiConfig = {
-//   // Popup signin flow rather than redirect flow.
-//   signInFlow: 'popup',
-//   // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-//   signInSuccessUrl: '/',
-//   // We will display Google and Facebook as auth providers.
-//   signInOptions: [
-//     GoogleAuthProvider.,
-//     firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-//   ],
-// };
+export { auth, app, db, letSignOut, storage, storageRef, profilesImages, postsBanners };
