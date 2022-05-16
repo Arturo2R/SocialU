@@ -78,13 +78,12 @@ export const authContext = createContext<AuthContextInterface | undefined>(
   undefined
 );
 
-const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
-
 const allowedUniversities: University[] = [
   { name: "Universidad Del Norte", domain: "uninorte.edu.co" },
 ];
 
 export const StudentValidation = (email: string): boolean => {
+  const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
   let validated: boolean = false;
   let hostDomain = email;
 
@@ -155,7 +154,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // console.log(user)
     return signInWithCredential(auth, cred);
   };
-
 
   const logout = () => {
     console.log("Se fue");

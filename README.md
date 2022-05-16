@@ -48,7 +48,7 @@ All the things that is left to finish the first version of the app
 - [ ] SEO optimization
 - [ ] Post page Connection with API
 - [ ] Profile connection with API
-- [ ] Real anonimity
+- [ ] Real anonimicity
 - [ ] Sidebar
 - [ ] Sign In with email
 - [ ] Sign up with email

@@ -8,34 +8,12 @@ import {
   query,
   orderBy,
   limit,
+  getDoc,
   serverTimestamp,
 } from "firebase/firestore/lite";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
-
-interface FormPost {
-  title: string;
-  message: string; // !TODO: Change property name to content
-  image?: string;
-  isEvent?: boolean;
-  date: string;
-  anonimo: boolean;
-  // author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
-  // comments: string[]; ////Comments are not implemented yet
-  // suscribed: string[];
-}
-interface Post extends FormPost {
-  id?: string;
-  createdAt: any; // !TODO: Change string to Date type
-  userUID?: string;
-  authorRef?: string;
-  authorName?: string | null;
-}
-
-interface anything {
-  [field: string]: any;
-}
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | []>([]);
@@ -71,6 +49,17 @@ export const useFirestore = () => {
       setError(thiserror.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPost = async (id: string) => {
+    try {
+      setLoading(true);
+      const postRef = doc(db, "posts", id);
+      const postSnap: anything = await getDoc(postRef);
+      return postSnap;
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -114,5 +103,5 @@ export const useFirestore = () => {
     fetchData();
   }, []);
 
-  return { data, error, loading, createPost };
+  return { data, error, loading, createPost, fetchPost };
 };
