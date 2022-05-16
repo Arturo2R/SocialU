@@ -29,7 +29,7 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth(app);
 auth.languageCode = 'es';
 // make the auth state persitence local
-setPersistence(auth, browserLocalPersistence)
+setPersistence(auth, inMemoryPersistence)
 const letSignOut = signOut(auth);
 
 
