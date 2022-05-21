@@ -21,7 +21,8 @@
     "**/*.ts",
     "**/*.tsx",
     "src/context/AuthContext.tsx",
-    "src/components/Post/Post.story.jsx"
+    "src/components/Post/Post.story.jsx",
+    "src/components/Comment/CommentTesting.js"
   ],
   "exclude": ["node_modules"]
 }

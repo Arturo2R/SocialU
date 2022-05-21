@@ -13,13 +13,21 @@ import React, { useState } from "react";
 import { Send } from "tabler-icons-react";
 
 export interface CommentProps {
-  postedAt: string;
-  body: string;
+  id: string;
+  parentId: string | null;
+  postedAt: Date | string;
+  content: string;
   author: { name: string; image: string } | "anonimo";
   subComments?: CommentProps[];
 }
 
-export function Comment({ postedAt, body, author, subComments }: CommentProps) {
+export function Comment({
+  postedAt,
+  content,
+  author,
+  subComments,
+  id,
+}: CommentProps) {
   const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
   return (
@@ -34,14 +42,14 @@ export function Comment({ postedAt, body, author, subComments }: CommentProps) {
           <Text size="sm">
             {author === "anonimo" ? "Anónimo" : author.name}
           </Text>
-          <Text size="xs" color="dimmed">
+          {/* <Text size="xs" color="dimmed">
             {postedAt}
-          </Text>
+          </Text> */}
         </div>
       </Group>
       <div className="">
-        <Text size="sm">{body}</Text>
-        <Anchor onClick={() => setOpen((o) => !o)} color="orange">
+        <Text size="sm">{content}</Text>
+        {/* <Anchor onClick={() => setOpen((o) => !o)} color="orange">
           Responder
         </Anchor>
 
@@ -57,17 +65,19 @@ export function Comment({ postedAt, body, author, subComments }: CommentProps) {
               <Send />
             </ActionIcon>
           </form>
-        </Collapse>
+        </Collapse> */}
       </div>
 
       {subComments && (
-        <Stack className="border-l-2 pl-4">
+        <Stack className="pl-4 border-l-2">
           {subComments?.map((subco, index) => (
             <Comment
+              id={subco.id}
+              parentId={subco.parentId}
               key={index}
               postedAt={subco.postedAt}
               author={subco.author}
-              body={subco.body}
+              content={subco.content}
               subComments={subco.subComments}
             />
           ))}

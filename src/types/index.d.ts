@@ -35,6 +35,6 @@ declare global {
   }
 
   interface anything {
-    [field: string]: any;
+    [field: string]: any | [];
   }
 }

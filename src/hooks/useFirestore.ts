@@ -1,3 +1,4 @@
+import { connectStorageEmulator } from "@firebase/storage";
 import {
   addDoc,
   doc,
@@ -10,7 +11,8 @@ import {
   limit,
   getDoc,
   serverTimestamp,
-} from "firebase/firestore/lite";
+  onSnapshot,
+} from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
@@ -32,16 +34,21 @@ export const useFirestore = () => {
       //   limit: 10,
       // });
 
-      const q = query(collection(db, "posts"), orderBy("createdAt"), limit(30));
-      const querySnapshot = await getDocs(q);
+      const q = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc"),
+        limit(30)
+      );
+      // const querySnapshot = await getDocs(q);
 
-      const dataDB = querySnapshot.docs.map((doc: anything) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      setData(dataDB);
-      console.log(dataDB);
+      onSnapshot(q, (querySnapshot: any) => {
+        const dataDB = querySnapshot.docs.map((doc: anything) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log(dataDB);
+        setData(dataDB);
+      });
     } catch (thiserror: any) {
       console.log(thiserror);
 
@@ -52,15 +59,17 @@ export const useFirestore = () => {
     }
   };
 
-  const fetchPost = async (id: string) => {
+  const fetchPost = async (id: string): Promise<Post> => {
+    let postSnap: any;
     try {
       setLoading(true);
       const postRef = doc(db, "posts", id);
-      const postSnap: anything = await getDoc(postRef);
-      return postSnap;
+      postSnap = await getDoc(postRef);
+      // console.log(postSnap);
     } catch (error) {
       console.log(error);
     }
+    return postSnap;
   };
 
   const createPost = async (formData: FormPost) => {

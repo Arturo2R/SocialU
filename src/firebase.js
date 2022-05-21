@@ -1,11 +1,11 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAuth, indexedDBLocalPersistence, browserLocalPersistence, setPersistence, signOut } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { getFirestore } from 'firebase/firestore/lite'
-import { ref, getStorage } from 'firebase/storage'
-import { getAuth, signOut, GoogleAuthProvider, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getFirestore } from 'firebase/firestore';
+import { getAnalytics } from "firebase/analytics";
+import { getStorage, ref } from 'firebase/storage';
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -23,18 +23,33 @@ export const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
 
-// const analytics = getAnalytics(app);
+const db = getFirestore(app);
+
+// let analytics = getAnalytics(app)
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
 auth.languageCode = 'es';
 // make the auth state persitence local
-setPersistence(auth, inMemoryPersistence)
+setPersistence(auth, browserLocalPersistence)
+
+// enableIndexedDbPersistence(db)
+//   .catch((err) => {
+//     if (err.code == 'failed-precondition') {
+//       // Multiple tabs open, persistence can only be enabled
+//       // in one tab at a a time.
+//       // ...
+//     } else if (err.code == 'unimplemented') {
+//       // The current browser does not support all of the
+//       // features required to enable persistence
+//       // ...
+//     }
+//   });
+
 const letSignOut = signOut(auth);
 
 
 
-const db = getFirestore(app);
 
 
 const storage = getStorage(app, "gs://socialu-c62e6.appspot.com");
