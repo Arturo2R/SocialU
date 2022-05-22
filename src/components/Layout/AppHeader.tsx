@@ -7,10 +7,11 @@ import {
   MediaQuery,
   Text,
   Title,
+  Image,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { UserCredential } from "firebase/auth";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";

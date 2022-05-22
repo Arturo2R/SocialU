@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Paper,
   createStyles,
@@ -11,47 +11,48 @@ import {
   Group,
   Divider,
   Space,
-} from '@mantine/core';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useAuth } from '../context/AuthContext';
+  Image,
+} from "@mantine/core";
+import Link from "next/link";
+// import Image from 'next/image';
+import { useAuth } from "../context/AuthContext";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
-    minHeight: '100vh',
+    minHeight: "100vh",
     // height: "100%",
-    backgroundRepeat: 'no-repeat',
+    backgroundRepeat: "no-repeat",
     // backgroundSize: "" ,
-    backgroundSize: 'cover',
-    backgroundClip: 'content-box',
+    backgroundSize: "cover",
+    backgroundClip: "content-box",
     backgroundImage:
-      'url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)',
+      "url(https://images.unsplash.com/photo-1484242857719-4b9144542727?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1280&q=80)",
   },
 
   form: {
     borderRight: `1px solid ${
-      theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3]
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.colors.gray[3]
     }`,
-    minHeight: '100vh',
+    minHeight: "100vh",
     maxWidth: 450,
     paddingTop: 80,
 
     [`@media (max-width: ${theme.breakpoints.sm}px)`]: {
-      maxWidth: '100%',
+      maxWidth: "100%",
     },
   },
 
   title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
   },
 
   logo: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    color: theme.colorScheme === "dark" ? theme.white : theme.black,
     width: 120,
-    display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
+    display: "block",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 }));
 
@@ -125,8 +126,8 @@ function AuthenticationPage() {
         </Anchor>
 
         <Text align="center" mt="md">
-          No tienes una cuenta?{' '}
-          <Anchor<'a'>
+          No tienes una cuenta?{" "}
+          <Anchor<"a">
             color="orange"
             href="#"
             weight={700}
@@ -137,11 +138,11 @@ function AuthenticationPage() {
         </Text>
         <Space h="xl" />
         <Text align="center" lineClamp={3}>
-          Si continuas aceptas los{' '}
+          Si continuas aceptas los{" "}
           <Anchor color="orange" weight={700} component={Link} href="/terminos">
             Terminos De Servicio
-          </Anchor>{' '}
-          de SocialU y confirmas que has leído nuestra{' '}
+          </Anchor>{" "}
+          de SocialU y confirmas que has leído nuestra{" "}
           <Anchor className="mt-4" component={Link} href="/privacidad">
             Política de privacidad
           </Anchor>
