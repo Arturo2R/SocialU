@@ -1,15 +1,20 @@
 import React from "react";
 import { Comment, CommentProps } from "./Comment";
+import CommentForm from "./CommentForm";
+import { auth } from "../../firebase";
 
 type CommentWallProps = {
-  comments: CommentProps[];
+  comments?: CommentProps[];
+  postId: string;
 };
 
-const CommentWall = ({ comments }: CommentWallProps) => {
-  if (comments.map) {
-    return (
-      <>
-        {comments.map((co, index) => (
+const CommentWall = ({ comments, postId }: CommentWallProps) => {
+  // if (comments.map) {
+  return (
+    <>
+      {auth.currentUser && <CommentForm postId={postId} />}
+      {comments &&
+        comments?.map((co, index) => (
           <Comment
             key={index}
             postedAt={co.postedAt}
@@ -20,11 +25,11 @@ const CommentWall = ({ comments }: CommentWallProps) => {
             parentId={co.parentId}
           />
         ))}
-      </>
-    );
-  } else {
-    return <></>;
-  }
+    </>
+  );
+  // } else {
+  // return <></>;
 };
+// };
 
 export default CommentWall;

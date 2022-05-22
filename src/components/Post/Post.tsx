@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
+import { Timestamp } from "@firebase/firestore";
 import {
   Anchor,
   Avatar,
@@ -11,11 +12,22 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
+import { CheckCircledIcon } from "@modulz/radix-icons";
 import Link from "next/link";
 // import Image from "next/image";
 import React, { useState } from "react";
 import { Plus } from "tabler-icons-react";
+import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
+
+// type author =
+//   | {
+//       image: string;
+//       name: string;
+//       id?: string;
+//       // ref?: `user/${string}`;
+//     }
+//   | "anonimo";
 
 export interface PostProps {
   author:
@@ -27,7 +39,14 @@ export interface PostProps {
   event?: boolean;
   postId?: string;
   // relevantCommentary?: Object;
-  asistants?: { id: string; name: string; avatar: string }[];
+  asistants?: {
+    user: {
+      image: string;
+      name: string;
+      ref: `user/${string}`;
+    };
+    suscribedAt: Timestamp;
+  }[];
 }
 
 export const Post = ({
@@ -40,6 +59,7 @@ export const Post = ({
   event,
 }: PostProps) => {
   const [expanded, setExpanded] = useState(false);
+  const [suscribed, setSuscribed] = useState(false);
 
   const aja = () => {
     if (asistants === undefined || asistants.length === 0) {
@@ -47,6 +67,8 @@ export const Post = ({
     }
     return false;
   };
+
+  const { suscribe } = useFirestore();
 
   return (
     <article className="">
@@ -88,6 +110,7 @@ export const Post = ({
                   size="lg"
                   onClick={(e: { stopPropagation: () => void }) => {
                     e.stopPropagation();
+
                     setExpanded(!expanded);
                   }}
                   variant="light"
@@ -104,11 +127,13 @@ export const Post = ({
                   size="lg"
                   onClick={(e: { stopPropagation: () => void }) => {
                     e.stopPropagation();
+                    setSuscribed(!suscribed);
+                    typeof postId === "string" && suscribe(postId, suscribed);
                   }}
                   color="orange"
-                  rightIcon={<Plus />}
+                  rightIcon={suscribed ? <CheckCircledIcon /> : <Plus />}
                 >
-                  Unirme
+                  {suscribed ? "Asistiré" : "Unirme"}
                 </Button>
               </Group>
               <Collapse in={expanded}>
@@ -121,9 +146,9 @@ export const Post = ({
                   {asistants?.map((i, index) => (
                     <SeeUser
                       key={index}
-                      id={i.id}
-                      name={i.name}
-                      image={i.avatar}
+                      id={i.user.ref || i.user.name}
+                      name={i.user.name}
+                      image={i.user.image}
                     />
                   ))}
                   {/* </Spoiler> */}

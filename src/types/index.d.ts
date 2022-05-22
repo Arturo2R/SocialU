@@ -32,6 +32,10 @@ declare global {
     userUID?: string;
     authorRef?: string;
     authorName?: string | null;
+    suscriptions?: {
+      user: { name: string; ref: `user/${string}`; image: string };
+      suscribedAt: Timestamp;
+    }[];
   }
 
   interface anything {

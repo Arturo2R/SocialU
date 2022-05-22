@@ -25,7 +25,7 @@ const co = [
 const AppSidebar = (props: Props) => (
   <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
     <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-      <CommentWall comments={co} />
+      {/* <CommentWall comments={co} /> */}
     </Aside>
   </MediaQuery>
 );

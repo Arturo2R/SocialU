@@ -23,7 +23,7 @@ export function Feed() {
   // console.log(data);
   if (loading) {
     return (
-      <Center className="h-full my-auto">
+      <Center className="my-auto h-full">
         <Loader color="orange" size="lg" variant="bars" />
       </Center>
     );
@@ -47,7 +47,7 @@ export function Feed() {
         {/* // !TODO: Use React Suspense */}
 
         <Space h="md" />
-        <Stack spacing="lg" className="max-w-sm mx-auto">
+        <Stack spacing="lg" className="mx-auto max-w-sm">
           {data &&
             data.map((post, index) => (
               <Post
@@ -67,6 +67,7 @@ export function Feed() {
                 postId={post.id}
                 event={post.isEvent}
                 key={index}
+                asistants={post?.suscriptions}
               />
             ))}
 
@@ -82,58 +83,58 @@ export function Feed() {
             // image="https://source.unsplash.com/random/180x90"
             postId="kljdfslkf"
             event
-            asistants={[
-              {
-                id: "jlfksd",
-                name: "El Kangas",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Carecu",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Brayan",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Manotas",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Gato Volador",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Kangas",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Carecu",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Brayan",
-                avatar: "/perfil.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Manotas",
-                avatar: "/girl.jpg",
-              },
-              {
-                id: "jlfksd",
-                name: "El Gato Volador",
-                avatar: "/perfil.jpg",
-              },
-            ]}
+            // asistants={[
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Kangas",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Carecu",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Brayan",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Manotas",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Gato Volador",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Kangas",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Carecu",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Brayan",
+            //     avatar: "/perfil.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Manotas",
+            //     avatar: "/girl.jpg",
+            //   },
+            //   {
+            //     id: "jlfksd",
+            //     name: "El Gato Volador",
+            //     avatar: "/perfil.jpg",
+            //   },
+            // ]}
           />
         </Stack>
       </Container>

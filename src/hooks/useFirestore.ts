@@ -1,17 +1,19 @@
-import { connectStorageEmulator } from "@firebase/storage";
 import {
   addDoc,
-  doc,
-  setDoc,
   collection,
-  getDocs,
+  doc,
+  getDoc,
+  limit,
+  onSnapshot,
+  orderBy,
   // QuerySnapshot,
   query,
-  orderBy,
-  limit,
-  getDoc,
   serverTimestamp,
-  onSnapshot,
+  setDoc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+  Timestamp,
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
@@ -21,6 +23,8 @@ export const useFirestore = () => {
   const [data, setData] = useState<Post[] | []>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // creating state
+  const [creating, setCreating] = useState<boolean>(false);
 
   const fetchData = async () => {
     try {
@@ -107,10 +111,103 @@ export const useFirestore = () => {
     }
   };
 
+  interface letSuscribe {
+    // suscribedAt: Timestamp | any;
+    postId: string;
+    user: { name: string; image: string; ref: `user/${string}` };
+  }
+
+  const suscribe = async (postId: string, remove: boolean) => {
+    if (auth.currentUser?.displayName) {
+      try {
+        console.log("Tirado", auth.currentUser.displayName);
+        const postRef = doc(db, "posts", postId);
+        const Payload: letSuscribe = {
+          postId,
+          // suscribedAt: serverTimestamp(),
+          user: {
+            name: auth.currentUser?.displayName,
+            image:
+              auth.currentUser?.photoURL ||
+              "https://source.unsplash.com/random/30x45",
+            ref: `user/${auth.currentUser?.uid}`,
+          },
+        };
+
+        if (remove === false) {
+          await updateDoc(postRef, {
+            suscriptions: arrayUnion(Payload),
+          });
+        } else {
+          await updateDoc(postRef, {
+            suscriptions: arrayRemove(Payload),
+          });
+        }
+      } catch (error) {
+        console.log("errorsaso", error);
+      }
+    } else {
+      console.log("Nada Papi");
+    }
+  };
+
+  interface CommentFormProps {
+    content: string;
+    postId: string;
+    anonimo: boolean;
+  }
+
+  interface createCommentProps extends CommentFormProps {
+    author: {
+      image: string;
+      name: string;
+      ref: `user/${string}`;
+    };
+    postedAt: any;
+    parentId?: string | null;
+  }
+
+  const createComment = async (data: CommentFormProps) => {
+    if (auth.currentUser?.displayName && auth.currentUser.uid) {
+      try {
+        setCreating(true);
+
+        const commentRef = collection(db, "posts", data.postId, "comments");
+        const Payload: createCommentProps = {
+          content: data.content,
+          anonimo: data.anonimo,
+          author: {
+            image: "https://source.unsplash.com/random/30x45",
+            name: auth.currentUser.displayName,
+            ref: `user/${auth.currentUser.uid}`,
+          },
+          postedAt: serverTimestamp(),
+          parentId: null,
+          postId: data.postId,
+        };
+
+        await addDoc(commentRef, Payload);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setCreating(false);
+      }
+    }
+  };
+
   useEffect(() => {
     console.log("useFirestore to getData");
     fetchData();
   }, []);
 
-  return { data, error, loading, createPost, fetchPost };
+  return {
+    data,
+    error,
+    loading,
+    creating,
+    createPost,
+    fetchPost,
+    createComment,
+    suscribe,
+  };
 };

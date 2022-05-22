@@ -4,11 +4,19 @@ import {
   getDoc,
   getDocs,
   limit,
+  orderBy,
   onSnapshot,
   query,
 } from "@firebase/firestore";
-import { Image, Paper, Stack, Text, Title } from "@mantine/core";
-import { orderBy } from "firebase/firestore";
+import {
+  Center,
+  Image,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { AuthorInfo } from "../../../components/AuthorInfo";
@@ -19,14 +27,19 @@ import { db } from "../../../firebase";
 // import { useFirestore } from "../../../hooks/useFirestore";
 
 import { CommentProps } from "../../../components/Comment/Comment";
+import dayjs from "dayjs";
+import es from "dayjs/locale/es";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 type Props = {};
+dayjs.extend(relativeTime);
+dayjs.locale(es);
 
 const PostPage = (props: Props) => {
   const router = useRouter();
   const { postId, authorName } = router.query;
   const id: string = typeof postId === "string" ? postId : "nada-que-ver";
-  const [content, setContent] = useState<anything | undefined>();
+  const [content, setContent] = useState<Post | undefined>();
   //loading state
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
@@ -88,23 +101,28 @@ const PostPage = (props: Props) => {
     try {
       setLoading(true);
       let q = query(
-        collection(db, "posts", id, "comments")
-        // orderBy("postedAt", "desc"),
+        collection(db, "posts", id, "comments"),
+        orderBy("postedAt", "desc")
         // limit(20)
       );
 
-      const querySnapshot = await getDocs(q);
+      onSnapshot(q, (querySnapshot: any) => {
+        const commentsDB = querySnapshot.docs
+          .map((doc: anything) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .map((comment: any) => ({
+            ...comment,
+            author: comment.anonimo === true ? "anonimo" : comment.author,
+          }));
+        console.log("raw", commentsDB);
+        setComments(commentsDB);
+      });
 
-      const commentsDB = querySnapshot.docs.map((doc: anything) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      console.log("raw data", commentsDB);
+      // const querySnapshot = await getDocs(q);
 
       // console.log("nested data", nestComments(commentsDB));
-
-      setComments(commentsDB);
     } catch (error) {
       console.log(error);
     } finally {
@@ -115,18 +133,20 @@ const PostPage = (props: Props) => {
   useEffect(() => {
     fetchContent();
     fetchComments();
-    return () => {
-      setComments(undefined);
-    };
+    // return () => {
+    //   setComments(undefined);
+    // };
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <Center className="my-auto h-full">
-  //       <Loader color="orange" size="lg" variant="bars" />
-  //     </Center>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <Layout>
+        <Center className="my-auto h-full">
+          <Loader color="orange" size="lg" variant="bars" />
+        </Center>
+      </Layout>
+    );
+  }
   // if (error) return <Text>{error}</Text>;
 
   return (
@@ -135,32 +155,51 @@ const PostPage = (props: Props) => {
         {content?.image && <Image radius="lg" src={content.image} />}
 
         <Title className="mt-4 mb-2 text-3xl">{content?.title}</Title>
-        {/* <Text className="mb-2 cursive">{content?.createdAt}</Text> */}
+        {content?.createdAt?.toDate() && (
+          <Text className="mb-2 cursive">
+            {dayjs(content?.createdAt?.toDate()).fromNow()}
+          </Text>
+        )}
         {content?.message && (
           <Text className="max-w-lg text-md">{content.message}</Text>
         )}
-        {content?.anonimo ? (
-          <Text color="orange" size="lg">
-            Anonimo
-          </Text>
-        ) : (
+        {content?.anonimo === false && content.authorName ? (
           <AuthorInfo
             name={content?.authorName}
             email={`${authorName}@uninorte.edu.co`}
             image="/perfil.jpg"
             icon
           />
+        ) : (
+          <Text color="orange" size="lg">
+            Anonimo
+          </Text>
         )}
         <div className="my-4">
-          <Title className="mb-2 text-xl">Asistentes</Title>
-          <Stack>
-            <SeeUser id="slkds" name="Juan" key="2" />
-          </Stack>
+          {content?.isEvent && (
+            <>
+              <Title className="mb-2 text-xl">Asistentes</Title>
+              <Stack>
+                {content.suscriptions?.length === 0 && (
+                  <Text>No Hay Nadie</Text>
+                )}
+                {content?.suscriptions?.map((s, index) => (
+                  <SeeUser
+                    id={s.user.ref}
+                    image={s.user.image}
+                    name={s.user.name}
+                    key={index}
+                  />
+                ))}
+              </Stack>
+            </>
+          )}
         </div>
         <div className="my-2">
           <Title className="mb-2 text-xl">Comentarios</Title>
           {console.log("consoleado", comments)}
-          {comments !== undefined && <CommentWall comments={comments} />}
+
+          <CommentWall postId={id} comments={comments} />
         </div>
       </Paper>
     </Layout>
