@@ -1,6 +1,6 @@
 {
-  "name": "PWA App",
-  "short_name": "App",
+  "name": "Social U",
+  "short_name": "SocialU",
   "icons": [
     {
       "src": "android-chrome-192x192.png",
