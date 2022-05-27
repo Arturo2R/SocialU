@@ -78,18 +78,18 @@ export const Post = ({
       >
         <Card withBorder p="xs" radius="md">
           {image && (
-            <Card.Section>
+            <Card.Section className="mb-2">
               <Image src={image} alt={title} height={160} />
             </Card.Section>
           )}
           {/* <Badge>{category}</Badge> */}
-          <Text className="mt-2 text-xl font-bold">{title}</Text>
+          <Text className="text-xl font-bold">{title}</Text>
           {author !== "anonimo" ? (
-            <Group mt="md">
+            <Group className="mt-1" spacing="xs">
               <Anchor component={Link} href={`/${author.id}`}>
                 <>
-                  <Avatar size="md" src={author?.image} radius="xl" />
-                  {author?.name}
+                  <Avatar size="sm" src={author?.image} radius="xl" />
+                  <p>{author?.name}</p>
                 </>
               </Anchor>
             </Group>
@@ -97,6 +97,7 @@ export const Post = ({
             <Text color="orange">Anónimo</Text>
           )}
           <Spoiler
+            className="mt-1"
             onClick={(e) => e.stopPropagation()}
             maxHeight={110}
             showLabel="Ver Más"

@@ -404,4 +404,5 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 body {
   font-family: "inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  @apply text-orange-900;
 }

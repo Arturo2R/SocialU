@@ -152,11 +152,13 @@ const PostPage = (props: Props) => {
   return (
     <Layout>
       <Paper p="md" shadow="sm" radius="md">
-        {content?.image && <Image radius="lg" src={content.image} />}
+        {content?.image && (
+          <Image className="mb-4" radius="lg" src={content.image} />
+        )}
 
-        <Title className="mt-4 mb-2 text-3xl">{content?.title}</Title>
+        <Title className="mb-2 text-3xl">{content?.title}</Title>
         {content?.createdAt?.toDate() && (
-          <Text className="mb-2 cursive">
+          <Text className="mb-2 italic text-stone-400">
             {dayjs(content?.createdAt?.toDate()).fromNow()}
           </Text>
         )}

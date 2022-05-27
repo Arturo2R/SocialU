@@ -23,7 +23,7 @@ import { useStore } from "../store";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | []>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
@@ -75,6 +75,8 @@ export const useFirestore = () => {
       // console.log(postSnap);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
     return postSnap;
   };
@@ -112,6 +114,8 @@ export const useFirestore = () => {
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
         console.log(thiserror.message);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log("Inautorizado");
@@ -127,6 +131,7 @@ export const useFirestore = () => {
   const suscribe = async (postId: string, remove: boolean) => {
     if (auth.currentUser?.displayName) {
       try {
+        setLoading(true);
         console.log("Tirado", auth.currentUser.displayName);
         const postRef = doc(db, "posts", postId);
         const Payload: letSuscribe = {
@@ -152,6 +157,8 @@ export const useFirestore = () => {
         }
       } catch (error) {
         console.log("errorsaso", error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.log("Nada Papi");

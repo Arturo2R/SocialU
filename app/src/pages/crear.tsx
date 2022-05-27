@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { Button, Container, Switch, Textarea } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Input,
+  InputWrapper,
+  Switch,
+  Textarea,
+} from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 
 import { DatePicker, TimeInput } from "@mantine/dates";
@@ -82,7 +89,7 @@ const CrearPost = () => {
         <Container className="h-full">
           <form
             onSubmit={form.onSubmit((values) => submitPost(values))}
-            className="flex h-full flex-col justify-between"
+            className="flex flex-col justify-between h-full"
           >
             <div>
               <ImageDropzone
@@ -133,6 +140,15 @@ const CrearPost = () => {
               />
               {event && (
                 <>
+                  {/* <InputWrapper required={event} label="Día De Reunion">
+                    <Input
+                      type="datetime-local"
+                      required={event}
+                      placeholder="Escojer Dia De Reunion"
+                      name="date"
+                      id="time"
+                    />
+                  </InputWrapper> */}
                   <DatePicker
                     transition="pop-bottom-left"
                     placeholder="Escojer Dia De Reunion"
@@ -141,7 +157,7 @@ const CrearPost = () => {
                     locale="es"
                     {...form.getInputProps("date")}
                   />
-                  <TimeInput
+                  {/* <TimeInput
                     defaultValue={new Date()}
                     label="Hora"
                     // error="No permitimos viajes en el tiempo, la hora tiene que ser en el futuro"
@@ -154,8 +170,10 @@ const CrearPost = () => {
                         `${e.getHours()}:${e.getMinutes()}`
                       )
                     }
-                  />
-                  {/* <input type="time" name="time" id="time-is-value" /> */}
+                  /> */}
+                  <InputWrapper required={event} label="Hora">
+                    <Input type="time" name="time" id="time-is-value" />
+                  </InputWrapper>
                 </>
               )}
             </div>

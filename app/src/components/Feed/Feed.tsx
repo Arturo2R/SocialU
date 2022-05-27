@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
-
+import { Suspense } from "react";
 import { Post } from "../Post/Post";
 import useStyles from "./Feed.styles";
 
@@ -32,7 +32,8 @@ export function Feed() {
       </Center>
     );
   }
-  if (error) return <Text>{error}</Text>;
+
+  // if (error) return <Text>{error}</Text>;
 
   return (
     <>
@@ -74,72 +75,6 @@ export function Feed() {
                 asistants={post?.suscriptions}
               />
             ))}
-
-          <Post
-            description="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque laudantium officia, ipsum enim tempore molestias architecto itaque? Vel aut nam at voluptatem, sunt, quo laudantium similique dolore, asperiores laborum nostrum."
-            author={{
-              image:
-                "https://cr00.epimg.net/radio/imagenes/2021/01/02/tendencias/1609606240_435257_1609606414_noticia_normal.jpg",
-              name: "María Juana",
-              id: "kjsdflk",
-            }}
-            title="Hola Que Hace"
-            // image="https://source.unsplash.com/random/180x90"
-            postId="kljdfslkf"
-            event
-            // asistants={[
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Kangas",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Carecu",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Brayan",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Manotas",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Gato Volador",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Kangas",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Carecu",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Brayan",
-            //     avatar: "/perfil.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Manotas",
-            //     avatar: "/girl.jpg",
-            //   },
-            //   {
-            //     id: "jlfksd",
-            //     name: "El Gato Volador",
-            //     avatar: "/perfil.jpg",
-            //   },
-            // ]}
-          />
         </Stack>
       </Container>
     </>
