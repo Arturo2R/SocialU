@@ -36,6 +36,8 @@ declare global {
       user: { name: string; ref: `user/${string}`; image: string };
       suscribedAt: Timestamp;
     }[];
+    authorImage: string;
+    userName?: string;
   }
 
   interface anything {

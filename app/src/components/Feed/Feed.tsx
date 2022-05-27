@@ -7,7 +7,7 @@ import {
   Title,
   Center,
 } from "@mantine/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 
 import { Post } from "../Post/Post";
@@ -19,8 +19,12 @@ export function Feed() {
   // error state
   const [error, setError] = useState<Error | null>(null);
 
-  const { data, error: dataError, loading } = useFirestore();
+  const { data, error: dataError, loading, fetchData } = useFirestore();
   // console.log(data);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   if (loading) {
     return (
       <Center className="my-auto h-full">
@@ -57,8 +61,8 @@ export function Feed() {
                     ? "anonimo"
                     : {
                         name: post.authorName,
-                        id: post.userUID,
-                        image: "https://source.unsplash.com/random/30x40",
+                        id: post.userName ? post.userName : post.id,
+                        ...(post.authorImage && { image: post.authorImage }),
                       }
                 }
                 title={post.title}

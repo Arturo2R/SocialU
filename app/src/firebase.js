@@ -28,10 +28,10 @@ const db = getFirestore(app);
 // let analytics = getAnalytics(app)
 
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
+const auth = getAuth(app)//.setPersistence(browserLocalPersistence)
 auth.languageCode = 'es';
 // make the auth state persitence local
-setPersistence(auth, browserLocalPersistence)
+// setPersistence(auth, browserLocalPersistence)
 
 // enableIndexedDbPersistence(db)
 //   .catch((err) => {
@@ -46,7 +46,7 @@ setPersistence(auth, browserLocalPersistence)
 //     }
 //   });
 
-const letSignOut = signOut(auth);
+const letSignOut = () => signOut(auth).catch((error) => sendError(error));
 
 
 

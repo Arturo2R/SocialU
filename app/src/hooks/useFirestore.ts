@@ -17,7 +17,9 @@ import {
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { useEffect, useState } from "react";
+import { Id } from "tabler-icons-react";
 import { auth, db } from "../firebase";
+import { useStore } from "../store";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | []>([]);
@@ -25,6 +27,7 @@ export const useFirestore = () => {
   const [error, setError] = useState(null);
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
+  // const {user} = useStore()
 
   const fetchData = async () => {
     try {
@@ -77,7 +80,7 @@ export const useFirestore = () => {
   };
 
   const createPost = async (formData: FormPost) => {
-    if (auth.currentUser) {
+    if (auth.currentUser && auth.currentUser.photoURL) {
       try {
         setLoading(true);
 
@@ -94,6 +97,10 @@ export const useFirestore = () => {
           // date: formData.date,
           // anonimo: formData.anonimo,
           ...formData,
+          // ...(auth.currentUser.photoURL && {
+          authorImage: auth.currentUser.photoURL,
+          // }),
+
           createdAt: serverTimestamp(),
           userUID: auth.currentUser.uid,
           authorRef: `user/${auth?.currentUser?.uid}`,
@@ -168,7 +175,11 @@ export const useFirestore = () => {
   }
 
   const createComment = async (data: CommentFormProps) => {
-    if (auth.currentUser?.displayName && auth.currentUser.uid) {
+    if (
+      auth.currentUser?.displayName &&
+      auth.currentUser.uid &&
+      auth.currentUser.photoURL
+    ) {
       try {
         setCreating(true);
 
@@ -177,7 +188,7 @@ export const useFirestore = () => {
           content: data.content,
           anonimo: data.anonimo,
           author: {
-            image: "https://source.unsplash.com/random/30x45",
+            image: auth.currentUser.photoURL,
             name: auth.currentUser.displayName,
             ref: `user/${auth.currentUser.uid}`,
           },
@@ -195,17 +206,84 @@ export const useFirestore = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("useFirestore to getData");
-    fetchData();
-  }, []);
+  interface userSchema {
+    career?: string;
+    semester?: number;
+    description?: string;
+    displayName: string;
+    email: string;
+    photoUrl?: string;
+    uid: string;
+    number?: number;
+    university?: {
+      domain: "uninorte.edu.co";
+      name: "Universidad Del Norte";
+    };
+    userName?: string;
+  }
+
+  const createOrFetchUser = async (user: any) => {
+    // const {state} = useStore();
+
+    // const { currentUser: user } = authData;
+    const userRef = doc(db, "user", user.uid);
+    let docExists: boolean;
+    let userSnap;
+    let userProfile;
+
+    try {
+      userSnap = await getDoc(userRef);
+      docExists = userSnap.exists();
+      if (docExists) {
+        userProfile = userSnap.data();
+        useStore.setState({ user: userProfile });
+      } else {
+        if (user?.displayName && user?.uid && user?.email) {
+          try {
+            console.log("Creando Un Nuevo Usuario");
+            setCreating(true);
+
+            const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
+            const [email, userName, hostDomain] = emailDomainRegex.exec(
+              user.email
+            ) || ["lalama.com", "lalalama.com", "lalama.com"];
+
+            const Payload: userSchema = {
+              displayName: user.displayName,
+              uid: user.uid,
+              email,
+              userName,
+              ...(user.phoneNumber && { number: user.phoneNumber }),
+              ...(user.photoURL && { photoUrl: user.photoURL }),
+            };
+            useStore.setState({ user: Payload });
+            await setDoc(userRef, Payload);
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setCreating(false);
+            // console.log(useStore.getState().user);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // useEffect(() => {
+  //   console.log("useFirestore to getData");
+  //   fetchData();
+  // }, []);
 
   return {
     data,
     error,
     loading,
     creating,
+    fetchData,
     createPost,
+    createOrFetchUser,
     fetchPost,
     createComment,
     suscribe,

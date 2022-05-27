@@ -167,7 +167,7 @@ const PostPage = (props: Props) => {
           <AuthorInfo
             name={content?.authorName}
             email={`${authorName}@uninorte.edu.co`}
-            image="/perfil.jpg"
+            image={content.authorImage ? content.authorImage : "/profile.jpg"}
             icon
           />
         ) : (

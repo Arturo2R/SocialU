@@ -14,7 +14,9 @@ import {
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
+import { useStore } from "../store";
 import { auth } from "../firebase";
+import { useFirestore } from "../hooks/useFirestore";
 
 interface googleResponse {
   credential: string;
@@ -119,6 +121,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
+  const { createOrFetchUser } = useFirestore();
+
   const router = useRouter();
 
   const signup = (email: string, password: string) => {
@@ -177,8 +181,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
-        console.log({ currentUser });
         setUser(currentUser);
+        // console.log({ currentUser });
+        createOrFetchUser(currentUser);
         setLoading(false);
       } else {
         console.log("No hay usuario");

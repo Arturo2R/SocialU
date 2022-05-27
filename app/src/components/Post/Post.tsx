@@ -86,9 +86,11 @@ export const Post = ({
           <Text className="mt-2 text-xl font-bold">{title}</Text>
           {author !== "anonimo" ? (
             <Group mt="md">
-              <Avatar size="md" src={author?.image} radius="xl" />
               <Anchor component={Link} href={`/${author.id}`}>
-                {author?.name}
+                <>
+                  <Avatar size="md" src={author?.image} radius="xl" />
+                  {author?.name}
+                </>
               </Anchor>
             </Group>
           ) : (
