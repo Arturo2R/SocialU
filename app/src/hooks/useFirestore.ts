@@ -23,15 +23,18 @@ import { useStore } from "../store";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | []>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState(null);
+  const [postsLoading, setPostsLoading] = useState<
+    "loading" | "loaded" | "error"
+  >();
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
   // const {user} = useStore()
 
   const fetchData = async () => {
+    setPostsLoading("loading");
     try {
-      setLoading(true);
       // querysnapshot function to get docs from firestore
       // const dataRef = collection(db, "posts");
 
@@ -55,6 +58,7 @@ export const useFirestore = () => {
         }));
         console.log(dataDB);
         setData(dataDB);
+        setPostsLoading("loaded");
       });
     } catch (thiserror: any) {
       console.log(thiserror);
@@ -62,7 +66,7 @@ export const useFirestore = () => {
       //ts-ignore
       setError(thiserror.message);
     } finally {
-      setLoading(false);
+      setPostsLoading("loaded");
     }
   };
 
@@ -288,6 +292,7 @@ export const useFirestore = () => {
     error,
     loading,
     creating,
+    postsLoading,
     fetchData,
     createPost,
     createOrFetchUser,

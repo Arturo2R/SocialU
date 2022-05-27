@@ -18,27 +18,34 @@ export function Feed() {
 
   // error state
   const [error, setError] = useState<Error | null>(null);
-
-  const { data, error: dataError, loading, fetchData } = useFirestore();
+  const [isLoading, setIsLoading] = useState<"loading" | "loaded">("loading");
+  const { data, error: dataError, postsLoading, fetchData } = useFirestore();
   // console.log(data);
   useEffect(() => {
+    // setIsLoading("loading");
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <Center className="my-auto h-full">
-        <Loader color="orange" size="lg" variant="bars" />
-      </Center>
-    );
-  }
+  // if (postsLoading === "loading") {
+  //   return (
+  //     <Center className="my-auto h-full">
+  //       <Loader color="orange" size="lg" variant="bars" />
+  //     </Center>
+  //   );
+  // }
 
   // if (error) return <Text>{error}</Text>;
-
+  // console.log(postsLoading);
   return (
     <>
-      <Container className="p-0 lg:px-12">
-        {/* <Title className={classes.title} align="center">
+      {postsLoading === "loading" && (
+        <Center className="my-auto h-full">
+          <Loader color="orange" size="lg" variant="bars" />
+        </Center>
+      )}
+      {postsLoading === "loaded" && data && (
+        <Container className="p-0 lg:px-12">
+          {/* <Title className={classes.title} align="center">
           Bienvenido A
           <Text
             inherit
@@ -49,34 +56,35 @@ export function Feed() {
           </Text>
         </Title> */}
 
-        {/* // !TODO: Use React Suspense */}
+          {/* // !TODO: Use React Suspense */}
 
-        <Space h="md" />
-        <Stack spacing="lg" className="mx-auto max-w-sm">
-          {data &&
-            data.map((post, index) => (
-              <Post
-                description={post.message}
-                author={
-                  post.anonimo
-                    ? "anonimo"
-                    : {
-                        name: post.authorName,
-                        id: post.userName ? post.userName : post.id,
-                        ...(post.authorImage && { image: post.authorImage }),
-                      }
-                }
-                title={post.title}
-                image={post.image}
-                // asistants={post.asistants} // Añadir asistentes
-                postId={post.id}
-                event={post.isEvent}
-                key={index}
-                asistants={post?.suscriptions}
-              />
-            ))}
-        </Stack>
-      </Container>
+          <Space h="md" />
+          <Stack spacing="lg" className="mx-auto max-w-sm">
+            {data &&
+              data.map((post, index) => (
+                <Post
+                  description={post.message}
+                  author={
+                    post.anonimo
+                      ? "anonimo"
+                      : {
+                          name: post.authorName,
+                          id: post.userName ? post.userName : post.id,
+                          ...(post.authorImage && { image: post.authorImage }),
+                        }
+                  }
+                  title={post.title}
+                  image={post.image}
+                  // asistants={post.asistants} // Añadir asistentes
+                  postId={post.id}
+                  event={post.isEvent}
+                  key={index}
+                  asistants={post?.suscriptions}
+                />
+              ))}
+          </Stack>
+        </Container>
+      )}
     </>
   );
 }

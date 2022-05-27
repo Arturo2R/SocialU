@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
 
 type Props = {
   children: React.ReactNode;
@@ -12,19 +12,19 @@ export const Component = ({ children }: Props) => {
   if (user) {
     return <>{children}</>;
   }
-    return <></>;
+  return <></>;
 };
 
 export function Route({ children }: Props) {
   const router = useRouter();
   const { user, loading } = useAuth();
-  if (loading) return <h1>Loading</h1>;
+  // if (loading) return <h1>Loading</h1>;
 
-  // useEffect(() => {
-  if (!user) {
-    router.push('/welcome');
-  }
-  // }, [user, loading]);
+  useEffect(() => {
+    if (!user) {
+      router.push("/welcome");
+    }
+  }, [user, loading]);
 
   return <>{children}</>;
 }
