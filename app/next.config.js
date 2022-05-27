@@ -4,7 +4,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const withPWA = require('next-pwa')
 
-module.exports = withBundleAnalyzer({
+module.exports = withBundleAnalyzer(withPWA({
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -27,4 +27,4 @@ module.exports = withBundleAnalyzer({
       },
     ]
   },
-});
+}));
