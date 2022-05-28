@@ -30,25 +30,21 @@ const db = getFirestore(app);
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app)//.setPersistence(browserLocalPersistence)
 auth.languageCode = 'es';
-// make the auth state persitence local
-// setPersistence(auth, browserLocalPersistence)
-
-// enableIndexedDbPersistence(db)
-//   .catch((err) => {
-//     if (err.code == 'failed-precondition') {
-//       // Multiple tabs open, persistence can only be enabled
-//       // in one tab at a a time.
-//       // ...
-//     } else if (err.code == 'unimplemented') {
-//       // The current browser does not support all of the
-//       // features required to enable persistence
-//       // ...
-//     }
-//   });
 
 const letSignOut = () => signOut(auth).catch((error) => sendError(error));
 
-
+enableIndexedDbPersistence(db)
+  .catch((err) => {
+    if (err.code == 'failed-precondition') {
+      // Multiple tabs open, persistence can only be enabled
+      // in one tab at a a time.
+      // ...
+    } else if (err.code == 'unimplemented') {
+      // The current browser does not support all of the
+      // features required to enable persistence
+      // ...
+    }
+  });
 
 
 
