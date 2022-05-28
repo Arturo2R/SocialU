@@ -22,7 +22,7 @@ import { auth, db } from "../firebase";
 import { useStore } from "../store";
 
 export const useFirestore = () => {
-  const [data, setData] = useState<Post[] | []>([]);
+  const [data, setData] = useState<Post[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState(null);
   const [postsLoading, setPostsLoading] = useState<
@@ -112,7 +112,7 @@ export const useFirestore = () => {
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
-        setData([...data, newPost]);
+        // setData([...data, newPost]);
 
         console.log(data);
         await setDoc(postsRef, newPost);
