@@ -1,5 +1,7 @@
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -11,15 +13,10 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
-  arrayRemove,
-  arrayUnion,
-  Timestamp,
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
-import { Id } from "tabler-icons-react";
+import { useState } from "react";
 import { auth, db } from "../firebase";
-import { useStore } from "../store";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
@@ -223,7 +220,7 @@ export const useFirestore = () => {
     description?: string;
     displayName: string;
     email: string;
-    photoUrl?: string;
+    photoURL?: string;
     uid: string;
     number?: number;
     university?: {
@@ -233,7 +230,7 @@ export const useFirestore = () => {
     userName?: string;
   }
 
-  const createOrFetchUser = async (user: any) => {
+  const createOrFetchUser = async (user: any, setter: Function) => {
     // const {state} = useStore();
 
     // const { currentUser: user } = authData;
@@ -247,7 +244,7 @@ export const useFirestore = () => {
       docExists = userSnap.exists();
       if (docExists) {
         userProfile = userSnap.data();
-        useStore.setState({ user: userProfile });
+        setter(userProfile);
       } else {
         if (user?.displayName && user?.uid && user?.email) {
           try {
@@ -265,9 +262,9 @@ export const useFirestore = () => {
               email,
               userName,
               ...(user.phoneNumber && { number: user.phoneNumber }),
-              ...(user.photoURL && { photoUrl: user.photoURL }),
+              ...(user.photoURL && { photoURL: user.photoURL }),
             };
-            useStore.setState({ user: Payload });
+            setter(Payload);
             await setDoc(userRef, Payload);
           } catch (error) {
             console.log(error);

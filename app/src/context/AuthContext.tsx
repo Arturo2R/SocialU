@@ -161,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     console.log("Se fue");
+    setUser(null);
     setValid("unset");
     signOut(auth);
     showNotification({
@@ -183,8 +184,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (currentUser) {
         setUser(currentUser);
         // console.log({ currentUser });
-        createOrFetchUser(currentUser);
+        createOrFetchUser(currentUser, setUser);
         setLoading(false);
+        console.log("elusuario", user);
       } else {
         console.log("No hay usuario");
       }

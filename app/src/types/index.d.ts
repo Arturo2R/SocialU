@@ -10,9 +10,11 @@ declare global {
     uid?: string;
     displayName?: string;
     photoURL?: string;
-    username?: string;
+    userName?: string;
     phoneNumber?: number;
     description?: string;
+    semester?: number;
+    career: string;
   }
 
   interface FormPost {

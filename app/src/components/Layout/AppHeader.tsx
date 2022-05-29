@@ -35,7 +35,7 @@ export const AppHeader = ({
 
   return (
     <Header height={70} p="md">
-      <div className="flex items-center justify-between h-full">
+      <div className="flex justify-between items-center h-full">
         <MediaQuery largerThan="sm" styles={{ display: "none" }}>
           <Burger
             opened={opened}
