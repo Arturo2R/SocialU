@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, indexedDBLocalPersistence, browserLocalPersistence, setPersistence, signOut } from "firebase/auth";
+import { getAuth, enableIndexedDbPersistence, indexedDBLocalPersistence, browserLocalPersistence, setPersistence, signOut } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getFirestore } from 'firebase/firestore';
@@ -32,21 +32,6 @@ const auth = getAuth(app)//.setPersistence(browserLocalPersistence)
 auth.languageCode = 'es';
 
 const letSignOut = () => signOut(auth).catch((error) => sendError(error));
-
-enableIndexedDbPersistence(db)
-  .catch((err) => {
-    if (err.code == 'failed-precondition') {
-      // Multiple tabs open, persistence can only be enabled
-      // in one tab at a a time.
-      // ...
-    } else if (err.code == 'unimplemented') {
-      // The current browser does not support all of the
-      // features required to enable persistence
-      // ...
-    }
-  });
-
-
 
 const storage = getStorage(app, "gs://socialu-c62e6.appspot.com");
 const storageRef = ref(storage);

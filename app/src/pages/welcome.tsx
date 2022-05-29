@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Paper,
   createStyles,
@@ -57,13 +57,26 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function AuthenticationPage() {
-  const { loginWithGoogle } = useAuth();
+  const { loginWithGoogle, login } = useAuth();
 
   const { classes } = useStyles();
+
+  const [form, setForm] = useState<{ email: string; password: string }>({
+    email: "",
+    password: "",
+  });
 
   const handleGoogletication = async () => {
     loginWithGoogle();
   };
+
+  const handleLogin = () => {
+    login(form.email, form.password);
+  };
+
+  // const handleChange = (e) => {
+  //   setForm({...Form, email: e.target.value, password: e.target.value})
+  // };
 
   return (
     <div className={classes.wrapper}>
@@ -110,20 +123,30 @@ function AuthenticationPage() {
           label="Correo universitario"
           placeholder="hello@uninorte.edu.co"
           size="md"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
         <PasswordInput
           label="Contraseña"
           placeholder="Tu contraseña"
           mt="md"
           size="md"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
         {/* <Checkbox label="Keep me logged in" mt="xl" size="md" /> */}
 
-        <Anchor component={Link} href="/">
-          <Button color="orange" fullWidth mt="xl" size="md">
-            Iniciar Sesión
-          </Button>
-        </Anchor>
+        {/* <Anchor component={Link} href="/"> */}
+        <Button
+          color="orange"
+          onClick={handleLogin}
+          fullWidth
+          mt="xl"
+          size="md"
+        >
+          Iniciar Sesión
+        </Button>
+        {/* </Anchor> */}
 
         <Text align="center" mt="md">
           No tienes una cuenta?{" "}
