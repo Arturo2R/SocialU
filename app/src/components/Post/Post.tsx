@@ -15,11 +15,11 @@ import {
 import { CheckCircledIcon } from "@modulz/radix-icons";
 import Link from "next/link";
 // import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import { Plus } from "tabler-icons-react";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
-
+// import BiggerPicture from "bigger-picture";
 // type author =
 //   | {
 //       image: string;
@@ -31,7 +31,7 @@ import SeeUser from "./SeeUser";
 
 export interface PostProps {
   author:
-    | { image?: string | null; name?: string | null; id?: string | null }
+    | { image?: string | null; name: string ; id: string }
     | "anonimo";
   image?: string;
   description: string;
@@ -45,11 +45,11 @@ export interface PostProps {
       name: string;
       ref: `user/${string}`;
     };
-    suscribedAt: Timestamp;
+    suscribedAt?: Timestamp;
   }[];
 }
 
-export const Post = ({
+export const Post: FC<PostProps> = ({
   author,
   title,
   image,
@@ -57,7 +57,7 @@ export const Post = ({
   postId,
   asistants,
   event,
-}: PostProps) => {
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [suscribed, setSuscribed] = useState(false);
 
@@ -69,7 +69,6 @@ export const Post = ({
   };
 
   const { suscribe } = useFirestore();
-
   return (
     <article className="">
       <Link
@@ -78,8 +77,18 @@ export const Post = ({
       >
         <Card withBorder p="xs" radius="md">
           {image && (
-            <Card.Section className="mb-2">
-              <Image src={image} alt={title} height={160} />
+            <Card.Section className="mb-2 image">
+              <Image
+                // quality={50}
+                src={image}
+                alt={title}
+                height={240}
+                // width={380}
+                withPlaceholder
+        placeholder={<Text align="center">This image contained the meaning of life</Text>}
+                className="w-full"
+                // layout="fill"
+              />
             </Card.Section>
           )}
           {/* <Badge>{category}</Badge> */}

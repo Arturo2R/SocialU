@@ -10,10 +10,11 @@ module.exports = withBundleAnalyzer(withPWA({
     ignoreDuringBuilds: true,
   },
   pwa: {
-    dest: 'public'
+    dest: 'public',
+    disable: process.env.NODE_ENV === 'development',
   },
   images: {
-    domains: ['source.unsplash.com', 'example2.com'],
+    domains: ['source.unsplash.com', 'example2.com', 'firebasestorage.googleapis.com', 'source.unsplash.com']
   },
   async headers() {
     return [

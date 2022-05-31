@@ -1,12 +1,7 @@
 import {
   collection,
   doc,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  onSnapshot,
-  query,
+  getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
   Center,
@@ -15,21 +10,24 @@ import {
   Paper,
   Stack,
   Text,
-  Title,
+  Title
 } from "@mantine/core";
+import dayjs from "dayjs";
+import es from "dayjs/locale/es";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { AuthorInfo } from "../../../components/AuthorInfo";
+// import { useFirestore } from "../../../hooks/useFirestore";
+import { CommentProps } from "../../../components/Comment/Comment";
 import CommentWall from "../../../components/Comment/CommentWall";
 import Layout from "../../../components/Layout/Layout";
 import SeeUser from "../../../components/Post/SeeUser";
 import { db } from "../../../firebase";
-// import { useFirestore } from "../../../hooks/useFirestore";
 
-import { CommentProps } from "../../../components/Comment/Comment";
-import dayjs from "dayjs";
-import es from "dayjs/locale/es";
-import relativeTime from "dayjs/plugin/relativeTime";
+// import "bigger-picture";
+
+// import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
 type Props = {};
 dayjs.extend(relativeTime);

@@ -1,17 +1,17 @@
-import { Code, createStyles, Group, Navbar } from '@mantine/core';
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { BellRinging, Logout, Send, Settings } from 'tabler-icons-react';
-import { useAuth } from '../../context/AuthContext';
+import { Code, createStyles, Group, Navbar } from "@mantine/core";
+import Link from "next/link";
+import React, { useState } from "react";
+import { BellRinging, Logout, Send, Settings } from "tabler-icons-react";
+import { useAuth } from "../../context/AuthContext";
 
 const useStyles = createStyles((theme, _params, getRef) => {
-  const icon = getRef('icon');
+  const icon = getRef("icon");
   return {
     header: {
       paddingBottom: theme.spacing.md,
       marginBottom: theme.spacing.md * 1.5,
       borderBottom: `1px solid ${
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.colors.dark[4]
           : theme.colors.gray[2]
       }`,
@@ -21,7 +21,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       paddingTop: theme.spacing.md,
       marginTop: theme.spacing.md,
       borderTop: `1px solid ${
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.colors.dark[4]
           : theme.colors.gray[2]
       }`,
@@ -29,27 +29,27 @@ const useStyles = createStyles((theme, _params, getRef) => {
 
     link: {
       ...theme.fn.focusStyles(),
-      display: 'flex',
-      alignItems: 'center',
-      textDecoration: 'none',
+      display: "flex",
+      alignItems: "center",
+      textDecoration: "none",
       fontSize: theme.fontSizes.sm,
       color:
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.colors.dark[1]
           : theme.colors.gray[7],
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
       fontWeight: 500,
 
-      '&:hover': {
+      "&:hover": {
         backgroundColor:
-          theme.colorScheme === 'dark'
+          theme.colorScheme === "dark"
             ? theme.colors.dark[6]
             : theme.colors.gray[0],
-        color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+        color: theme.colorScheme === "dark" ? theme.white : theme.black,
 
         [`& .${icon}`]: {
-          color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+          color: theme.colorScheme === "dark" ? theme.white : theme.black,
         },
       },
     },
@@ -57,26 +57,26 @@ const useStyles = createStyles((theme, _params, getRef) => {
     linkIcon: {
       ref: icon,
       color:
-        theme.colorScheme === 'dark'
+        theme.colorScheme === "dark"
           ? theme.colors.dark[2]
           : theme.colors.gray[6],
       marginRight: theme.spacing.sm,
     },
 
     linkActive: {
-      '&, &:hover': {
+      "&, &:hover": {
         backgroundColor:
-          theme.colorScheme === 'dark'
+          theme.colorScheme === "dark"
             ? theme.fn.rgba(theme.colors[theme.primaryColor][8], 0.25)
             : theme.colors[theme.primaryColor][0],
         color:
-          theme.colorScheme === 'dark'
+          theme.colorScheme === "dark"
             ? theme.white
             : theme.colors[theme.primaryColor][7],
         [`& .${icon}`]: {
           color:
             theme.colors[theme.primaryColor][
-              theme.colorScheme === 'dark' ? 5 : 7
+              theme.colorScheme === "dark" ? 5 : 7
             ],
         },
       },
@@ -85,13 +85,13 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const data = [
-  { link: '/', label: 'Feed', icon: BellRinging },
-  { link: '/crear', label: 'Crear Post', icon: Send },
+  { link: "/", label: "Feed", icon: BellRinging },
+  { link: "/crear", label: "Crear Post", icon: Send },
   // { link: "/", label: "Security", icon: Fingerprint },
   // { link: "/", label: "SSH Keys", icon: Key },
   // { link: "/", label: "Databases", icon: DatabaseImport },
   // { link: "/", label: "Authentication", icon: TwoFA },
-  { link: '/', label: 'Configuración', icon: Settings },
+  { link: "/configuracion", label: "Configuración", icon: Settings },
 ];
 
 interface Props {
@@ -101,7 +101,7 @@ interface Props {
 export default function NavbarSimple({ opened }: Props) {
   const { logout } = useAuth();
   const { classes, cx } = useStyles();
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState("Billing");
 
   const links = data.map((item) => (
     <Link href={item.link} key={item.label}>
@@ -139,7 +139,7 @@ export default function NavbarSimple({ opened }: Props) {
             <span>Salir de la cuenta</span>
           </a>
 
-          <Group className={cx(classes.header, 'bottom-0')} position="apart">
+          <Group className={cx(classes.header, "bottom-0")} position="apart">
             {/* <MantineLogo /> */}
             <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
           </Group>
