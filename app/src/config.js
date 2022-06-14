@@ -6,6 +6,7 @@ export default function () {
     bussiness: {
       address: "Cra 54 # 64",
       tel: "3453984934"
-    }
+    },
+
   }
 }

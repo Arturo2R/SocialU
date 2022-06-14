@@ -1,3 +1,4 @@
+import { updateCurrentUser, updateProfile } from "@firebase/auth";
 import {
   Autocomplete,
   Group,
@@ -9,12 +10,16 @@ import {
   Text,
   Title,
   Stack,
+  Button,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 import React,{FC, useState} from "react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
+import { auth } from "../firebase";
+import { useFirestore } from "../hooks/useFirestore";
 // import { useStore } from "../store";
 
 type Props = {};
@@ -22,9 +27,12 @@ type Props = {};
 const configuracion = (props: Props) => {
   // const { user } = useStore.getState();
   const [anonimo, setAnonimo]= useState<boolean>(false)
+  const [useUserName, setUseUserName] = useState<boolean>(false)
 
+  const { resetPassword, user, setUser} = useAuth();
+  const {updateProfile: updateFirestoreProfile, updatingProfile} = useFirestore()
 
-  const { resetPassword, user } = useAuth();
+  const [loading, setLoading] = useState<boolean>(false)
 
   const form = useForm({
     initialValues: {
@@ -34,8 +42,8 @@ const configuracion = (props: Props) => {
       semester: user?.semester,
       photoURL: user?.photoURL,
       career: user?.career,
-      password: "",
-      number: user?.phoneNumber,
+      // password: "",
+      phoneNumber: user?.phoneNumber,
     },
     // validate: {
     //   title: {
@@ -52,14 +60,30 @@ const configuracion = (props: Props) => {
     // },
   });
 
-  console.log(user);
+  const saveConfiguration = (configurationData: any) => {
+    if(user?.uid){
+      console.log("disparado")
+      setLoading(true)
+      updateFirestoreProfile(user.uid,configurationData).then(()=>showNotification({
+        id: "created-post",
+        disallowClose: true,
+        autoClose: 4000,
+        title: "Perfil Actualizado",
+        message: "El perfil ha sido actualizado exitosamente",
+        color: "orange",
+        className: "my-notification-class",
+        // icon: <FileCheck />,
+      }))
+      setLoading(false)
+    }
+  };
 
   return (
     <Protected.Route>
       <Layout>
         <Paper p="md" shadow="sm" radius="md">
           <Title>Configuración</Title>
-          <form action=""><Stack>
+          <form onSubmit={form.onSubmit((values) => saveConfiguration(values))}><Stack>
             
               <Space h="md" />
               <Title order={2}>Perfil</Title>
@@ -78,19 +102,17 @@ const configuracion = (props: Props) => {
                 label="Correo" // rightSections=""
                 {...form.getInputProps("email")}
               />
-              <TextInput
+              {/* <TextInput
                 // placeholder="klfsñjalks"
                 type="password"
                 label="Cambiar Contraseña" // rightSections=""
                 {...form.getInputProps("password")}
-              />
+              /> */}
               <NumberInput
                 // description="Se recalculara automaticamente"
                 placeholder="3137864030"
                 label="Número De Celular"
-                min={1}
-                max={12}
-                {...form.getInputProps("number")}
+                {...form.getInputProps("phoneNumber")}
               />
               <Autocomplete
                 label="Tu Carrera"
@@ -118,8 +140,14 @@ const configuracion = (props: Props) => {
                value={anonimo} 
                onChange={setAnonimo}
                />
-            
-          </Stack></form>
+               <SwitchConfiguration title="Usar Nombre De Usuario"
+               description="Usar el nombre de usuario en lugar del nombre real para las publicaciones y comentarios" 
+               value={useUserName} 
+               onChange={setUseUserName}
+               />
+            <Button loading={loading} mt="sm" type="submit" color="orange" radius="md" uppercase>Guardar</Button>  
+          </Stack>
+          </form>
         </Paper>
       </Layout>
     </Protected.Route>

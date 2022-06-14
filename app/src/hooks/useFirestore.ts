@@ -12,6 +12,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  getDocs,
   updateDoc,
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
@@ -222,12 +223,14 @@ export const useFirestore = () => {
     email: string;
     photoURL?: string;
     uid: string;
-    number?: number;
+    phoneNumber?: number;
     university?: {
       domain: "uninorte.edu.co";
       name: "Universidad Del Norte";
     };
     userName?: string;
+    anonimoDefault?: boolean,
+
   }
 
   const createOrFetchUser = async (user: any, setter: Function) => {
@@ -239,6 +242,8 @@ export const useFirestore = () => {
     let userSnap;
     let userProfile;
 
+    
+    // Esto mira si el usuario existe, si es asi lo trae y si no existe crea uno nuevo
     try {
       userSnap = await getDoc(userRef);
       docExists = userSnap.exists();
@@ -261,7 +266,8 @@ export const useFirestore = () => {
               uid: user.uid,
               email,
               userName,
-              ...(user.phoneNumber && { number: user.phoneNumber }),
+              anonimoDefault: false,
+              ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
               ...(user.photoURL && { photoURL: user.photoURL }),
             };
             setter(Payload);
@@ -279,6 +285,69 @@ export const useFirestore = () => {
     }
   };
 
+  interface userConfiguration extends userSchema {
+    anonimoDefault: boolean,
+  }
+  
+  const [updatingProfile, setUpdatingProfile] = useState<"loading"| "loaded"| "error"| false>(false)
+  //? Función Provisional, pasar a una función en un contexto propio
+  const updateProfile = async (id:string, Payload:userSchema) => {
+    try {
+      setUpdatingProfile("loading")
+      const userRef = doc(db, "user", id);
+
+      const data = {
+      ...(Payload.anonimoDefault && { anonimoDefault: Payload.anonimoDefault }),
+              ...(Payload.career && { career: Payload.career }),
+              ...(Payload.semester && { semester: Payload.semester }),
+              ...(Payload.photoURL && { photoURL: Payload.photoURL }),
+              ...(Payload.phoneNumber && { phoneNumber: Payload.phoneNumber }),
+              ...(Payload.userName && { userName: Payload.userName }),
+              ...(Payload.description && { description: Payload.description }),
+              // ...(Payload. && { photoURL: Payload.photoURL }),
+              // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
+            }
+
+      await updateDoc(userRef, data)
+      
+    } catch (error) {
+      console.log(error)
+      setUpdatingProfile("error")
+    } finally {
+      setUpdatingProfile("loaded")
+    } 
+  }
+
+  const UserPaths = async () => { 
+      try {
+        const q = query(collection(db, "user"))
+        const ids = await getDocs(q)
+        return q
+      } catch (error) {
+        console.error(error)
+      }
+  }
+
+  interface userReq { 
+    displayName?: string;
+    userName?: string
+    id?: string, 
+  }
+
+  const fetchUser = async ({displayName, userName, id}: userReq)=> {
+    try {
+        const userRef = query(collection(db, 'user'), where("displayName", "==", "displayName"))
+        const user = await getDoc(userRef)
+        return user.data()
+      } catch (error) {
+        console.error(error)
+        return undefined
+      }
+  }
+
+
+  
+
   // useEffect(() => {
   //   console.log("useFirestore to getData");
   //   fetchData();
@@ -290,6 +359,9 @@ export const useFirestore = () => {
     loading,
     creating,
     postsLoading,
+    fetchUser,
+    updateProfile,
+    updatingProfile,
     fetchData,
     createPost,
     createOrFetchUser,

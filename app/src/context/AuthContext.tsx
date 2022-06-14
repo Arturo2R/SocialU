@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   signOut,
   UserCredential,
+  updateProfile,
 } from "firebase/auth";
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
@@ -54,6 +55,7 @@ interface AuthContextInterface {
   signup(email: string, password: string): Promise<UserCredential>;
   login(email: string, password: string): Promise<UserCredential>;
   user: User | null;
+  setUser: Function
   logout(): void;
   loading: boolean;
   loginWithGoogle(): Promise<UserCredential>;
@@ -115,13 +117,13 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user,  setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  const { createOrFetchUser } = useFirestore();
+  const { createOrFetchUser, updateProfile:updateFirestoreProfile } = useFirestore();
 
   const router = useRouter();
 
@@ -177,6 +179,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const resetPassword = async (email: string): Promise<void> =>
     sendPasswordResetEmail(auth, email);
+
+    const updateUser =(configurationData:any)=>{
+      auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
+      auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
+    }).catch((error) => {
+      console.log(error)
+    });
+    }
+
+const updateInfo = 
 
   useEffect(() => {
     console.log("unsubuscribe effect", valid);
@@ -235,12 +247,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [valid]);
 
+
   return (
     <authContext.Provider
       value={{
         signup,
         login,
         user,
+        setUser,
         logout,
         loading,
         loginWithGoogle,

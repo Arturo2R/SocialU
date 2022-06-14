@@ -89,7 +89,7 @@ const CrearPost = () => {
         <Container className="h-full">
           <form
             onSubmit={form.onSubmit((values) => submitPost(values))}
-            className="flex h-full flex-col justify-between"
+            className="flex flex-col justify-between h-full"
           >
             <div>
               <ImageDropzone
