@@ -12,11 +12,13 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  where,
   getDocs,
   updateDoc,
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 import { auth, db } from "../firebase";
 
 export const useFirestore = () => {
@@ -26,6 +28,8 @@ export const useFirestore = () => {
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
   >();
+
+
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
   // const {user} = useStore()
@@ -83,8 +87,8 @@ export const useFirestore = () => {
     return postSnap;
   };
 
-  const createPost = async (formData: FormPost) => {
-    if (auth.currentUser && auth.currentUser.photoURL) {
+  const createPost = async (formData: FormPost, user:User) => {
+    if (auth.currentUser && user?.photoURL && auth.currentUser.email) {
       try {
         setLoading(true);
 
@@ -102,13 +106,15 @@ export const useFirestore = () => {
           // anonimo: formData.anonimo,
           ...formData,
           // ...(auth.currentUser.photoURL && {
-          authorImage: auth.currentUser.photoURL,
+          authorImage: user?.photoURL,
           // }),
-
+          userName: user?.userName,
+          authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
           userUID: auth.currentUser.uid,
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
+          
         };
         // setData([...data, newPost]);
 
@@ -178,16 +184,20 @@ export const useFirestore = () => {
       image: string;
       name: string;
       ref: `user/${string}`;
+      userName: string;
     };
     postedAt: any;
     parentId?: string | null;
   }
 
-  const createComment = async (data: CommentFormProps) => {
+ 
+
+  const createComment = async (data: CommentFormProps, user:any) => {
     if (
-      auth.currentUser?.displayName &&
-      auth.currentUser.uid &&
-      auth.currentUser.photoURL
+     user?.displayName &&
+     user.uid &&
+     user.photoURL &&
+     user.userName
     ) {
       try {
         setCreating(true);
@@ -197,9 +207,10 @@ export const useFirestore = () => {
           content: data.content,
           anonimo: data.anonimo,
           author: {
-            image: auth.currentUser.photoURL,
-            name: auth.currentUser.displayName,
-            ref: `user/${auth.currentUser.uid}`,
+            image: user.photoURL,
+            name: user.displayName,
+            ref: `user/${user.uid}`,
+            userName: user.userName,
           },
           postedAt: serverTimestamp(),
           parentId: null,
@@ -291,13 +302,13 @@ export const useFirestore = () => {
   
   const [updatingProfile, setUpdatingProfile] = useState<"loading"| "loaded"| "error"| false>(false)
   //? Función Provisional, pasar a una función en un contexto propio
-  const updateProfile = async (id:string, Payload:userSchema) => {
+  const updateProfile = async (id:string, Payload:userSchema, user: User, setter: Function) => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
 
       const data = {
-      ...(Payload.anonimoDefault && { anonimoDefault: Payload.anonimoDefault }),
+      ...(Payload.anonimoDefault  && { anonimoDefault: Payload.anonimoDefault }),
               ...(Payload.career && { career: Payload.career }),
               ...(Payload.semester && { semester: Payload.semester }),
               ...(Payload.photoURL && { photoURL: Payload.photoURL }),
@@ -307,6 +318,13 @@ export const useFirestore = () => {
               // ...(Payload. && { photoURL: Payload.photoURL }),
               // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
             }
+
+      console.log(data)
+      
+      setter((user:any) => ({
+      ...user,
+      ...data
+    }))
 
       await updateDoc(userRef, data)
       
@@ -328,17 +346,14 @@ export const useFirestore = () => {
       }
   }
 
-  interface userReq { 
-    displayName?: string;
-    userName?: string
-    id?: string, 
-  }
 
-  const fetchUser = async ({displayName, userName, id}: userReq)=> {
+  const [authorProfile, serAuthorProfile] = useState<any>()
+  const fetchUser = async (userName:string)=> {
     try {
-        const userRef = query(collection(db, 'user'), where("displayName", "==", "displayName"))
-        const user = await getDoc(userRef)
-        return user.data()
+        const userRef = query(collection(db, 'user'), where("userName", "==", userName), limit(1))
+        const user = await getDocs(userRef)
+        const data = user.docs[0].data()
+        serAuthorProfile(data)
       } catch (error) {
         console.error(error)
         return undefined
@@ -359,6 +374,7 @@ export const useFirestore = () => {
     loading,
     creating,
     postsLoading,
+    authorProfile,
     fetchUser,
     updateProfile,
     updatingProfile,

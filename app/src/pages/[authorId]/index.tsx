@@ -23,19 +23,23 @@ import { LetterV } from 'tabler-icons-react';
 export default function UserInfoAction() {
   const router = useRouter();
   const { authorId } = router.query;
-  const [user, setUser] = useState<any| undefined>()
-  const {fetchUser} = useFirestore()
+  // const [author, setAuthor] = useState<any| undefined>()
+  const {fetchUser, authorProfile:author} = useFirestore()
 
   
   useEffect(() => {
-    typeof authorId === 'string' && setUser(fetchUser(authorId))
+    typeof authorId === 'string' && fetchUser(authorId)
   }, [])
-  
-  user
 
-  const avatar: string = '/perfil.jpg';
-  const email: string = `${authorId}@uninorte.edu.co`;
-  const job: string = 'Economía';
+  // useEffect(() => {
+
+  //   setAuthor(authorProfile)
+  // }, authorProfile)
+
+  console.log(author)
+  const avatar: string = author?.photoURL ||'/perfil.jpg';
+  const email: string = author?.email || `${authorId}@uninorte.edu.co`;
+  const job: string = author?.career || 'Economía';
 
   return (
     <Layout>
@@ -50,13 +54,13 @@ export default function UserInfoAction() {
       >
         <Avatar src={avatar} size={120} radius={120} mx="auto" />
         <Text align="center" size="lg" weight={500} mt="md">
-          {user.userName}
+          {author?.userName}
         </Text>
         <Text align="center" color="dimmed" size="sm">
-          {user.email} • {user.career}
+          {email} • {job}
         </Text>
         <Text align="center" className="mx-auto my-2 max-w-sm italic">
-          {user.description}
+          {author?.description}
         </Text>
         {/* <Button variant="outline" className="mx-auto" color="orange" mt="md">
           Send message

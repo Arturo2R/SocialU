@@ -21,10 +21,13 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 
 import { useFirestore } from "../hooks/useFirestore";
+import { useAuth } from "../context/AuthContext";
 
 // type Props = {};
 
 const CrearPost = () => {
+  const {user} = useAuth()
+
   // Event state
   const [event, setEvent] = useState(false);
   //image state
@@ -79,7 +82,11 @@ const CrearPost = () => {
       className: "my-notification-class",
       icon: <FileCheck />,
     });
-    createPost(postValues);
+    if(user){
+      createPost(postValues, user);
+    } else {
+      throw new Error("No hay usuario");
+    }
     router.push("/");
   };
 

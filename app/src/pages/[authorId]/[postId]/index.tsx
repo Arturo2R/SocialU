@@ -165,8 +165,9 @@ const PostPage = (props: Props) => {
         )}
         {content?.anonimo === false && content.authorName ? (
           <AuthorInfo
+            link={content?.userName}
             name={content?.authorName}
-            email={`${authorName}@uninorte.edu.co`}
+            email={content?.authorEmail ||`${content?.userName}@uninorte.edu.co`}
             image={content.authorImage ? content.authorImage : "/profile.jpg"}
             icon
           />

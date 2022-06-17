@@ -26,6 +26,7 @@ interface AuthorInfoProps {
   name: string;
   email: string;
   icon?: React.ReactNode;
+  link?:string,
 }
 
 export function AuthorInfo({
@@ -33,13 +34,14 @@ export function AuthorInfo({
   name,
   email,
   icon,
+  link,
   ...others
 }: AuthorInfoProps) {
   const { classes } = useStyles();
 
   return (
     <UnstyledButton className={classes.user} {...others}>
-      <Link href={`/${name}`}>
+      <Link href={`/${link||name}`}>
         <Group>
           <Avatar src={image} radius="xl" />
           <div style={{ flex: 1 }}>

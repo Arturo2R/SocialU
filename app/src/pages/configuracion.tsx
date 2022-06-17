@@ -64,7 +64,7 @@ const configuracion = (props: Props) => {
     if(user?.uid){
       console.log("disparado")
       setLoading(true)
-      updateFirestoreProfile(user.uid,configurationData).then(()=>showNotification({
+      updateFirestoreProfile(user.uid,configurationData, user, setUser).then(()=>showNotification({
         id: "created-post",
         disallowClose: true,
         autoClose: 4000,
@@ -74,6 +74,7 @@ const configuracion = (props: Props) => {
         className: "my-notification-class",
         // icon: <FileCheck />,
       }))
+      
       setLoading(false)
     }
   };

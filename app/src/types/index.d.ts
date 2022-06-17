@@ -29,6 +29,7 @@ declare global {
     // suscribed: string[];
   }
   interface Post extends FormPost {
+    authorEmail: string; 
     id?: string;
     createdAt: any; // !TODO: Change string to Date type
     userUID?: string;

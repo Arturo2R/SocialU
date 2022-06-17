@@ -180,13 +180,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const resetPassword = async (email: string): Promise<void> =>
     sendPasswordResetEmail(auth, email);
 
-    const updateUser =(configurationData:any)=>{
-      auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
-      auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
-    }).catch((error) => {
-      console.log(error)
-    });
-    }
+    // const updateUser =(configurationData:any)=>{
+    //   auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
+    //   auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
+    // }).catch((error) => {
+    //   console.log(error)
+    // });
+    // }
 
 const updateInfo = 
 

@@ -4,12 +4,15 @@ import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
+import { useAuth } from "../../context/AuthContext";
 
 type Props = {
   postId: string;
 };
 
 const CommentForm = (props: Props) => {
+  const {user} = useAuth()
+
   const form = useForm({
     initialValues: {
       content: "",
@@ -24,7 +27,7 @@ const CommentForm = (props: Props) => {
     <form
       className="flex gap-x-2"
       onSubmit={form.onSubmit((values) => {
-        createComment(values);
+        createComment(values, user);
         form.reset();
       })}
     >
