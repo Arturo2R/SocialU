@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthorInfo } from "../../../components/AuthorInfo";
 // import { useFirestore } from "../../../hooks/useFirestore";
 import { CommentProps } from "../../../components/Comment/Comment";

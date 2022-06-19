@@ -7,16 +7,17 @@ import {
   Card,
   Collapse,
   Group,
-  Image,
+  // Image,
   Spoiler,
   Stack,
   Text,
 } from "@mantine/core";
 import { CheckCircledIcon } from "@modulz/radix-icons";
 import Link from "next/link";
-// import Image from "next/image";
-import React, { useState, FC } from "react";
+import Image from "next/image";
+import React, { useState, FC, useEffect } from "react";
 import { Plus } from "tabler-icons-react";
+import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 // import BiggerPicture from "bigger-picture";
@@ -47,6 +48,7 @@ export interface PostProps {
     };
     suscribedAt?: Timestamp;
   }[];
+  key: number;
 }
 
 export const Post: FC<PostProps> = ({
@@ -57,9 +59,25 @@ export const Post: FC<PostProps> = ({
   postId,
   asistants,
   event,
+  key,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [suscribed, setSuscribed] = useState(false);
+  const {user} = useAuth()
+  
+  
+  const [suscribed, setSuscribed] = useState<boolean>(false) ;
+
+  useEffect(() => {
+   if(event && asistants){
+    const isSuscribed = asistants.some((item)=> {
+      // console.log(item.user.ref, `user/${user?.uid}`)
+      return item.user.ref == `user/${user?.uid}`
+    })
+    setSuscribed(isSuscribed)
+  }
+  }, [])
+  
+ 
 
   const aja = () => {
     if (asistants === undefined || asistants.length === 0) {
@@ -82,10 +100,17 @@ export const Post: FC<PostProps> = ({
                 // quality={50}
                 src={image}
                 alt={title}
+                width={380}
                 height={240}
+                color="orange"
+                loading="lazy"
+                layout="responsive"
+                sizes="50vw"
+                quality={70}
+                // priority={key === 1||2||3||4 ? true:false }
                 // width={380}
-                withPlaceholder
-        placeholder={<Text align="center">This image contained the meaning of life</Text>}
+                // withPlaceholder
+        // placeholder={<Text align="center">This image contained the meaning of life</Text>}
                 className="w-full"
                 // layout="fill"
               />
@@ -94,14 +119,14 @@ export const Post: FC<PostProps> = ({
           {/* <Badge>{category}</Badge> */}
           <Text className="text-xl font-bold">{title}</Text>
           {author !== "anonimo" ? (
-            <Group className="mt-1" spacing="xs">
-              <Anchor component={Link} href={`/${author.id}`}>
-                <>
-                  <Avatar size="sm" src={author?.image} radius="xl" />
-                  <p>{author?.name}</p>
-                </>
-              </Anchor>
-            </Group>
+                  <Link href={`/${author.id}`} >
+                    <a >
+                    <Group className="mt-1" spacing="xs">
+                          <Avatar size="sm" src={author?.image} radius="xl" />
+                              <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
+                    </Group>
+                    </a>
+                  </Link>
           ) : (
             <Text color="orange">Anónimo</Text>
           )}
