@@ -1,0 +1,25 @@
+[debug] [2022-06-19T03:57:43.680Z] ----------------------------------------------------------------------
+[debug] [2022-06-19T03:57:43.684Z] Command:       /home/arturo2r/.nvm/versions/node/v16.13.1/bin/node /home/arturo2r/.nvm/versions/node/v16.13.1/bin/firebase deploy --only functions
+[debug] [2022-06-19T03:57:43.685Z] CLI Version:   10.7.2
+[debug] [2022-06-19T03:57:43.686Z] Platform:      linux
+[debug] [2022-06-19T03:57:43.686Z] Node Version:  v16.13.1
+[debug] [2022-06-19T03:57:43.695Z] Time:          Sat Jun 18 2022 22:57:43 GMT-0500 (Colombia Standard Time)
+[debug] [2022-06-19T03:57:43.695Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-06-19T03:57:43.845Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-06-19T03:57:43.845Z] > authorizing via signed-in user (artudavidrebolledo2003@gmail.com)
+[debug] [2022-06-19T03:57:43.846Z] [iam] checking project socialu-c62e6 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2022-06-19T03:57:43.853Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/socialu-c62e6:testIamPermissions [none]
+[debug] [2022-06-19T03:57:43.854Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/socialu-c62e6:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-06-19T03:57:44.563Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/socialu-c62e6:testIamPermissions 200
+[debug] [2022-06-19T03:57:44.563Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/socialu-c62e6:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2022-06-19T03:57:44.564Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/socialu-c62e6/serviceAccounts/socialu-c62e6@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2022-06-19T03:57:44.564Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/socialu-c62e6/serviceAccounts/socialu-c62e6@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2022-06-19T03:57:45.290Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/socialu-c62e6/serviceAccounts/socialu-c62e6@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2022-06-19T03:57:45.290Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/socialu-c62e6/serviceAccounts/socialu-c62e6@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'socialu-c62e6'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build

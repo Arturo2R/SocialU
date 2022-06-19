@@ -99,7 +99,7 @@ const PostPage = (props: Props) => {
     try {
       setLoading(true);
       let q = query(
-        collection(db, "posts", id, "comments"),
+        collection(db, "publicPosts", id, "comments"),
         orderBy("postedAt", "desc")
         // limit(20)
       );
