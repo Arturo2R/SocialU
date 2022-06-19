@@ -47,7 +47,7 @@ export const useFirestore = () => {
       // });
 
       const q = query(
-        collection(db, "posts"),
+        collection(db, "publicPosts"),
         orderBy("createdAt", "desc"),
         limit(30)
       );
@@ -76,7 +76,7 @@ export const useFirestore = () => {
     let postSnap: any;
     try {
       setLoading(true);
-      const postRef = doc(db, "posts", id);
+      const postRef = doc(db, "publicPosts", id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
     } catch (error) {
@@ -141,7 +141,7 @@ export const useFirestore = () => {
       try {
         setLoading(true);
         console.log("Tirado", auth.currentUser.displayName);
-        const postRef = doc(db, "posts", postId);
+        const postRef = doc(db, "publicPosts", postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),

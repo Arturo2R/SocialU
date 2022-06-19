@@ -74,7 +74,7 @@ const PostPage = (props: Props) => {
 
   const fetchContent = async () => {
     try {
-      const postRef = doc(db, "posts", id);
+      const postRef = doc(db, "publicPosts", id);
 
       const postSnap: anything = await getDoc(postRef);
       // console.log(postSnap.data());

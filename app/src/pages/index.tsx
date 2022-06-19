@@ -13,7 +13,7 @@ import { db } from "../firebase";
 
 export const getServerSideProps = async () => {
   const q = query(
-    collection(db, "posts"),
+    collection(db, "publicPosts"),
     orderBy("createdAt", "desc"),
     limit(30)
   );

@@ -45,6 +45,7 @@ export function Comment({
         ) : (
           <Avatar size="sm" src={author.image} alt={author.name} radius="xl" />
         )}
+        
         <div>
           <Text size="sm">
             {author === "anonimo" ? "Anónimo" : author.name}
@@ -56,6 +57,7 @@ export function Comment({
           )}
         </div>
       </Group>
+
       <div className="ml-11">
         <Text size="sm">{content}</Text>
         {/* <Anchor onClick={() => setOpen((o) => !o)} color="orange">
