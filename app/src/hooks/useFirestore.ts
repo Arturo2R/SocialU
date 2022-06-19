@@ -95,8 +95,10 @@ export const useFirestore = () => {
         const generatedPostId = await nanoid(7);
 
         const postsRef = doc(db, "posts", generatedPostId);
+        const publicRef = doc(db, "publicPosts", generatedPostId);
 
-        const newPost: Post = {
+
+        let newPost: Post = {
           // id: formData.id,
           // title: formData.title,
           // message: formData.message,
@@ -116,9 +118,15 @@ export const useFirestore = () => {
           authorName: auth.currentUser.displayName,
           
         };
+        // let Payload: Post
+        if(formData.anonimo){
+         await setDoc(publicRef, {...formData, createdAt: serverTimestamp(),});
+        } else {
+         await setDoc(publicRef, newPost);
+        }
         // setData([...data, newPost]);
 
-        console.log(data);
+        
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
         console.log(thiserror.message);
