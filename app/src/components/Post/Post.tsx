@@ -65,7 +65,7 @@ export const Post: FC<PostProps> = ({
   const {user} = useAuth()
   
   
-  const [suscribed, setSuscribed] = useState<boolean>(asistants.some((item)=> {
+  const [suscribed, setSuscribed] = useState<boolean>(asistants?.some((item)=> {
       // console.log(item.user.ref, `user/${user?.uid}`)
       return item.user.ref == `user/${user?.uid}`
     })||false) ;
