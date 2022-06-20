@@ -32,8 +32,8 @@ import SeeUser from "./SeeUser";
 
 export interface PostProps {
   author:
-    | { image?: string | null; name: string ; id: string }
-    | "anonimo";
+  | { image?: string | null; name: string; id: string }
+  | "anonimo";
   image?: string;
   description: string;
   title: string;
@@ -62,25 +62,29 @@ export const Post: FC<PostProps> = ({
   key,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const {user} = useAuth()
-  
-  
-  const [suscribed, setSuscribed] = useState<boolean>(asistants?.some((item)=> {
-      // console.log(item.user.ref, `user/${user?.uid}`)
-      return item.user.ref == `user/${user?.uid}`
-    })||false) ;
+  const { user } = useAuth()
+
+
+
 
   // useEffect(() => {
-  //  if(event && asistants){
-  //   const isSuscribed = asistants.some((item)=> {
-  //     // console.log(item.user.ref, `user/${user?.uid}`)
-  //     return item.user.ref == `user/${user?.uid}`
-  //   })
-  //   setSuscribed(isSuscribed)
-  // }
-  // }, [])
+  const sera = (): boolean => {
+    let isSuscribed: boolean
+    if (event && asistants) {
+      isSuscribed = asistants.some((item) => {
+        // console.log(item.user.ref, `user/${user?.uid}`)
+        return item.user.ref == `user/${user?.uid}`
+      })
+    } else { isSuscribed = false }
+    return isSuscribed
+  }
+
+  const [suscribed, setSuscribed] = useState<boolean>(false);
+
+  useEffect(() => {
+    setSuscribed(sera())
+  }, [asistants])
   
- 
 
   const aja = () => {
     if (asistants === undefined || asistants.length === 0) {
@@ -94,7 +98,7 @@ export const Post: FC<PostProps> = ({
     <article className="">
       <Link
         href={`/${author !== "anonimo" ? author.name : "anonimo"}/${postId}`}
-        // as="a"
+      // as="a"
       >
         <Card withBorder p="xs" radius="md">
           {image && (
@@ -113,23 +117,23 @@ export const Post: FC<PostProps> = ({
                 // priority={key === 1||2||3||4 ? true:false }
                 // width={380}
                 // withPlaceholder
-        // placeholder={<Text align="center">This image contained the meaning of life</Text>}
+                // placeholder={<Text align="center">This image contained the meaning of life</Text>}
                 className="w-full"
-                // layout="fill"
+              // layout="fill"
               />
             </Card.Section>
           )}
           {/* <Badge>{category}</Badge> */}
           <Text className="text-xl font-bold">{title}</Text>
           {author !== "anonimo" ? (
-                  <Link href={`/${author.id}`} >
-                    <a >
-                    <Group className="mt-1" spacing="xs">
-                          <Avatar size="sm" src={author?.image} radius="xl" />
-                              <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
-                    </Group>
-                    </a>
-                  </Link>
+            <Link href={`/${author.id}`} >
+              <a >
+                <Group className="mt-1" spacing="xs">
+                  <Avatar size="sm" src={author?.image} radius="xl" />
+                  <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
+                </Group>
+              </a>
+            </Link>
           ) : (
             <Text color="orange">Anónimo</Text>
           )}
@@ -157,7 +161,7 @@ export const Post: FC<PostProps> = ({
                   color="orange"
                   disabled={aja()}
                   compact
-                  // rightIcon={<ChevronsRight />}
+                // rightIcon={<ChevronsRight />}
                 >
                   {asistants?.length} Asistentes
                 </Button>
