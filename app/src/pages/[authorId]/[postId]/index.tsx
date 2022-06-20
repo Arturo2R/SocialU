@@ -29,63 +29,90 @@ import { db } from "../../../firebase";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
-type Props = {};
+
+type Props = {data:Post};
 dayjs.extend(relativeTime);
 dayjs.locale(es);
 
-const PostPage = (props: Props) => {
+export async function getServerSideProps(context:any) {
+  const {postId, authorName} = context.params
+  
+  
+  const postRef = doc(db, "publicPosts", postId);
+
+  const postSnap: anything = await getDoc(postRef);
+  // console.log(postSnap.data());
+  const data = postSnap.data()
+
+  const Payload = {
+    ...data,
+    createdAt: data?.createdAt?.toMillis(),
+    ...(data.date !== "" && { date: data.date?.toJSON() }),
+    ...(typeof data.time !== "string" && {time: data.time?.toJSON() }),
+  }
+    
+      
+    
+  
+
+  return {
+    props: {data: Payload}, // will be passed to the page component as props
+  }
+}
+
+const PostPage = ({data:content}: Props) => {
   const router = useRouter();
   const { postId, authorName } = router.query;
   const id: string = typeof postId === "string" ? postId : "nada-que-ver";
-  const [content, setContent] = useState<Post | undefined>();
+  // const [content, setContent] = useState<Post | undefined>();
   //loading state
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
   // console.log(postId);
 
   // const { fetchPost, loading, error } = useFirestore();
-  const nestComments = (commentList: CommentProps[]) => {
-    let commentMap: anything = {};
-    console.log("0", commentList, commentMap);
+  // const nestComments = (commentList: CommentProps[]) => {
+  //   let commentMap: anything = {};
+  //   console.log("0", commentList, commentMap);
 
-    // move all the comments into a map of id => comment
-    commentList.forEach(
-      (comment: anything) => (commentMap[comment.id] = comment)
-    );
+  //   // move all the comments into a map of id => comment
+  //   commentList.forEach(
+  //     (comment: anything) => (commentMap[comment.id] = comment)
+  //   );
 
-    console.log("1", commentMap);
+  //   console.log("1", commentMap);
 
-    // iterate over the comments again and correctly nest the children
-    commentList.forEach((comment) => {
-      if (comment.parentId !== null) {
-        const parent = commentMap[comment.parentId];
-        (parent.subComments = parent.subComments || []).push(comment);
-      }
-    });
+  //   // iterate over the comments again and correctly nest the children
+  //   commentList.forEach((comment) => {
+  //     if (comment.parentId !== null) {
+  //       const parent = commentMap[comment.parentId];
+  //       (parent.subComments = parent.subComments || []).push(comment);
+  //     }
+  //   });
 
-    console.log("2", commentMap, commentList);
+  //   console.log("2", commentMap, commentList);
 
-    // filter the list to return a list of correctly nested comments
-    // commentMap = {};
-    return commentList.filter((comment: anything) => {
-      return comment.parentId === null;
-    });
-  };
+  //   // filter the list to return a list of correctly nested comments
+  //   // commentMap = {};
+  //   return commentList.filter((comment: anything) => {
+  //     return comment.parentId === null;
+  //   });
+  // };
 
-  const fetchContent = async () => {
-    try {
-      const postRef = doc(db, "publicPosts", id);
+  // const fetchContent = async () => {
+  //   try {
+  //     const postRef = doc(db, "publicPosts", id);
 
-      const postSnap: anything = await getDoc(postRef);
-      // console.log(postSnap.data());
-      const data = postSnap.data();
-      setContent(data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     const postSnap: anything = await getDoc(postRef);
+  //     // console.log(postSnap.data());
+  //     const data = postSnap.data();
+  //     setContent(data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // const myNestComments = (commentList: CommentProps[]) => {
   //   commentList.reduce((prev, curr) => {
@@ -129,7 +156,7 @@ const PostPage = (props: Props) => {
   };
 
   useEffect(() => {
-    fetchContent();
+    // fetchContent();
     fetchComments();
     // return () => {
     //   setComments(undefined);
@@ -146,6 +173,7 @@ const PostPage = (props: Props) => {
     );
   }
   // if (error) return <Text>{error}</Text>;
+  const fecha:Date = content.createdAt
 
   return (
     <Layout>
@@ -155,9 +183,9 @@ const PostPage = (props: Props) => {
         )}
 
         <Title className="mb-2 text-3xl">{content?.title}</Title>
-        {content?.createdAt?.toDate() && (
+        { fecha&& (
           <Text className="mb-2 italic text-stone-400">
-            {dayjs(content?.createdAt?.toDate()).fromNow()}
+            {dayjs(fecha).fromNow()}
           </Text>
         )}
         {content?.message && (

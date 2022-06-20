@@ -211,6 +211,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
+        const publicRef = collection(db, "publicPosts", data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -224,6 +225,12 @@ export const useFirestore = () => {
           parentId: null,
           postId: data.postId,
         };
+
+         if(data.anonimo){
+         await addDoc(publicRef, {...Payload, author: "anonimo"});
+        } else {
+         await addDoc(publicRef, Payload);
+        }
 
         await addDoc(commentRef, Payload);
       } catch (error) {
