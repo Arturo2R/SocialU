@@ -1,24 +1,15 @@
-import { updateCurrentUser, updateProfile } from "@firebase/auth";
 import {
-  Autocomplete,
-  Group,
+  Autocomplete, Button, Group,
   NumberInput,
   Paper,
-  Space,
-  Switch,
-  TextInput,
-  Text,
-  Title,
-  Stack,
-  Button,
+  Space, Stack, Switch, Text, TextInput, Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-import React,{FC, useState} from "react";
+import { FC, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
-import { auth } from "../firebase";
 import { useFirestore } from "../hooks/useFirestore";
 // import { useStore } from "../store";
 

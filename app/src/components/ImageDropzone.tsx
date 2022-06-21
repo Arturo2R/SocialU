@@ -3,23 +3,23 @@ import {
   Image,
   MantineTheme,
   Text,
-  useMantineTheme,
+  useMantineTheme
 } from "@mantine/core";
 import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import { Icon as TablerIcon, Photo, Upload, X } from "tabler-icons-react";
 import { postsBanners } from "../firebase";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 
-function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
-  return status.accepted
-    ? theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]
-    : status.rejected
-    ? theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]
-    : theme.colorScheme === "dark"
-    ? theme.colors.dark[0]
-    : theme.colors.gray[7];
-}
+// function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
+//   return status.accepted
+//     ? theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]
+//     : status.rejected
+//     ? theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]
+//     : theme.colorScheme === "dark"
+//     ? theme.colors.dark[0]
+//     : theme.colors.gray[7];
+// }
 
 function ImageUploadIcon({
   status,

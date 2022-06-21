@@ -1,12 +1,6 @@
-import React from "react";
 import {
-  createStyles,
-  Container,
-  Title,
-  Text,
-  Button,
-  Group,
-  Image,
+  Button, Container, createStyles, Group,
+  Image, Text, Title
 } from "@mantine/core";
 import Layout from "../components/Layout/Layout";
 // import { Illustration } from "./Illustration";

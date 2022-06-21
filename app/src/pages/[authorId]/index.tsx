@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Text, Button, Paper } from '@mantine/core';
+import { useEffect } from 'react';
+import { Avatar, Text, Paper } from '@mantine/core';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout/Layout';
 import { useFirestore } from '../../hooks/useFirestore';
-import { LetterV } from 'tabler-icons-react';
 
 // interface UserInfoActionProps {
 //   avatar: string;

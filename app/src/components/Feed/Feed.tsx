@@ -14,21 +14,21 @@ import { Post } from "../Post/Post";
 import useStyles from "./Feed.styles";
 
 export function Feed({ data }: anything) {
-  const { classes } = useStyles();
+  // const { classes } = useStyles();
 
   // error state
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState<"loading" | "loaded">("loading");
+  // const [error, setError] = useState<Error | null>(null);
+  // const [isLoading, setIsLoading] = useState<"loading" | "loaded">("loading");
   const {
     data: liveData,
-    error: dataError,
-    postsLoading,
+    // error: dataError,
+    // postsLoading,
     fetchData,
   } = useFirestore();
   // console.log(data);
   useEffect(() => {
-    setIsLoading("loading");
-    fetchData().then(() => setIsLoading("loaded"));
+    // setIsLoading("loading");
+    fetchData()//.then(() => setIsLoading("loaded"));
     // return () => {
     // };
   }, []);

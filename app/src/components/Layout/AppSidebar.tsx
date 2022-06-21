@@ -1,6 +1,4 @@
 import { Aside, MediaQuery } from "@mantine/core";
-import React from "react";
-import CommentWall from "../Comment/CommentWall";
 
 type Props = {};
 

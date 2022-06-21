@@ -5,23 +5,23 @@ import {
   Input,
   InputWrapper,
   Switch,
-  Textarea,
+  Textarea
 } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
-
-import { DatePicker, TimeInput } from "@mantine/dates";
-import React, { useEffect, useState } from "react";
+import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
 // import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { FileCheck } from "tabler-icons-react";
 import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
-
-import { useFirestore } from "../hooks/useFirestore";
 import { useAuth } from "../context/AuthContext";
+import { useFirestore } from "../hooks/useFirestore";
+
+
 
 // type Props = {};
 
@@ -77,7 +77,7 @@ const CrearPost = () => {
       disallowClose: true,
       autoClose: 4000,
       title: "Post creado",
-      message: "La publicación fue creada exitosamente",
+      message: "La publicación fue creada exitosamente 😀",
       color: "orange",
       className: "my-notification-class",
       icon: <FileCheck />,

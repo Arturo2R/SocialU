@@ -1,19 +1,19 @@
 import {
-  ActionIcon,
-  Anchor,
+  // ActionIcon,
+  // Anchor,
   Avatar,
-  Collapse,
+  // Collapse,
   Group,
   Stack,
   Text,
-  Textarea,
+  // Textarea,
 } from "@mantine/core";
-import { useToggle } from "@mantine/hooks";
-import React, { useState } from "react";
+// import { useToggle } from "@mantine/hooks";
+import { useState } from "react";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { Send } from "tabler-icons-react";
+// import { Send } from "tabler-icons-react";
 import { Timestamp } from "@firebase/firestore";
 
 export interface CommentProps {
@@ -32,7 +32,7 @@ export function Comment({
   subComments,
   id,
 }: CommentProps) {
-  const [reply, toggle] = useToggle("closed", ["closed", "open"]);
+  // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
   dayjs.extend(relativeTime);
   dayjs.locale(es);

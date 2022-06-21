@@ -4,21 +4,16 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDoc,
-  limit,
+  getDoc, getDocs, limit,
   onSnapshot,
   orderBy,
   // QuerySnapshot,
   query,
   serverTimestamp,
-  setDoc,
-  where,
-  getDocs,
-  updateDoc,
+  setDoc, updateDoc, where
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { auth, db } from "../firebase";
 
 export const useFirestore = () => {
@@ -29,7 +24,8 @@ export const useFirestore = () => {
     "loading" | "loaded" | "error"
   >();
 
-
+  const path:string =  process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
+  console.log("path", path);
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
   // const {user} = useStore()
@@ -47,7 +43,7 @@ export const useFirestore = () => {
       // });
 
       const q = query(
-        collection(db, "publicPosts"),
+        collection(db, path),
         orderBy("createdAt", "desc"),
         limit(30)
       );
@@ -76,7 +72,7 @@ export const useFirestore = () => {
     let postSnap: any;
     try {
       setLoading(true);
-      const postRef = doc(db, "publicPosts", id);
+      const postRef = doc(db, path, id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
     } catch (error) {
@@ -95,7 +91,7 @@ export const useFirestore = () => {
         const generatedPostId = await nanoid(7);
 
         const postsRef = doc(db, "posts", generatedPostId);
-        const publicRef = doc(db, "publicPosts", generatedPostId);
+        const publicRef = doc(db, path, generatedPostId);
 
 
         let newPost: Post = {
@@ -149,7 +145,7 @@ export const useFirestore = () => {
       try {
         setLoading(true);
         console.log("Tirado", auth.currentUser.displayName);
-        const postRef = doc(db, "publicPosts", postId);
+        const postRef = doc(db, path, postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),
@@ -211,7 +207,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
-        const publicRef = collection(db, "publicPosts", data.postId, "comments");
+        const publicRef = collection(db, path, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,

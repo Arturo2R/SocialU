@@ -37,8 +37,8 @@ dayjs.locale(es);
 export async function getServerSideProps(context:any) {
   const {postId, authorName} = context.params
   
-  
-  const postRef = doc(db, "publicPosts", postId);
+  const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
+  const postRef = doc(db, path, postId);
 
   const postSnap: anything = await getDoc(postRef);
   // console.log(postSnap.data());
@@ -101,7 +101,7 @@ const PostPage = ({data:content}: Props) => {
 
   // const fetchContent = async () => {
   //   try {
-  //     const postRef = doc(db, "publicPosts", id);
+  //     const postRef = doc(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH, id);
 
   //     const postSnap: anything = await getDoc(postRef);
   //     // console.log(postSnap.data());
@@ -122,11 +122,14 @@ const PostPage = ({data:content}: Props) => {
   //   });
   // };
 
+  const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
+
+
   const fetchComments = async () => {
     try {
       setLoading(true);
       let q = query(
-        collection(db, "publicPosts", id, "comments"),
+        collection(db, path, id, "comments"),
         orderBy("postedAt", "desc")
         // limit(20)
       );

@@ -733,8 +733,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 } */
 
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
 body {
   font-family: "inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;

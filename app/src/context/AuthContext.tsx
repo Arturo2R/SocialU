@@ -1,5 +1,5 @@
 import { showNotification } from "@mantine/notifications";
-import { Cross1Icon } from "@modulz/radix-icons";
+import { Cross } from "tabler-icons-react";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -15,7 +15,7 @@ import {
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useStore } from "../store";
+// import { useStore } from "../store";
 import { auth } from "../firebase";
 import { useFirestore } from "../hooks/useFirestore";
 
@@ -173,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       title: "Has cerrado Sesión",
       color: "red",
       message: "Hasta pronto",
-      icon: <Cross1Icon />,
+      icon: <Cross />,
     });
   };
 
@@ -241,7 +241,7 @@ const updateInfo =
         message:
           "No estas usando un correo universtario de una de nuestras universidades permitidas",
         color: "red",
-        icon: <Cross1Icon />,
+        icon: <Cross/>,
         // className: "my-notification-class",
       });
     }

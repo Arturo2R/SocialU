@@ -13,11 +13,10 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { CheckCircledIcon } from "@modulz/radix-icons";
+import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useState, FC, useEffect } from "react";
-import { Plus } from "tabler-icons-react";
+import { useState, FC, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
@@ -183,7 +182,7 @@ export const Post: FC<PostProps> = ({
                   typeof postId === "string" && suscribe(postId, suscribed);
                 }}
                 color="orange"
-                rightIcon={suscribed ? <CheckCircledIcon /> : <Plus />}
+                rightIcon={suscribed ? <Check /> : <Plus />}
               >
                 {suscribed ? "Asistiré" : "Unirme"}
               </Button>

@@ -1,29 +1,12 @@
-import React, { useState } from 'react';
 import {
-  Container,
-  Avatar,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
-  Divider,
-  Tabs,
-  Burger,
+  Avatar, Burger, Container, Divider, Group, Menu, Tabs, Text, UnstyledButton
 } from '@mantine/core';
 import { useBooleanToggle } from '@mantine/hooks';
+import { useState } from 'react';
 import {
-  Logout,
-  Heart,
-  Star,
-  Message,
-  Settings,
-  PlayerPause,
-  Trash,
-  SwitchHorizontal,
-  ChevronDown,
+  ChevronDown, Heart, Logout, Message, PlayerPause, Settings, Star, SwitchHorizontal, Trash
 } from 'tabler-icons-react';
 import useStyles from './NavBar.styles';
-import Protected from '../Protected';
 // import { MantineLogo } from '../../shared/MantineLogo';
 
 interface NavBarProps {

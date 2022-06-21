@@ -127,7 +127,7 @@ export default class _Document extends Document {
         <body>
           <Main />
           <NextScript />
-          <Script src="https://accounts.google.com/gsi/client" />
+         
         </body>
       </Html>
     );

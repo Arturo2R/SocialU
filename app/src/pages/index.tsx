@@ -1,19 +1,16 @@
 import {
-  collection,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
+    collection, getDocs,
+    limit,
+    orderBy,
+    query
 } from "@firebase/firestore";
-import { useMemo } from "react";
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
 import { db } from "../firebase";
 
 export const getServerSideProps = async () => {
   const q = query(
-    collection(db, "publicPosts"),
+    collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
     orderBy("createdAt", "desc"),
     limit(30)
   );

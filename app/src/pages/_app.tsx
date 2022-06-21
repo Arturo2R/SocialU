@@ -1,15 +1,14 @@
 import {
   ColorScheme,
   ColorSchemeProvider,
-  MantineProvider,
+  MantineProvider
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { getCookie, setCookies } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import Script from "next/script";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AuthProvider } from "../context/AuthContext";
 // import GlobalStyles from '../lib/globalStyles'
 import "../styles/globals.css";
