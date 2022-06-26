@@ -6,13 +6,14 @@ import {
 } from "@firebase/firestore";
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
+import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 
 export const getServerSideProps = async () => {
   const q = query(
     collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
     orderBy("createdAt", "desc"),
-    limit(30)
+    limit(5)
   );
 
   const querySnapshot = await getDocs(q);
@@ -43,10 +44,13 @@ interface HomeProps {
 }
 
 export default function HomePage({ data }: HomeProps) {
-  console.log(data);
+  const { user } = useAuth()
+
+  
+
   return (
     <Layout>
-      <Feed data={data} />
+      <Feed data={data} user={user} />
     </Layout>
   );
 }

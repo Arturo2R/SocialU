@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   createStyles,
@@ -16,6 +16,9 @@ import {
 import Link from "next/link";
 // import Image from 'next/image';
 import { useAuth } from "../context/AuthContext";
+import { showNotification } from "@mantine/notifications";
+import { useRouter } from "next/router";
+import { X } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -57,7 +60,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function AuthenticationPage() {
-  const { loginWithGoogle, login } = useAuth();
+  const { loginWithGoogle, login, valid, logout } = useAuth();
 
   const { classes } = useStyles();
 
@@ -66,6 +69,8 @@ function AuthenticationPage() {
     password: "",
   });
 
+  
+
   const handleGoogletication = async () => {
     loginWithGoogle();
   };
@@ -73,6 +78,40 @@ function AuthenticationPage() {
   const handleLogin = () => {
     login(form.email, form.password);
   };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("valid cambió a ", valid);
+    if (valid === true) {
+      console.log("is valid");
+      router.push("/");
+      showNotification({
+        id: "welcome",
+        disallowClose: true,
+        autoClose: 5000,
+        title: "Bienvenido",
+        message: "Bienvenido a la aplicación",
+        color: "orange",
+        className: "my-notification-class",
+      });
+    }
+    if (valid === false) {
+      logout();
+      showNotification({
+        id: "get-out",
+        disallowClose: true,
+        autoClose: 5000,
+        title: "No Estas Permitido",
+        message:
+          "No estas usando un correo universtario de una de nuestras universidades permitidas",
+        color: "red",
+        icon: <X/>,
+        // className: "my-notification-class",
+      });
+    }
+  }, [valid]);
+
 
   // const handleChange = (e) => {
   //   setForm({...Form, email: e.target.value, password: e.target.value})

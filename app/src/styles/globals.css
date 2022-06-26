@@ -399,7 +399,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
-/* @keyframes bp-fadein {
+@keyframes bp-fadein {
   from {
     opacity: 0.01;
   }
@@ -430,8 +430,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 100%;
   position: fixed;
   z-index: 999;
-   If you're mounting on a portion of the screen and need visible
-  overflow on .bp-wrap, change contain to "layout" on that instance 
+   /* If you're mounting on a portion of the screen and need visible
+  overflow on .bp-wrap, change contain to "layout" on that instance  */
   contain: strict;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
@@ -731,7 +731,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   .bp-count {
     margin: 13px;
   }
-} */
+}
 
 /* @tailwind base; */
 @tailwind components;

@@ -1,5 +1,5 @@
 import { showNotification } from "@mantine/notifications";
-import { Cross } from "tabler-icons-react";
+import { X } from "tabler-icons-react";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -10,7 +10,7 @@ import {
   signInWithPopup,
   signOut,
   UserCredential,
-  updateProfile,
+  // updateProfile,
 } from "firebase/auth";
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
@@ -57,6 +57,7 @@ interface AuthContextInterface {
   user: User | null;
   setUser: Function
   logout(): void;
+  valid: boolean|string;
   loading: boolean;
   loginWithGoogle(): Promise<UserCredential>;
   resetPassword(email: string): Promise<void>;
@@ -173,7 +174,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       title: "Has cerrado Sesión",
       color: "red",
       message: "Hasta pronto",
-      icon: <Cross />,
+      icon: <X />,
     });
   };
 
@@ -216,21 +217,8 @@ const updateInfo =
     console.log("despues de validar el correo ", user?.email, " es", valid);
   }, [user]);
 
-  useEffect(() => {
-    console.log("valid cambió a ", valid);
-    if (valid === true) {
-      console.log("is valid");
-      router.push("/");
-      showNotification({
-        id: "welcome",
-        disallowClose: true,
-        autoClose: 5000,
-        title: "Bienvenido",
-        message: "Bienvenido a la aplicación",
-        color: "orange",
-        className: "my-notification-class",
-      });
-    }
+  
+useEffect(() => {
     if (valid === false) {
       logout();
       showNotification({
@@ -241,12 +229,11 @@ const updateInfo =
         message:
           "No estas usando un correo universtario de una de nuestras universidades permitidas",
         color: "red",
-        icon: <Cross/>,
+        icon: <X/>,
         // className: "my-notification-class",
       });
     }
   }, [valid]);
-
 
   return (
     <authContext.Provider
@@ -256,6 +243,7 @@ const updateInfo =
         user,
         setUser,
         logout,
+        valid,
         loading,
         loginWithGoogle,
         resetPassword,

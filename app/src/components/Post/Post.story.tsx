@@ -15,9 +15,9 @@ export const Default = Template.bind({});
 
 Default.args = {
   title: "Post title",
-  image: "https://source.unsplash.com/random/300x400",
   description: "CUal quier vaina",
   author: "anonimo",
+  userUID: "kfjñalskfjañlskdfjslk"
 };
 
 export const Simple = Template.bind({});

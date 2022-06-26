@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { Timestamp } from "@firebase/firestore";
 import {
-  Anchor,
+  // Anchor,
   Avatar,
   Button,
   Card,
@@ -50,6 +50,7 @@ export interface PostProps {
     suscribedAt?: Timestamp;
   }[];
   key: number;
+  userUID?: string;
 }
 
 
@@ -63,9 +64,10 @@ export const Post: FC<PostProps> = ({
   asistants,
   event,
   key,
+  userUID,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const { user } = useAuth()
+ 
 
 
 
@@ -73,10 +75,10 @@ export const Post: FC<PostProps> = ({
   // useEffect(() => {
   const sera = (): boolean => {
     let isSuscribed: boolean
-    if (event && asistants) {
+    if (event && asistants && userUID) {
       isSuscribed = asistants.some((item) => {
         // console.log(item.user.ref, `user/${user?.uid}`)
-        return item.user.ref == `user/${user?.uid}`
+        return item.user.ref == `user/${userUID}`
       })
     } else { isSuscribed = false }
     return isSuscribed
@@ -98,7 +100,7 @@ export const Post: FC<PostProps> = ({
 
   const { suscribe } = useFirestore();
   return (
-    <article className="">
+    <article className="px">
       <Card withBorder p="xs" radius="md">
         <Link 
           href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
