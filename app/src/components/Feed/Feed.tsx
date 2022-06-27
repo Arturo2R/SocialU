@@ -13,7 +13,7 @@ import { Suspense } from "react";
 import { Post } from "../Post/Post";
 import useStyles from "./Feed.styles";
 
-export function Feed({ data }: anything) {
+export function Feed({ data, user }: anything) {
   // const { classes } = useStyles();
 
   // error state
@@ -56,6 +56,7 @@ export function Feed({ data }: anything) {
         <Stack spacing="lg" className="mx-auto max-w-sm">
           {(liveData ?? data).map((post: any, index: number) => (
             <Post
+              userUID={user?.uid}
               description={post.message}
               author={
                 post.anonimo
