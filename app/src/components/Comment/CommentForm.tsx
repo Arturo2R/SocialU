@@ -12,11 +12,12 @@ type Props = {
 
 const CommentForm = (props: Props) => {
   const {user} = useAuth()
+  const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
 
   const form = useForm({
     initialValues: {
       content: "",
-      anonimo: false,
+      anonimo: user?.configuration?.anonimoDefault || false,
       postId: props.postId,
     },
   });
@@ -47,7 +48,11 @@ const CommentForm = (props: Props) => {
         <Switch
           color="orange"
           label="Enviar Anonimamente"
-          {...form.getInputProps("anonimo", { type: "checkbox" })}
+          checked={anonimo}
+          onChange={(e) => {
+            setAnonimo(e.currentTarget.checked);
+            form.setFieldValue("anonimo", e.currentTarget.checked);
+          }}
         ></Switch>
       </div>
       {/* <div className=""> */}
