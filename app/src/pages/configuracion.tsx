@@ -1,14 +1,13 @@
 import {
-  Autocomplete, Button, Group,
-  NumberInput,
-  Paper,
-  Space, Stack, Switch, Text, TextInput, Title
+    Autocomplete, Button, Group,
+    NumberInput,
+    Paper,
+    Space, Stack, Switch, Text, TextInput, Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
 import { FC, useState } from "react";
 import Layout from "../components/Layout/Layout";
-import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
 // import { useStore } from "../store";
@@ -18,7 +17,7 @@ type Props = {};
 const configuracion = (props: Props) => {
   // const { user } = useStore.getState();
   const [anonimo, setAnonimo]= useState<boolean>(false)
-  const [useUserName, setUseUserName] = useState<boolean>(false)
+  const [useUserName, setuseUserName] = useState<boolean>(false)
 
   const { resetPassword, user, setUser} = useAuth();
   const {updateProfile: updateFirestoreProfile, updatingProfile} = useFirestore()
@@ -27,14 +26,16 @@ const configuracion = (props: Props) => {
 
   const form = useForm({
     initialValues: {
-      userName: user?.userName,
+      userName: user?.userName ,
       email: user?.email,
       displayName: user?.displayName,
-      semester: user?.semester,
+      semester: user?.semester || "",
       photoURL: user?.photoURL,
-      career: user?.career,
+      career: user?.career ||"",
       // password: "",
-      phoneNumber: user?.phoneNumber,
+      phoneNumber: user?.phoneNumber || "",
+      anonimoDefault: user?.configuration?.anonimoDefault || false, 
+      useUserName: user?.configuration?.useUserName  || false,
     },
     // validate: {
     //   title: {
@@ -53,7 +54,7 @@ const configuracion = (props: Props) => {
 
   const saveConfiguration = (configurationData: any) => {
     if(user?.uid){
-      console.log("disparado")
+   // console.log("disparado")
       setLoading(true)
       updateFirestoreProfile(user.uid,configurationData, user, setUser).then(()=>showNotification({
         id: "created-post",
@@ -71,7 +72,7 @@ const configuracion = (props: Props) => {
   };
 
   return (
-    <Protected.Route>
+    // <Protected.Route>
       <Layout>
         <Paper p="md" shadow="sm" radius="md">
           <Title>Configuración</Title>
@@ -129,20 +130,18 @@ const configuracion = (props: Props) => {
               <Title order={2}>Posts</Title>
               <SwitchConfiguration title="Anonimo Predeterminado"
                description="Publicar como anonimo predeterminadamente para los posts y los comentarios" 
-               value={anonimo} 
-               onChange={setAnonimo}
+               {...form.getInputProps("anonimoDefault")}
                />
                <SwitchConfiguration title="Usar Nombre De Usuario"
                description="Usar el nombre de usuario en lugar del nombre real para las publicaciones y comentarios" 
-               value={useUserName} 
-               onChange={setUseUserName}
+               {...form.getInputProps("useUserName")}
                />
             <Button loading={loading} mt="sm" type="submit" color="orange" radius="md" uppercase>Guardar</Button>  
           </Stack>
           </form>
         </Paper>
       </Layout>
-    </Protected.Route>
+    // </Protected.Route>
   );
 };
 

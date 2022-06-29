@@ -57,7 +57,7 @@ export const AppHeader = ({
               <Text>{user?.displayName}</Text>
             </MediaQuery>
           )}
-          {user?.photoURL && <Avatar radius="xl" src={user?.photoURL} />}
+          {user?.photoURL && <Avatar radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
           {user === null && (
             <Button
               size={matches ? "md" : "xs"}

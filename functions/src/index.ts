@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
@@ -37,7 +37,7 @@ export const securedPosts = functions.firestore
           userUID: "",
         };
       }
-      console.log("Documento", snap.id);
+   // console.log("Documento", snap.id);
 
       admin.firestore().doc(`/publicPosts/${snap.id}`).create(Payload);
     // perform desired operations ...
@@ -57,7 +57,7 @@ export const securedComments = functions.firestore
           author: "anonimo",
         };
       }
-      console.log("Documento", snap.id);
+   // console.log("Documento", snap.id);
 
       admin
           .firestore()

@@ -13,7 +13,7 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { Check, Plus } from "tabler-icons-react";
+import { BorderRadius, Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, FC, useEffect } from "react";
@@ -138,7 +138,7 @@ export const Post: FC<PostProps> = ({
           <Link href={`/${author.id}`} >
             <a >
               <Group className="mt-1" spacing="xs">
-                <Avatar size="sm" src={author?.image} radius="xl" />
+                {author?.image && <Image width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
                 <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
               </Group>
             </a>

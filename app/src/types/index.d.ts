@@ -5,6 +5,8 @@ declare global {
     google: any;
   }
 
+
+
   interface User {
     email?: string;
     uid?: string;
@@ -15,6 +17,15 @@ declare global {
     description?: string;
     semester?: number;
     career: string;
+  }
+
+  interface AppConfiguration { 
+    anonimoDefault: boolean;
+    useUserName: boolean;
+  }
+
+  interface UserState extends User {
+    configuration: AppConfiguration;
   }
 
   interface FormPost {

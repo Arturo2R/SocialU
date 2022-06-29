@@ -1,7 +1,7 @@
 import {
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider
+    ColorScheme,
+    ColorSchemeProvider,
+    MantineProvider
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
 import { getCookie, setCookies } from "cookies-next";
@@ -36,7 +36,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   //     callback: console.log,
   //     auto_select: true,
   //   });
-  //   console.log("Tirado");
+  //// console.log("Tirado");
   //   globalThis?.window?.google?.accounts?.id?.prompt();
   // }, []);
 

@@ -27,9 +27,10 @@ import { useFirestore } from "../hooks/useFirestore";
 
 const CrearPost = () => {
   const {user} = useAuth()
-
+  console.log(user?.configuration?.anonimoDefault)
   // Event state
   const [event, setEvent] = useState(false);
+  const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
   //image state
   const [image, setImage] = useState<File | null>(null);
 
@@ -47,7 +48,7 @@ const CrearPost = () => {
       time: "",
       image: "",
       isEvent: false,
-      anonimo: false,
+      anonimo: user?.configuration?.anonimoDefault,
     },
     // validate: {
     //   title: {
@@ -132,7 +133,11 @@ const CrearPost = () => {
               <Switch
                 label="Post Anónimo"
                 color="orange"
-                {...form.getInputProps("anonimo")}
+                checked={anonimo}
+                onChange={(e) => {
+                  setAnonimo(e.currentTarget.checked);
+                  form.setFieldValue("anonimo", e.currentTarget.checked);
+                }}
               />
               <Switch
                 mt="sm"

@@ -1,16 +1,16 @@
 import {
-  collection,
-  doc,
-  getDoc, onSnapshot, orderBy, query
+    collection,
+    doc,
+    getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
-  Center,
-  Image,
-  Loader,
-  Paper,
-  Stack,
-  Text,
-  Title
+    Center,
+    Image,
+    Loader,
+    Paper,
+    Stack,
+    Text,
+    Title
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -30,7 +30,7 @@ import { db } from "../../../firebase";
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
 
-type Props = {data:Post};
+export interface PostPageProps {data:Post, postId: string};
 dayjs.extend(relativeTime);
 dayjs.locale(es);
 
@@ -56,14 +56,14 @@ export async function getServerSideProps(context:any) {
   
 
   return {
-    props: {data: Payload}, // will be passed to the page component as props
+    props: {data: Payload, postId}, // will be passed to the page component as props
   }
 }
 
-const PostPage = ({data:content}: Props) => {
+const PostPage = ({data:content, postId: id}: PostPageProps) => {
   const router = useRouter();
-  const { postId, authorName } = router.query;
-  const id: string = typeof postId === "string" ? postId : "nada-que-ver";
+  // const { postId, authorName } = router.query;
+  // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
   const [loading, setLoading] = useState(false);
@@ -73,14 +73,14 @@ const PostPage = ({data:content}: Props) => {
   // const { fetchPost, loading, error } = useFirestore();
   // const nestComments = (commentList: CommentProps[]) => {
   //   let commentMap: anything = {};
-  //   console.log("0", commentList, commentMap);
+  //// console.log("0", commentList, commentMap);
 
   //   // move all the comments into a map of id => comment
   //   commentList.forEach(
   //     (comment: anything) => (commentMap[comment.id] = comment)
   //   );
 
-  //   console.log("1", commentMap);
+  //// console.log("1", commentMap);
 
   //   // iterate over the comments again and correctly nest the children
   //   commentList.forEach((comment) => {
@@ -90,7 +90,7 @@ const PostPage = ({data:content}: Props) => {
   //     }
   //   });
 
-  //   console.log("2", commentMap, commentList);
+  //// console.log("2", commentMap, commentList);
 
   //   // filter the list to return a list of correctly nested comments
   //   // commentMap = {};
@@ -108,7 +108,7 @@ const PostPage = ({data:content}: Props) => {
   //     const data = postSnap.data();
   //     setContent(data);
   //   } catch (error) {
-  //     console.log(error);
+  //  // console.log(error);
   //   } finally {
   //     setLoading(false);
   //   }
@@ -144,7 +144,7 @@ const PostPage = ({data:content}: Props) => {
             ...comment,
             author: comment.anonimo === true ? "anonimo" : comment.author,
           }));
-        console.log("raw", commentsDB);
+     // console.log("raw", commentsDB);
         setComments(commentsDB);
       });
 
@@ -152,7 +152,7 @@ const PostPage = ({data:content}: Props) => {
 
       // console.log("nested data", nestComments(commentsDB));
     } catch (error) {
-      console.log(error);
+   // console.log(error);
     } finally {
       setLoading(false);
     }

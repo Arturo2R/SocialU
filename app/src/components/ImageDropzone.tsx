@@ -1,9 +1,9 @@
 import {
-  Group,
-  Image,
-  MantineTheme,
-  Text,
-  useMantineTheme
+    Group,
+    Image,
+    MantineTheme,
+    Text,
+    useMantineTheme
 } from "@mantine/core";
 import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -68,7 +68,7 @@ export default function ImageDropzone({
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
   const addImage = (file: File[]) => {
-    console.log(file);
+ // console.log(file);
 
     setImage(file[0]);
     const reader = new FileReader();
@@ -97,7 +97,7 @@ export default function ImageDropzone({
           onDrop={(files: File[]) => {
             // uploadBytes(storageRef, file);
             addImage(files);
-            console.log("accepted files", files);
+         // console.log("accepted files", files);
           }}
           onReject={(files: unknown) => console.log("rejected files", files)}
           maxSize={3 * 1024 ** 2}

@@ -16,6 +16,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
 
+const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>();
@@ -23,29 +24,42 @@ export const useFirestore = () => {
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
   >();
+  const [lastVisible, setLastVisible] = useState();
 
-  const path:string =  process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
-  console.log("path", path);
+  // console.log("path", path);
   // creating state
   const [creating, setCreating] = useState<boolean>(false);
   // const {user} = useStore()
 
+
+  // const fetchMore = async () => { 
+  //   try {
+  //     const q = query(
+  //       collection(db, path),
+  //       orderBy("createdAt", "desc"),
+  //       limit(20),
+  //       startAfter(lastVisible)
+  //     );
+
+  //     const querySnapshot = await getDocs(q);
+  //     setLastVisible(querySnapshot.docs[querySnapshot.docs.length-1])
+  //     setData([...data, querySnapshot.docs])
+  //     console.log(data)
+
+
+  //   } catch (error) {
+      
+  //   }
+  // }
+
   const fetchData = async () => {
     setPostsLoading("loading");
     try {
-      // querysnapshot function to get docs from firestore
-      // const dataRef = collection(db, "posts");
-
-      // const snapshot = await query(dataRef, {
-      //   collection: "posts",
-      //   orderBy: ["createdAt", "desc"],
-      //   limit: 10,
-      // });
 
       const q = query(
         collection(db, path),
         orderBy("createdAt", "desc"),
-        limit(30)
+        limit(100)
       );
       // const querySnapshot = await getDocs(q);
 
@@ -59,7 +73,7 @@ export const useFirestore = () => {
         setPostsLoading("loaded");
       });
     } catch (thiserror: any) {
-      console.log(thiserror);
+   // console.log(thiserror);
 
       //ts-ignore
       setError(thiserror.message);
@@ -76,14 +90,14 @@ export const useFirestore = () => {
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
     } catch (error) {
-      console.log(error);
+   // console.log(error);
     } finally {
       setLoading(false);
     }
     return postSnap;
   };
 
-  const createPost = async (formData: FormPost, user:User) => {
+  const createPost = async (formData: FormPost, user: UserState) => {
     if (auth.currentUser && user?.photoURL && auth.currentUser.email) {
       try {
         setLoading(true);
@@ -106,31 +120,30 @@ export const useFirestore = () => {
           // ...(auth.currentUser.photoURL && {
           authorImage: user?.photoURL,
           // }),
-          userName: user?.userName,
+          userName: user?.configuration?.useUserName ? user?.userName : user?.displayName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
           userUID: auth.currentUser.uid,
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
-          
         };
         // let Payload: Post
-        if(formData.anonimo){
-         await setDoc(publicRef, {...formData, createdAt: serverTimestamp(),});
+        if (formData.anonimo) {
+          await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
         } else {
-         await setDoc(publicRef, newPost);
+          await setDoc(publicRef, newPost);
         }
         // setData([...data, newPost]);
 
-        
+
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
-        console.log(thiserror.message);
+     // console.log(thiserror.message);
       } finally {
         setLoading(false);
       }
     } else {
-      console.log("Inautorizado");
+   // console.log("Inautorizado");
     }
   };
 
@@ -144,7 +157,7 @@ export const useFirestore = () => {
     if (auth.currentUser?.displayName) {
       try {
         setLoading(true);
-        console.log("Tirado", auth.currentUser.displayName);
+     // console.log("Tirado", auth.currentUser.displayName);
         const postRef = doc(db, path, postId);
         const Payload: letSuscribe = {
           postId,
@@ -168,12 +181,12 @@ export const useFirestore = () => {
           });
         }
       } catch (error) {
-        console.log("errorsaso", error);
+     // console.log("errorsaso", error);
       } finally {
         setLoading(false);
       }
     } else {
-      console.log("Nada Papi");
+   // console.log("Nada Papi");
     }
   };
 
@@ -194,14 +207,14 @@ export const useFirestore = () => {
     parentId?: string | null;
   }
 
- 
 
-  const createComment = async (data: CommentFormProps, user:any) => {
+
+  const createComment = async (data: CommentFormProps, user: any) => {
     if (
-     user?.displayName &&
-     user.uid &&
-     user.photoURL &&
-     user.userName
+      user?.displayName &&
+      user.uid &&
+      user.photoURL &&
+      user.userName
     ) {
       try {
         setCreating(true);
@@ -213,7 +226,7 @@ export const useFirestore = () => {
           anonimo: data.anonimo,
           author: {
             image: user.photoURL,
-            name: user.displayName,
+            name: user?.configuration?.useUserName ? user?.userName: user?.displayName,
             ref: `user/${user.uid}`,
             userName: user.userName,
           },
@@ -222,15 +235,15 @@ export const useFirestore = () => {
           postId: data.postId,
         };
 
-         if(data.anonimo){
-         await addDoc(publicRef, {...Payload, author: "anonimo"});
+        if (data.anonimo) {
+          await addDoc(publicRef, { ...Payload, author: "anonimo" });
         } else {
-         await addDoc(publicRef, Payload);
+          await addDoc(publicRef, Payload);
         }
 
         await addDoc(commentRef, Payload);
       } catch (error) {
-        console.log(error);
+     // console.log(error);
       } finally {
         setCreating(false);
       }
@@ -264,7 +277,7 @@ export const useFirestore = () => {
     let userSnap;
     let userProfile;
 
-    
+
     // Esto mira si el usuario existe, si es asi lo trae y si no existe crea uno nuevo
     try {
       userSnap = await getDoc(userRef);
@@ -275,7 +288,7 @@ export const useFirestore = () => {
       } else {
         if (user?.displayName && user?.uid && user?.email) {
           try {
-            console.log("Creando Un Nuevo Usuario");
+         // console.log("Creando Un Nuevo Usuario");
             setCreating(true);
 
             const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
@@ -283,19 +296,22 @@ export const useFirestore = () => {
               user.email
             ) || ["lalama.com", "lalalama.com", "lalama.com"];
 
-            const Payload: userSchema = {
+            const Payload: UserState = {
               displayName: user.displayName,
               uid: user.uid,
               email,
               userName,
-              anonimoDefault: false,
+              configuration: { 
+                anonimoDefault: false,
+                useUserName: false,
+              },
               ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
               ...(user.photoURL && { photoURL: user.photoURL }),
             };
             setter(Payload);
             await setDoc(userRef, Payload);
           } catch (error) {
-            console.log(error);
+         // console.log(error);
           } finally {
             setCreating(false);
             // console.log(useStore.getState().user);
@@ -303,79 +319,82 @@ export const useFirestore = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+   // console.log(error);
     }
   };
 
   interface userConfiguration extends userSchema {
     anonimoDefault: boolean,
   }
-  
-  const [updatingProfile, setUpdatingProfile] = useState<"loading"| "loaded"| "error"| false>(false)
+
+  interface configurationForm extends User, AppConfiguration { }
+
+  const [updatingProfile, setUpdatingProfile] = useState<"loading" | "loaded" | "error" | false>(false)
   //? Función Provisional, pasar a una función en un contexto propio
-  const updateProfile = async (id:string, Payload:userSchema, user: User, setter: Function) => {
+  const updateProfile = async (id: string, Payload: configurationForm, user: User, setter: Function) => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
 
       const data = {
-      ...(Payload.anonimoDefault  && { anonimoDefault: Payload.anonimoDefault }),
-              ...(Payload.career && { career: Payload.career }),
-              ...(Payload.semester && { semester: Payload.semester }),
-              ...(Payload.photoURL && { photoURL: Payload.photoURL }),
-              ...(Payload.phoneNumber && { phoneNumber: Payload.phoneNumber }),
-              ...(Payload.userName && { userName: Payload.userName }),
-              ...(Payload.description && { description: Payload.description }),
-              // ...(Payload. && { photoURL: Payload.photoURL }),
-              // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
-            }
-
-      console.log(data)
+        ...user,
+        ...Payload,
+          configuration: {
+            anonimoDefault: Payload.anonimoDefault,
+            useUserName: Payload.useUserName,
+          }
+        }
+        
+        // ...(Payload. && { photoURL: Payload.photoURL }),
+        // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
       
-      setter((user:any) => ({
-      ...user,
-      ...data
-    }))
+
+   // console.log(data)
+
+      setter((user: any) => ({
+        ...user,
+        ...data
+      }))
 
       await updateDoc(userRef, data)
-      
+
     } catch (error) {
-      console.log(error)
+   // console.log(error)
       setUpdatingProfile("error")
     } finally {
       setUpdatingProfile("loaded")
-    } 
+    }
   }
 
-  const UserPaths = async () => { 
-      try {
-        const q = query(collection(db, "user"))
-        const ids = await getDocs(q)
-        return q
-      } catch (error) {
-        console.error(error)
-      }
+  const UserPaths = async () => {
+    try {
+      const q = query(collection(db, "user"))
+      const ids = await getDocs(q)
+      return q
+    } catch (error) {
+      console.error(error)
+    }
   }
 
 
   const [authorProfile, serAuthorProfile] = useState<any>()
-  const fetchUser = async (userName:string)=> {
+  const fetchUser = async (userName: string) => {
     try {
-        const userRef = query(collection(db, 'user'), where("userName", "==", userName), limit(1))
-        const user = await getDocs(userRef)
-        const data = user.docs[0].data()
-        serAuthorProfile(data)
-      } catch (error) {
-        console.error(error)
-        return undefined
-      }
+      const userRef = query(collection(db, 'user'), where("userName", "==", userName), limit(1))
+      const user = await getDocs(userRef)
+      const data = user.docs[0].data()
+      serAuthorProfile(data)
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
   }
 
 
-  
+
 
   // useEffect(() => {
-  //   console.log("useFirestore to getData");
+  //// console.log("useFirestore to getData");
   //   fetchData();
   // }, []);
 

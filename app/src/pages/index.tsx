@@ -9,11 +9,11 @@ import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const q = query(
     collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
     orderBy("createdAt", "desc"),
-    limit(5)
+    limit(7)
   );
 
   const querySnapshot = await getDocs(q);

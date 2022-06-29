@@ -1,20 +1,19 @@
 import { showNotification } from "@mantine/notifications";
-import { X } from "tabler-icons-react";
 import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithCredential,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  signOut,
-  UserCredential,
-  // updateProfile,
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    sendPasswordResetEmail,
+    signInWithCredential,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut,
+    UserCredential
 } from "firebase/auth";
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
+import { X } from "tabler-icons-react";
 // import { useStore } from "../store";
 import { auth } from "../firebase";
 import { useFirestore } from "../hooks/useFirestore";
@@ -54,7 +53,7 @@ interface Login {
 interface AuthContextInterface {
   signup(email: string, password: string): Promise<UserCredential>;
   login(email: string, password: string): Promise<UserCredential>;
-  user: User | null;
+  user: UserState | null;
   setUser: Function
   logout(): void;
   valid: boolean|string;
@@ -118,7 +117,7 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user,  setUser] = useState<User | null>(null);
+  const [user,  setUser] = useState<UserState | null>(null);
   const [loading, setLoading] = useState(true);
   const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
@@ -137,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const loginWithGoogle = () => {
-    console.log("google provider");
+ // console.log("google provider");
     const googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({
       login_hint: "usuario@uninorte.edu.com",
@@ -153,9 +152,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogleOneTap = (
     response: googleResponse
   ): Promise<UserCredential> => {
-    console.log("google one tap");
+ // console.log("google one tap");
     const data: googleDecodedResponse = jwt_decode(response.credential);
-    console.log(data);
+ // console.log(data);
     const cred = GoogleAuthProvider.credential(response.credential);
     // Sign in with credential from the Google user.
     // console.log(user)
@@ -163,7 +162,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    console.log("Se fue");
+ // console.log("Se fue");
     setUser(null);
     setValid("unset");
     signOut(auth);
@@ -185,36 +184,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     //   auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
     //   auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
     // }).catch((error) => {
-    //   console.log(error)
+    //// console.log(error)
     // });
     // }
 
 const updateInfo = 
 
   useEffect(() => {
-    console.log("unsubuscribe effect", valid);
+ // console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
         setUser(currentUser);
         // console.log({ currentUser });
         createOrFetchUser(currentUser, setUser);
         setLoading(false);
-        console.log("elusuario", user);
+     // console.log("elusuario", user);
       } else {
-        console.log("No hay usuario");
+     // console.log("No hay usuario");
       }
     });
     return () => unsubuscribe();
   }, [auth]);
 
   useEffect(() => {
-    console.log("antes de validar el correo ", user?.email, " es", valid);
+ // console.log("antes de validar el correo ", user?.email, " es", valid);
     if (user?.email) {
       const quees = StudentValidation(user.email);
-      console.log("la validacion es", quees);
+   // console.log("la validacion es", quees);
       setValid(quees);
     }
-    console.log("despues de validar el correo ", user?.email, " es", valid);
+ // console.log("despues de validar el correo ", user?.email, " es", valid);
   }, [user]);
 
   

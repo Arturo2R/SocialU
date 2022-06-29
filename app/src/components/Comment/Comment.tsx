@@ -80,7 +80,7 @@ export function Comment({
       </div>
 
       {subComments && (
-        <Stack className="border-l-2 pl-4">
+        <Stack className="pl-4 border-l-2">
           {subComments?.map((subco, index) => (
             <Comment
               id={subco.id}

@@ -1,24 +1,13 @@
-import React, { useEffect, useState } from "react";
 import {
-  Paper,
-  createStyles,
-  TextInput,
-  PasswordInput,
-  Button,
-  Title,
-  Text,
-  Anchor,
-  Group,
-  Divider,
-  Space,
-  Image,
+    Anchor, Button, createStyles, Divider, Group, Image, Paper, PasswordInput, Space, Text, TextInput, Title
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { X } from "tabler-icons-react";
 // import Image from 'next/image';
 import { useAuth } from "../context/AuthContext";
-import { showNotification } from "@mantine/notifications";
-import { useRouter } from "next/router";
-import { X } from "tabler-icons-react";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -82,9 +71,9 @@ function AuthenticationPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("valid cambió a ", valid);
+ // console.log("valid cambió a ", valid);
     if (valid === true) {
-      console.log("is valid");
+   // console.log("is valid");
       router.push("/");
       showNotification({
         id: "welcome",

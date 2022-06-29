@@ -22,7 +22,7 @@ const Google1Tap = ({login, user}: Props,) => {
         itp_support: true,
         // skip_prompt_cookie: "localhost",
       });
-      console.log("Tirado");
+   // console.log("Tirado");
       globalThis?.window?.google?.accounts?.id?.prompt();
     // }
     // console.log("despues del intervalor");

@@ -1,17 +1,12 @@
 import {
   Container,
   Space,
-  Stack,
-  Loader,
-  Text,
-  Title,
-  Center,
+  Stack
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
-import { Suspense } from "react";
 import { Post } from "../Post/Post";
-import useStyles from "./Feed.styles";
+// import InfiniteScroll from 'react-infinite-scroller';
 
 export function Feed({ data, user }: anything) {
   // const { classes } = useStyles();
@@ -62,7 +57,7 @@ export function Feed({ data, user }: anything) {
                 post.anonimo
                   ? "anonimo"
                   : {
-                      name: post.authorName,
+                      name: post.userName,
                       id: post.userName ? post.userName : post.id,
                       ...(post.authorImage && { image: post.authorImage }),
                     }
