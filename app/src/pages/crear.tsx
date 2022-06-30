@@ -4,6 +4,7 @@ import {
   Container,
   Input,
   InputWrapper,
+  Modal,
   Switch,
   Textarea
 } from "@mantine/core";
@@ -29,6 +30,7 @@ const CrearPost = () => {
   const {user} = useAuth()
   console.log(user?.configuration?.anonimoDefault)
   // Event state
+  const [opened, setOpened] = useState(false)
   const [event, setEvent] = useState(false);
   const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
   //image state
@@ -65,9 +67,36 @@ const CrearPost = () => {
     // },
   });
 
+  const checkImage = async (url:string): Promise<boolean> => {
+    let data = {
+      "DataRepresentation":"URL",
+      "Value": url
+    };
+    let isPorn : boolean = false
+    try {
+      let response = await fetch('https://nap.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate?', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Ocp-Apim-Subscription-Key': 'a4b85165c2584472a9f2b5dd6101525f',
+        },
+        body: JSON.stringify(data)
+      });
+  
+      let result = await response.json();
+      console.log(result)
+      isPorn = result.IsImageAdultClassified
+    } catch (error) {
+      console.log("Un error mirando la imagen", error)
+    }
+    return isPorn
+  }
+
   // form.setFieldValue("image", image);
   useEffect(() => {
-    imageUrl && form.setFieldValue("image", imageUrl);
+    if(imageUrl){
+      checkImage(imageUrl).then(porn =>{ if(porn){setOpened(true); setImage(null); setImageUrl(null)}else{form.setFieldValue("image", imageUrl)}})
+    }
   }, [imageUrl]);
 
   // form.setFieldValue("message", debouncedMessage);
@@ -94,6 +123,14 @@ const CrearPost = () => {
   return (
     <Layout>
       <Protected.Route>
+        <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        withCloseButton={false}
+        title="Que Pensabas!"
+      >
+       <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
+      </Modal>
         <Container className="h-full">
           <form
             onSubmit={form.onSubmit((values) => submitPost(values))}

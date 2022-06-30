@@ -1,16 +1,16 @@
 import {
-    collection,
-    doc,
-    getDoc, onSnapshot, orderBy, query
+  collection,
+  doc,
+  getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
-    Center,
-    Image,
-    Loader,
-    Paper,
-    Stack,
-    Text,
-    Title
+  Center,
+  Image,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  Title
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -50,11 +50,6 @@ export async function getServerSideProps(context:any) {
     ...(data.date !== "" && { date: data.date?.toJSON() }),
     ...(typeof data.time !== "string" && {time: data.time?.toJSON() }),
   }
-    
-      
-    
-  
-
   return {
     props: {data: Payload, postId}, // will be passed to the page component as props
   }
