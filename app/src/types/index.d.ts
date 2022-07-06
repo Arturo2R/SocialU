@@ -40,6 +40,7 @@ declare global {
     // suscribed: string[];
   }
   interface Post extends FormPost {
+    useUserName: boolean;
     authorEmail: string; 
     id?: string;
     createdAt: any; // !TODO: Change string to Date type
@@ -50,6 +51,7 @@ declare global {
       user: { name: string; ref: `user/${string}`; image: string };
       suscribedAt: Timestamp;
     }[];
+    createdAt?: Timestamp;
     authorImage: string;
     userName?: string;
   }

@@ -1,10 +1,11 @@
 import {
   collection,
   doc,
-  getDoc, onSnapshot, orderBy, query
+  getDoc, getDocs, limit, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
   Center,
+  Select,
   Image,
   Loader,
   Paper,
@@ -23,21 +24,22 @@ import { CommentProps } from "../../../components/Comment/Comment";
 import CommentWall from "../../../components/Comment/CommentWall";
 import Layout from "../../../components/Layout/Layout";
 import SeeUser from "../../../components/Post/SeeUser";
+import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
-
+import {useFirestore} from "../../../hooks/useFirestore"
 // import "bigger-picture";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
 
-export interface PostPageProps {data:Post, postId: string};
+export interface PostPageProps {data:Post, postId: string;authorId:string};
 dayjs.extend(relativeTime);
 dayjs.locale(es);
+const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
 export async function getServerSideProps(context:any) {
-  const {postId, authorName} = context.params
+  const {postId, authorId} = context.params
   
-  const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
   const postRef = doc(db, path, postId);
 
   const postSnap: anything = await getDoc(postRef);
@@ -51,71 +53,26 @@ export async function getServerSideProps(context:any) {
     ...(typeof data.time !== "string" && {time: data.time?.toJSON() }),
   }
   return {
-    props: {data: Payload, postId}, // will be passed to the page component as props
+    props: {data: Payload, postId, authorId: JSON.stringify(authorId)}, // will be passed to the page component as props
   }
 }
 
-const PostPage = ({data:content, postId: id}: PostPageProps) => {
-  const router = useRouter();
-  // const { postId, authorName } = router.query;
+// export async function getStaticPaths(){
+//   const q = query(collection(db, path), limit(100))
+
+//   const posts = await getDocs(q)
+//   posts.metadata.
+//   const ids = posts.docs.map((obj) => obj.id);
+// }
+
+const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
+  // const router = useRouter();
+  // const { postId, authorId } = router.query;
   // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
-  // console.log(postId);
-
-  // const { fetchPost, loading, error } = useFirestore();
-  // const nestComments = (commentList: CommentProps[]) => {
-  //   let commentMap: anything = {};
-  //// console.log("0", commentList, commentMap);
-
-  //   // move all the comments into a map of id => comment
-  //   commentList.forEach(
-  //     (comment: anything) => (commentMap[comment.id] = comment)
-  //   );
-
-  //// console.log("1", commentMap);
-
-  //   // iterate over the comments again and correctly nest the children
-  //   commentList.forEach((comment) => {
-  //     if (comment.parentId !== null) {
-  //       const parent = commentMap[comment.parentId];
-  //       (parent.subComments = parent.subComments || []).push(comment);
-  //     }
-  //   });
-
-  //// console.log("2", commentMap, commentList);
-
-  //   // filter the list to return a list of correctly nested comments
-  //   // commentMap = {};
-  //   return commentList.filter((comment: anything) => {
-  //     return comment.parentId === null;
-  //   });
-  // };
-
-  // const fetchContent = async () => {
-  //   try {
-  //     const postRef = doc(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH, id);
-
-  //     const postSnap: anything = await getDoc(postRef);
-  //     // console.log(postSnap.data());
-  //     const data = postSnap.data();
-  //     setContent(data);
-  //   } catch (error) {
-  //  // console.log(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const myNestComments = (commentList: CommentProps[]) => {
-  //   commentList.reduce((prev, curr) => {
-  //     if (curr.parentId === null) {
-  //       commentList[prev.index].push(curr);
-  //     }
-  //   });
-  // };
 
   const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
@@ -175,6 +132,7 @@ const PostPage = ({data:content, postId: id}: PostPageProps) => {
 
   return (
     <Layout>
+      <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
       <Paper p="md" shadow="sm" radius="md">
         {content?.image && (
           <Image className="mb-4" radius="lg" src={content.image} />

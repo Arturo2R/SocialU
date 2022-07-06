@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { BellRinging, Logout, Send, Settings } from "tabler-icons-react";
 import { useAuth } from "../../context/AuthContext";
+import Protected from "../Protected";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -32,7 +33,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       display: "flex",
       alignItems: "center",
       textDecoration: "none",
-      fontSize: theme.fontSizes.sm,
+      fontSize: theme.fontSizes.md,
       color:
         theme.colorScheme === "dark"
           ? theme.colors.dark[1]
@@ -40,7 +41,6 @@ const useStyles = createStyles((theme, _params, getRef) => {
       padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
       borderRadius: theme.radius.sm,
       fontWeight: 500,
-
       "&:hover": {
         backgroundColor:
           theme.colorScheme === "dark"
@@ -61,6 +61,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
           ? theme.colors.dark[2]
           : theme.colors.gray[6],
       marginRight: theme.spacing.sm,
+      
     },
 
     linkActive: {
@@ -127,7 +128,7 @@ export default function NavbarSimple({ opened }: Props) {
       hiddenBreakpoint="sm"
       hidden={!opened}
     >
-      {/* <Protected.Component> */}
+      <Protected.Component>
       <>
         <Navbar.Section grow mt="md">
           {links}
@@ -145,7 +146,7 @@ export default function NavbarSimple({ opened }: Props) {
           </Group>
         </Navbar.Section>
       </>
-      {/* </Protected.Component> */}
+      </Protected.Component>
     </Navbar>
   );
 }

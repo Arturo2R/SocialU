@@ -29,7 +29,8 @@ const Google1Tap = ({login, user}: Props,) => {
     // }
 
     // return () => clearInterval(thatGoogle);
-  }, [user]);
+  }, []);
+
   return(<Script src="https://accounts.google.com/gsi/client" />);
 };
 

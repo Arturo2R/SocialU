@@ -48,7 +48,7 @@ export const AppHeader = ({
         <Link href="/">
           <Group>
             <Image src="/logologo.svg" width={30} height={30} />
-            <Title className=' {font-family:"inter";} text-2xl'>Social/U</Title>
+            <Title className=' {font-family:"inter";} text-2xl'>Social\U</Title>
           </Group>
         </Link>
         <Group>

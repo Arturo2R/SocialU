@@ -22,12 +22,14 @@ import { useFirestore } from '../../hooks/useFirestore';
 export default function UserInfoAction() {
   const router = useRouter();
   const { authorId } = router.query;
+  console.log(authorId);
   // const [author, setAuthor] = useState<any| undefined>()
   const {fetchUser, authorProfile:author} = useFirestore()
-
+  
   
   useEffect(() => {
     typeof authorId === 'string' && fetchUser(authorId)
+    console.log(author)
   }, [])
 
   // useEffect(() => {
@@ -36,7 +38,7 @@ export default function UserInfoAction() {
   // }, authorProfile)
 
   console.log(author)
-  const avatar: string = author?.photoURL ||'/perfil.jpg';
+  const avatar: string = author?.photoURL ||'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAK0lEQVR42u3NMQEAAAQAMBrq30EGYnBsBZZT0XEgxWKxWCwWi8VisVj8N158HkMnz28EVQAAAABJRU5ErkJggg==';
   const email: string = author?.email || `${authorId}@uninorte.edu.co`;
   const job: string = author?.career || 'Economía';
 
@@ -51,7 +53,7 @@ export default function UserInfoAction() {
             theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
         })}
       >
-        <Avatar src={avatar} component="img" loading="lazy" size={120} radius={120} mx="auto" />
+        <Avatar src={avatar} size={120} radius={120} mx="auto" />
         <Text align="center" size="lg" weight={500} mt="md">
           {author?.userName}
         </Text>

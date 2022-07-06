@@ -120,7 +120,8 @@ export const useFirestore = () => {
           // ...(auth.currentUser.photoURL && {
           authorImage: user?.photoURL,
           // }),
-          userName: user?.configuration?.useUserName ? user?.userName : user?.displayName,
+          useUserName: user?.configuration?.useUserName,
+          userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
           userUID: auth.currentUser.uid,

@@ -2,7 +2,7 @@
 import { Timestamp } from "@firebase/firestore";
 import {
   // Anchor,
-  Avatar,
+  // Avatar,
   Button,
   Card,
   Collapse,
@@ -17,7 +17,7 @@ import { BorderRadius, Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, FC, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+// import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
@@ -49,7 +49,7 @@ export interface PostProps {
     };
     suscribedAt?: Timestamp;
   }[];
-  key: number;
+  // key: number;
   userUID?: string;
 }
 
@@ -63,7 +63,6 @@ export const Post: FC<PostProps> = ({
   postId,
   asistants,
   event,
-  key,
   userUID,
 }) => {
   const [expanded, setExpanded] = useState(false);

@@ -92,7 +92,7 @@ const SEO = ({
       <meta name="description" content={description} />
       <link
         rel="canonical"
-        href={`https://${config.domain}${canonical}`}
+        href={`https://${config.domain}/${canonical}`}
         key="canonical"
       />
       <meta property="og:type" content="article" />

@@ -6,9 +6,15 @@ import {
 import { useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import { Post } from "../Post/Post";
+import SEO from "../SEO";
 // import InfiniteScroll from 'react-infinite-scroller';
 
-export function Feed({ data, user }: anything) {
+interface FeedProps { 
+  data: Post[],
+  user: User,
+}
+
+export function Feed({ data, user }:FeedProps) {
   // const { classes } = useStyles();
 
   // error state
@@ -46,6 +52,7 @@ export function Feed({ data, user }: anything) {
         </Center>
       )} */}
       {/* {isLoading === "loaded" && ( */}
+      <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
       <Container className="p-0 lg:px-12">
         <Space h="md" />
         <Stack spacing="lg" className="mx-auto max-w-sm">
@@ -57,8 +64,8 @@ export function Feed({ data, user }: anything) {
                 post.anonimo
                   ? "anonimo"
                   : {
-                      name: post.userName,
-                      id: post.userName ? post.userName : post.id,
+                      name: post.useUserName ? post.userName : post.authorName ,
+                      id: post.userName||post.authorName,
                       ...(post.authorImage && { image: post.authorImage }),
                     }
               }

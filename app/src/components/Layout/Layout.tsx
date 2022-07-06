@@ -1,13 +1,12 @@
 import { AppShell, createStyles, useMantineTheme } from "@mantine/core";
 import { useRouter } from "next/router";
 // import Script from "next/script";
-import { ReactNode, useState } from "react";
+import { lazy, ReactNode, Suspense, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 // import AppSidebar from "./AppSidebar";
-import Google1Tap from "../Google1Tap.client"
 
 // const classes = createStyles((theme) => ({
 //   links: {
@@ -49,13 +48,15 @@ import Google1Tap from "../Google1Tap.client"
 //   },
 // }));
 
+const Google1Tap= lazy(() => import('../Google1Tap.client'));
+
 type LayoutProps = {
   children: ReactNode;
 };
 
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
-  const { user, loginWithGoogle, loginWithGoogleOneTap } = useAuth();
+  const { user, loading, loginWithGoogle, loginWithGoogleOneTap } = useAuth();
   const theme = useMantineTheme();
 
   const [opened, setOpened] = useState<boolean>(false);
@@ -79,8 +80,10 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <>
-     {!user &&(
+     {loading === false && user === null &&(
+      <Suspense fallback={null}>
         <Google1Tap login={loginWithGoogleOneTap} />
+      </Suspense>
       )} 
       <AppShell
         styles={{
