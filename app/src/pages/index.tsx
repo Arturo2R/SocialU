@@ -9,7 +9,7 @@ import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const q = query(
     collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
     orderBy("createdAt", "desc"),
@@ -40,7 +40,7 @@ export const getStaticProps = async () => {
 };
 
 interface HomeProps {
-  data: Object[];
+  data: Post[];
 }
 
 export default function HomePage({ data }: HomeProps) {
@@ -50,7 +50,7 @@ export default function HomePage({ data }: HomeProps) {
 
   return (
     <Layout>
-      <Feed data={data} user={user} />
+      <Feed data={data} user={user||undefined} />
     </Layout>
   );
 }

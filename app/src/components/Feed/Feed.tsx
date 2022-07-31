@@ -11,7 +11,7 @@ import SEO from "../SEO";
 
 interface FeedProps { 
   data: Post[],
-  user: User,
+  user?: UserState,
 }
 
 export function Feed({ data, user }:FeedProps) {

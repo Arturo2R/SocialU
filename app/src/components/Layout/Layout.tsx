@@ -6,6 +6,8 @@ import { useAuth } from "../../context/AuthContext";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
+import { BellRinging, Send, Settings } from 'tabler-icons-react';
+
 // import AppSidebar from "./AppSidebar";
 
 // const classes = createStyles((theme) => ({
@@ -53,6 +55,12 @@ const Google1Tap= lazy(() => import('../Google1Tap.client'));
 type LayoutProps = {
   children: ReactNode;
 };
+
+// const buttons= [
+//     { route: "/", label: "Feed", icon: BellRinging },
+//     { route: "/crear", label: "Crear Post", icon: Send},
+//     { route: "/configuracion", label: "Configuración", icon: Settings },
+//   ]
 
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
