@@ -100,13 +100,13 @@ export const StudentValidation = (email: string): boolean => {
     hostDomain = emailDomain[2];
   }
 
-  console.log(email);
+  // console.log(email);
 
   validated = allowedUniversities.some((item) => {
     return item.domain === hostDomain;
   });
 
-  console.log("funcion student validation escupe ", validated);
+  // console.log("funcion student validation escupe ", validated);
   return validated;
 };
 

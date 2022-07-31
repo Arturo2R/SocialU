@@ -68,7 +68,7 @@ export const useFirestore = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        console.log(dataDB);
+        // console.log(dataDB);
         setData(dataDB);
         setPostsLoading("loaded");
       });

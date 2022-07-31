@@ -43,11 +43,12 @@ export const AppHeader = ({
             size="sm"
             color={color}
             mr="xl"
+            title="Hamburger"
           />
         </MediaQuery>
         <Link href="/">
           <Group>
-            <Image src="/logologo.svg" width={30} height={30} />
+            <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
             <Title className=' {font-family:"inter";} text-2xl'>Social\U</Title>
           </Group>
         </Link>
@@ -57,7 +58,7 @@ export const AppHeader = ({
               <Text>{user?.displayName}</Text>
             </MediaQuery>
           )}
-          {user?.photoURL && <Avatar radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
+          {user?.photoURL && <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
           {user === null && (
             <Button
               size={matches ? "md" : "xs"}

@@ -137,7 +137,7 @@ export const Post: FC<PostProps> = ({
           <Link href={`/${author.id}`} >
             <a >
               <Group className="mt-1" spacing="xs">
-                {author?.image && <Image width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
+                {author?.image && <Image alt={`${author.name} avatar image`} width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
                 <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
               </Group>
             </a>

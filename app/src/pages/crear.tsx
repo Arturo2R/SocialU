@@ -28,7 +28,7 @@ import { useFirestore } from "../hooks/useFirestore";
 
 const CrearPost = () => {
   const {user} = useAuth()
-  console.log(user?.configuration?.anonimoDefault)
+  // console.log(user?.configuration?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false)
   const [event, setEvent] = useState(false);
@@ -84,10 +84,10 @@ const CrearPost = () => {
       });
   
       let result = await response.json();
-      console.log(result)
+      // console.log(result)
       isPorn = result.IsImageAdultClassified
     } catch (error) {
-      console.log("Un error mirando la imagen", error)
+      // console.log("Un error mirando la imagen", error)
     }
     return isPorn
   }

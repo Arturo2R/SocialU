@@ -1,9 +1,11 @@
 import { Code, createStyles, Group, Navbar } from "@mantine/core";
 import Link from "next/link";
 import React, { useState } from "react";
-import { BellRinging, Logout, Send, Settings } from "tabler-icons-react";
+import {Logout} from "tabler-icons-react";
 import { useAuth } from "../../context/AuthContext";
 import Protected from "../Protected";
+import Config from "../../config"
+
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const icon = getRef("icon");
@@ -85,15 +87,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
   };
 });
 
-const data = [
-  { link: "/", label: "Feed", icon: BellRinging },
-  { link: "/crear", label: "Crear Post", icon: Send },
-  // { link: "/", label: "Security", icon: Fingerprint },
-  // { link: "/", label: "SSH Keys", icon: Key },
-  // { link: "/", label: "Databases", icon: DatabaseImport },
-  // { link: "/", label: "Authentication", icon: TwoFA },
-  { link: "/configuracion", label: "Configuración", icon: Settings },
-];
+const data = Config().sidebar
 
 interface Props {
   opened: boolean;
@@ -142,7 +136,7 @@ export default function NavbarSimple({ opened }: Props) {
 
           <Group className={cx(classes.header, "bottom-0")} position="apart">
             {/* <MantineLogo /> */}
-            <Code sx={{ fontWeight: 700 }}>v.0.01.2</Code>
+            <Code sx={{ fontWeight: 700 }}>{Config().version}</Code>
           </Group>
         </Navbar.Section>
       </>

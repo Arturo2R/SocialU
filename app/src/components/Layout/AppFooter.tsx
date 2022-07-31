@@ -26,6 +26,7 @@ const AppFooter = () => {
             variant="subtle"
             color="orange"
             size="md"
+            title="Crear Post"
           >
             Crear Post
           </Button>
