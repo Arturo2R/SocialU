@@ -13,7 +13,7 @@ const Template: Story<PostPageProps> = (args) => (<PostPage {...args} />);
 export const Default = Template.bind({});
 
 Default.args = {
-  authorId: "fdkajsfldksa",
+  authorId: "fdkajsfldksad",
   postId: "flaka",
   data: {
     useUserName: false,
