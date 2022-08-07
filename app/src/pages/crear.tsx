@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/quotes */
 import {
   Button,
   Container,
@@ -6,7 +5,8 @@ import {
   InputWrapper,
   Modal,
   Switch,
-  Textarea
+  Textarea,
+  Tooltip
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -14,7 +14,7 @@ import { showNotification } from "@mantine/notifications";
 // import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { FileCheck } from "tabler-icons-react";
+import { FileCheck, InfoCircle } from "tabler-icons-react";
 import ImageDropzone from "../components/ImageDropzone";
 // import { Container } from "tabler-icons-react";
 import Layout from "../components/Layout/Layout";
@@ -52,19 +52,10 @@ const CrearPost = () => {
       isEvent: false,
       anonimo: user?.configuration?.anonimoDefault,
     },
-    // validate: {
-    //   title: {
-    //     minLength: 3,
-    //     maxLength: 50,
-    //   },
-    //   message: {
-    //     minLength: 3,
-    //     maxLength: 200,
-    //   },
-    //   date: {},
-    //   time: {},
-    //   image: {},
-    // },
+    validate: {
+      title: (value) => (value.length < 7 ? 'El Titulo debe tener almenos 7 letras' : null),
+      message: (value) => (value.length < 23 ? 'El Mensaje debe tener almenos 23 letras' : null),
+    },
   });
 
   const checkImage = async (url:string): Promise<boolean> => {
@@ -105,9 +96,9 @@ const CrearPost = () => {
     showNotification({
       id: "created-post",
       disallowClose: true,
-      autoClose: 4000,
+      autoClose: 3000,
       title: "Post creado",
-      message: "La publicación fue creada exitosamente 😀",
+      message: "Se Publicó 😀",
       color: "orange",
       className: "my-notification-class",
       icon: <FileCheck />,
@@ -178,15 +169,17 @@ const CrearPost = () => {
               />
               <Switch
                 mt="sm"
-                label="Evento"
+                mb="md"
+                label="Reunion / Solicitar Ayuda"
                 color="orange"
                 checked={event}
-                onChange={(e) => {
+                onChange={(e:any) => {
                   setEvent(e.currentTarget.checked);
                   form.setFieldValue("isEvent", e.currentTarget.checked);
                 }}
-                // {...form.getInputProps("isEvent", { type: "checkbox" })}
               />
+             
+              
               {event && (
                 <>
                   {/* <InputWrapper required={event} label="Día De Reunion">
