@@ -7,8 +7,10 @@ import { Transition } from "@mantine/core";
 type CommentWallProps = {
   comments?: CommentProps[];
   postId: string;
- // setRespondTo?: Dispatch<SetStateAction<string>>;
+  setRespondTo?: Dispatch<SetStateAction<string>>;
 };
+
+
 
 const CommentWall = ({ comments, postId, setRespondTo }: CommentWallProps) => {
   // if (comments.map) {

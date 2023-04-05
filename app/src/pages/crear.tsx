@@ -4,24 +4,30 @@ import {
   Input,
   InputWrapper,
   Modal,
-  Switch,
   Textarea
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Controller, useForm as hform } from "react-hook-form";
+import { Controller, SubmitHandler, useForm as hform } from "react-hook-form";
 import { FileCheck } from "tabler-icons-react";
+import DatePick from "../components/Comment/DatePick";
+import Switc from "../components/Comment/Switc";
 import ImageDropzone from "../components/ImageDropzone";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
-import { useFirestore } from "../hooks/useFirestore";
+import { useFirestore} from "../hooks/useFirestore";
 
 
 
 // type Props = {};
+interface FormInputs {
+  TextField: string
+  MyCheckbox: boolean
+}
+
 
 const CrearPost = () => {
   const {user} = useAuth()
@@ -33,7 +39,7 @@ const CrearPost = () => {
       time: "", //
       date: "",
       image: "",
-      anonimo: user?.configuration?.anonimoDefault,
+      anonimo: user?.configuration?.anonimoDefault || false,
     }
   });
   
@@ -94,7 +100,7 @@ const CrearPost = () => {
   }, [imageUrl]);
 
 
-  const submitPost = (postValues: any) => {
+  const submitPost:SubmitHandler<FormPost> = postValues => {
     if(user){
       console.log("sip", postValues)
       createPost(postValues, user);
@@ -160,53 +166,28 @@ const CrearPost = () => {
                 {...register("message")}
                 
               />
-              <Controller
-                name="anonimo"
-                control={control}
-                shouldUnregister={true}
-                render={({ field }) =>(
-                  <Switch
-                    label="Post Anónimo"
-                    color="orange"
-                    checked={watch("anonimo")}
-                    {...field}
-                  />
-                ) }
-              />
               
+                  <Switc
+                   label="Anonimo"
+                   control={control}
+                   name="anonimo"
+              />
+              <Switc
+                  label="Reunion / Solicitar Ayuda"
 
-              <Controller
-                name="isEvent"
-                control={control}
-                render={({ field }) =>( 
-                  <Switch
-                    mt="sm"
-                    mb="md"
-                    label="Reunion / Solicitar Ayuda"
-                    color="orange"
-                    {...field}
-                  />
-                  )
-                }
-               />
+                   control={control}
+                   name="isEvent"
+              />
+
+              
 
               {watch("isEvent") && (
                 <>
-                  <Controller
-                    name="date"
-                    control={control}
-                    render={({ field }) =>( 
-                      <DatePicker
-                        transition="pop-bottom-left"
-                        placeholder="Escojer Dia De Reunion"
+                      <DatePick
+                        name="date"
+                        control={control}
                         label="Día De Reunion"
-                        required={true}//{watch("isEvent")}
-                        locale="es"
-                        {...field}
                       />
-                      )
-                    }
-                  />
                   
                   
                   <InputWrapper required={true} label="Hora">

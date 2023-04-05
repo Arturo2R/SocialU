@@ -4,11 +4,26 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 const withPWA = require('next-pwa')
 
-module.exports = withBundleAnalyzer(withPWA({
+// next.config.js
+const withMDX = require('@next/mdx')({
+  // Optionally provide remark and rehype plugins
+  options: {
+    // If you use remark-gfm, you'll need to use next.config.mjs
+    // as the package is ESM only
+    // https://github.com/remarkjs/remark-gfm#install
+    remarkPlugins: [],
+    rehypePlugins: [],
+    // If you use `MDXProvider`, uncomment the following line.
+    // providerImportSource: "@mdx-js/react",
+  },
+})
+
+module.exports = withMDX(withBundleAnalyzer(withPWA({
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   pwa: {
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
@@ -28,4 +43,4 @@ module.exports = withBundleAnalyzer(withPWA({
       },
     ]
   },
-}));
+})));

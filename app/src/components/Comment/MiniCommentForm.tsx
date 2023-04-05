@@ -22,14 +22,16 @@ const MiniCommentForm = ({opened, postId, userNameToResponder,  }: Props) => {
   });
   const { createComment } = useFirestore();
   
-  const onSubmit = data => createComment(data, user);
-  return (
-    <Collapse in={opened}>
+  const onSubmit = (data:any) => createComment(data, user);
+  return ( <p>Nada</p>   )
+}
+    {/* <Collapse in={opened}>
           <form  onSubmit={handleSubmit(onSubmit)}>
             <Textarea defaultValue={userNameToResponder &&("@"+userNameToResponder)} required={true} {...register("content")} />
               <div className="flex">
 
               <Controller
+                defaultValue={false}
                 name="anonimo"
                 control={control}
                 render={({ field }) =>( 
@@ -53,8 +55,7 @@ const MiniCommentForm = ({opened, postId, userNameToResponder,  }: Props) => {
             </ActionIcon>
               </div>
           </form>
-        </Collapse>
-  )
-}
+        </Collapse> */}
+
 
 export default MiniCommentForm
