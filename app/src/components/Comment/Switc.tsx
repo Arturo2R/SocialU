@@ -1,9 +1,9 @@
 import { Switch } from "@mantine/core";
 import { useController, useForm } from "react-hook-form";
 
-interface Props { control:any, name:string, label:string }
+interface Props { control:any, name:string, label:string, def?:boolean }
 
-function Switc({ control, name, label }:Props) {
+function Switc({ control, name, label,def }:Props) {
   const {
     field,
     fieldState: { invalid, isTouched, isDirty },
@@ -11,13 +11,13 @@ function Switc({ control, name, label }:Props) {
   } = useController({
     name,
     control,
-    rules: { required: true },
   });
 
   return (
     <Switch 
       mt="sm"
       mb="md"
+      defaultChecked={def||false}
       label={label}
       color="orange"
       onChange={field.onChange} // send value to hook form 

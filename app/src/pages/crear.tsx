@@ -6,11 +6,10 @@ import {
   Modal,
   Textarea
 } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Controller, SubmitHandler, useForm as hform } from "react-hook-form";
+import { SubmitHandler, useForm as hform } from "react-hook-form";
 import { FileCheck } from "tabler-icons-react";
 import DatePick from "../components/Comment/DatePick";
 import Switc from "../components/Comment/Switc";
@@ -18,7 +17,7 @@ import ImageDropzone from "../components/ImageDropzone";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
-import { useFirestore} from "../hooks/useFirestore";
+import { useFirestore } from "../hooks/useFirestore";
 
 
 
@@ -42,8 +41,9 @@ const CrearPost = () => {
       anonimo: user?.configuration?.anonimoDefault || false,
     }
   });
+  console.log(errors);
   
-  // console.log(user?.configuration?.anonimoDefault)
+  console.log(user?.configuration?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false) // #MOdal
   //image state
@@ -52,7 +52,6 @@ const CrearPost = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const { createPost } = useFirestore();
-
   
 
   const router = useRouter();
@@ -146,6 +145,7 @@ const CrearPost = () => {
               <Textarea
                 variant="unstyled"
                 placeholder="Titulo"
+                error={errors.title?.message}
                 size="xl"
                 required
                 minRows={1}
@@ -153,28 +153,33 @@ const CrearPost = () => {
                 classNames={{
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
-                {...register("title")}
+                {...register("title",{ 
+                  required: "Email Address is required", 
+                  minLength: { value:5, message: "No menos de 5 caracteres" },
+                  maxLength: { value:80, message: "No mas de 80 caracteres" } 
+                })}
               />
               <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
                 radius="xl"
                 size="md"
+                maxLength={1000}
                 minRows={5}
                 required
                 autosize
-                {...register("message")}
+                {...register("message",{ required: true,minLength: { value:30, message: "No menos de 30 caracteres" }, maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
                 
               />
               
-                  <Switc
-                   label="Anonimo"
-                   control={control}
-                   name="anonimo"
+              <Switc
+                label="Anonimo"
+                control={control}
+                def={user?.configuration?.anonimoDefault || false}
+                name="anonimo"
               />
               <Switc
                   label="Reunion / Solicitar Ayuda"
-
                    control={control}
                    name="isEvent"
               />
@@ -183,16 +188,17 @@ const CrearPost = () => {
 
               {watch("isEvent") && (
                 <>
-                      <DatePick
-                        name="date"
-                        control={control}
-                        label="Día De Reunion"
-                      />
-                  
+                  <DatePick
+                    required={true}
+                    name="date"
+                    control={control}
+                    label="Día De Reunion"
+                  />
+              
                   
                   <InputWrapper required={true} label="Hora">
                     <Input type="time" id="time-is-value"
-                    {...register("time")}
+                    {...register("time",{ required: true })}
                       />
                   </InputWrapper>
                 </>

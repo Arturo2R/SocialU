@@ -2,9 +2,9 @@ import { Switch } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
 import { useController, useForm } from "react-hook-form";
 
-interface Props { control:any, name:string, label:string }
+interface Props { control:any, name:string, label:string, required:boolean }
 
-function DatePick({ control, name, label }:Props) {
+function DatePick({ control, name, label, required }:Props) {
   const {
     field,
     fieldState: { invalid, isTouched, isDirty },
@@ -12,12 +12,12 @@ function DatePick({ control, name, label }:Props) {
   } = useController({
     name,
     control,
-    rules: { required: true },
+    rules: { required },
   });
 
   return (
     <DatePicker
-      required={true}//{watch("isEvent")}
+      required={required}//{watch("isEvent")}
       locale="es"
       placeholder="Escojer Dia De Reunion"
       transition="pop-bottom-left"
