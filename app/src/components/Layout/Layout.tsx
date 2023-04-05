@@ -64,7 +64,7 @@ type LayoutProps = {
 
 export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
-  const { user, loading, loginWithGoogle, loginWithGoogleOneTap } = useAuth();
+  const { user, loading, loginWithMicrosoft, loginWithGoogleOneTap } = useAuth();
   const theme = useMantineTheme();
 
   const [opened, setOpened] = useState<boolean>(false);
@@ -114,7 +114,7 @@ export default function Layout({ children }: LayoutProps) {
             setOpened={setOpened}
             color={theme.colors.gray[6]}
             user={user}
-            loginWithGoogle={loginWithGoogle}
+            loginProvider={loginWithMicrosoft}
           />
         }
       >

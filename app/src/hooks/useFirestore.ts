@@ -98,12 +98,12 @@ export const useFirestore = () => {
   };
 
   const createPost = async (formData: FormPost, user: UserState) => {
-    if (auth.currentUser && user?.photoURL && auth.currentUser.email) {
+    if (auth.currentUser  && auth.currentUser.email) {
       try {
         setLoading(true);
 
         const generatedPostId = await nanoid(7);
-
+        console.log(path)
         const postsRef = doc(db, "posts", generatedPostId);
         const publicRef = doc(db, path, generatedPostId);
 
@@ -117,10 +117,10 @@ export const useFirestore = () => {
           // date: formData.date,
           // anonimo: formData.anonimo,
           ...formData,
-          // ...(auth.currentUser.photoURL && {
-          authorImage: user?.photoURL,
-          // }),
-          useUserName: user?.configuration?.useUserName,
+         // ...(user.photoURL ? {
+            authorImage : user?.photoURL || "",
+         // } : {authorImage : "st",}),
+          useUserName: user?.configuration?.useUserName || false,
           userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
@@ -128,6 +128,7 @@ export const useFirestore = () => {
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
+        console.log(newPost)
         // let Payload: Post
         if (formData.anonimo) {
           await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
@@ -139,7 +140,7 @@ export const useFirestore = () => {
 
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
-     // console.log(thiserror.message);
+        console.log(thiserror.message);
       } finally {
         setLoading(false);
       }
@@ -213,9 +214,7 @@ export const useFirestore = () => {
   const createComment = async (data: CommentFormProps, user: any) => {
     if (
       user?.displayName &&
-      user.uid &&
-      user.photoURL &&
-      user.userName
+      user.uid
     ) {
       try {
         setCreating(true);
@@ -226,10 +225,10 @@ export const useFirestore = () => {
           content: data.content,
           anonimo: data.anonimo,
           author: {
-            image: user.photoURL,
+            image: user?.photoURL  || "" ,
             name: user?.configuration?.useUserName ? user?.userName: user?.displayName,
             ref: `user/${user.uid}`,
-            userName: user.userName,
+            userName: user.userName || "",
           },
           postedAt: serverTimestamp(),
           parentId: null,

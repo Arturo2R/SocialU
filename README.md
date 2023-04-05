@@ -2,6 +2,10 @@
 
 The modern social media for connecting people with similar interests and objectives. With the idea of developing a strong communities inside universities.
 
+Enter with the test account:
+**email**: tester@uninorte.edu.co
+**password**: testadmin
+
 ## Features
 
 This webApp have several essential features:

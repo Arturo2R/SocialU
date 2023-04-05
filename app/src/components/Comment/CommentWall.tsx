@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Comment, CommentProps } from "./Comment";
 import CommentForm from "./CommentForm";
 import { auth } from "../../firebase";
@@ -7,9 +7,10 @@ import { Transition } from "@mantine/core";
 type CommentWallProps = {
   comments?: CommentProps[];
   postId: string;
+ // setRespondTo?: Dispatch<SetStateAction<string>>;
 };
 
-const CommentWall = ({ comments, postId }: CommentWallProps) => {
+const CommentWall = ({ comments, postId, setRespondTo }: CommentWallProps) => {
   // if (comments.map) {
   return (
     <>
@@ -23,6 +24,7 @@ const CommentWall = ({ comments, postId }: CommentWallProps) => {
             content={co.content}
             author={co.author}
             id={co.id}
+           // setRespondTo={setRespondTo}
             parentId={co.parentId}
           />
         ))}

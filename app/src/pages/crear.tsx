@@ -5,18 +5,15 @@ import {
   InputWrapper,
   Modal,
   Switch,
-  Textarea,
-  Tooltip
+  Textarea
 } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { useForm } from "@mantine/form";
 import { showNotification } from "@mantine/notifications";
-// import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { FileCheck, InfoCircle } from "tabler-icons-react";
+import { Controller, useForm as hform } from "react-hook-form";
+import { FileCheck } from "tabler-icons-react";
 import ImageDropzone from "../components/ImageDropzone";
-// import { Container } from "tabler-icons-react";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
@@ -28,11 +25,21 @@ import { useFirestore } from "../hooks/useFirestore";
 
 const CrearPost = () => {
   const {user} = useAuth()
+  const { register,setValue, handleSubmit, watch, control, formState: { errors } } =  hform({
+    defaultValues: {
+      title: "",
+      message: "",
+      isEvent: false,
+      time: "", //
+      date: "",
+      image: "",
+      anonimo: user?.configuration?.anonimoDefault,
+    }
+  });
+  
   // console.log(user?.configuration?.anonimoDefault)
   // Event state
-  const [opened, setOpened] = useState(false)
-  const [event, setEvent] = useState(false);
-  const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
+  const [opened, setOpened] = useState(false) // #MOdal
   //image state
   const [image, setImage] = useState<File | null>(null);
 
@@ -40,23 +47,10 @@ const CrearPost = () => {
 
   const { createPost } = useFirestore();
 
-  const router = useRouter();
+  
 
-  const form = useForm({
-    initialValues: {
-      title: "",
-      message: "",
-      date: "",
-      time: "",
-      image: "",
-      isEvent: false,
-      anonimo: user?.configuration?.anonimoDefault,
-    },
-    validate: {
-      title: (value) => (value.length < 7 ? 'El Titulo debe tener almenos 7 letras' : null),
-      message: (value) => (value.length < 23 ? 'El Mensaje debe tener almenos 23 letras' : null),
-    },
-  });
+  const router = useRouter();
+  
 
   const checkImage = async (url:string): Promise<boolean> => {
     let data = {
@@ -75,24 +69,38 @@ const CrearPost = () => {
       });
   
       let result = await response.json();
-      // console.log(result)
+      console.log(result)
       isPorn = result.IsImageAdultClassified
     } catch (error) {
-      // console.log("Un error mirando la imagen", error)
+      console.error("Un error mirando la imagen", error)
     }
     return isPorn
   }
 
-  // form.setFieldValue("image", image);
   useEffect(() => {
     if(imageUrl){
-      checkImage(imageUrl).then(porn =>{ if(porn){setOpened(true); setImage(null); setImageUrl(null)}else{form.setFieldValue("image", imageUrl)}})
+      checkImage(imageUrl)
+        .then(porn =>{ 
+          if(porn){
+            setOpened(true); 
+            setImage(null); 
+            setImageUrl(null)
+          }else{
+            setValue("image", imageUrl)
+          }
+        }
+        )
     }
   }, [imageUrl]);
 
-  // form.setFieldValue("message", debouncedMessage);
 
   const submitPost = (postValues: any) => {
+    if(user){
+      console.log("sip", postValues)
+      createPost(postValues, user);
+    } else {
+      throw new Error("No hay usuario");
+    }
     showNotification({
       id: "created-post",
       disallowClose: true,
@@ -103,18 +111,13 @@ const CrearPost = () => {
       className: "my-notification-class",
       icon: <FileCheck />,
     });
-    if(user){
-      createPost(postValues, user);
-    } else {
-      throw new Error("No hay usuario");
-    }
     router.push("/");
   };
 
   return (
     <Layout>
       <Protected.Route>
-        <Modal
+      <Modal
         opened={opened}
         onClose={() => setOpened(false)}
         withCloseButton={false}
@@ -124,7 +127,7 @@ const CrearPost = () => {
       </Modal>
         <Container className="h-full">
           <form
-            onSubmit={form.onSubmit((values) => submitPost(values))}
+            onSubmit={handleSubmit(submitPost)}
             className="flex flex-col justify-between h-full"
           >
             <div>
@@ -135,7 +138,6 @@ const CrearPost = () => {
                 setImage={setImage}
               />
               <Textarea
-                // icon={<At />}
                 variant="unstyled"
                 placeholder="Titulo"
                 size="xl"
@@ -145,7 +147,7 @@ const CrearPost = () => {
                 classNames={{
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
-                {...form.getInputProps("title")}
+                {...register("title")}
               />
               <Textarea
                 placeholder="Mensaje"
@@ -155,70 +157,68 @@ const CrearPost = () => {
                 minRows={5}
                 required
                 autosize
-                // value={messageValue}
-                {...form.getInputProps("message")}
+                {...register("message")}
+                
               />
-              <Switch
-                label="Post Anónimo"
-                color="orange"
-                checked={anonimo}
-                onChange={(e) => {
-                  setAnonimo(e.currentTarget.checked);
-                  form.setFieldValue("anonimo", e.currentTarget.checked);
-                }}
-              />
-              <Switch
-                mt="sm"
-                mb="md"
-                label="Reunion / Solicitar Ayuda"
-                color="orange"
-                checked={event}
-                onChange={(e:any) => {
-                  setEvent(e.currentTarget.checked);
-                  form.setFieldValue("isEvent", e.currentTarget.checked);
-                }}
-              />
-             
-              
-              {event && (
-                <>
-                  {/* <InputWrapper required={event} label="Día De Reunion">
-                    <Input
-                      type="datetime-local"
-                      required={event}
-                      placeholder="Escojer Dia De Reunion"
-                      name="date"
-                      id="time"
-                    />
-                  </InputWrapper> */}
-                  <DatePicker
-                    transition="pop-bottom-left"
-                    placeholder="Escojer Dia De Reunion"
-                    label="Día De Reunion"
-                    required={event}
-                    locale="es"
-                    {...form.getInputProps("date")}
+              <Controller
+                name="anonimo"
+                control={control}
+                shouldUnregister={true}
+                render={({ field }) =>(
+                  <Switch
+                    label="Post Anónimo"
+                    color="orange"
+                    checked={watch("anonimo")}
+                    {...field}
                   />
-                  {/* <TimeInput
-                    defaultValue={new Date()}
-                    label="Hora"
-                    // error="No permitimos viajes en el tiempo, la hora tiene que ser en el futuro"
-                    format="12"
-                    required={event}
-                    clearable
-                    onChange={(e) =>
-                      form.setFieldValue(
-                        "time",
-                        `${e.getHours()}:${e.getMinutes()}`
+                ) }
+              />
+              
+
+              <Controller
+                name="isEvent"
+                control={control}
+                render={({ field }) =>( 
+                  <Switch
+                    mt="sm"
+                    mb="md"
+                    label="Reunion / Solicitar Ayuda"
+                    color="orange"
+                    {...field}
+                  />
+                  )
+                }
+               />
+
+              {watch("isEvent") && (
+                <>
+                  <Controller
+                    name="date"
+                    control={control}
+                    render={({ field }) =>( 
+                      <DatePicker
+                        transition="pop-bottom-left"
+                        placeholder="Escojer Dia De Reunion"
+                        label="Día De Reunion"
+                        required={true}//{watch("isEvent")}
+                        locale="es"
+                        {...field}
+                      />
                       )
                     }
-                  /> */}
-                  <InputWrapper required={event} label="Hora">
-                    <Input type="time" name="time" id="time-is-value" />
+                  />
+                  
+                  
+                  <InputWrapper required={true} label="Hora">
+                    <Input type="time" id="time-is-value"
+                    {...register("time")}
+                      />
                   </InputWrapper>
                 </>
               )}
+
             </div>
+
             <Button
               type="submit"
               variant="filled"
@@ -230,7 +230,7 @@ const CrearPost = () => {
             </Button>
           </form>
         </Container>
-      </Protected.Route>
+     </Protected.Route>
     </Layout>
   );
 };

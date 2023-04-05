@@ -4,8 +4,20 @@
     {
       "type": "yarn",
       "task": "dev",
-      "problemMatcher": ["$tsc"],
+      "problemMatcher": [
+        "$tsc"
+      ],
       "label": "yarn: dev"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "app",
+      "problemMatcher": [
+        "$tsc"
+      ],
+      "label": "npm: dev - app",
+      "detail": "NODE_ENV='development' && next dev"
     }
   ]
 }

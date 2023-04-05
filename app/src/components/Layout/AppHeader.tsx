@@ -10,6 +10,7 @@ import {
   Image,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { NextLink } from "@mantine/next";
 import { UserCredential } from "firebase/auth";
 // import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +22,7 @@ interface AppHeaderProps {
   setOpened: React.Dispatch<React.SetStateAction<boolean>>;
   color: any;
   user: User | null;
-  loginWithGoogle: () => Promise<UserCredential>;
+  loginProvider: () => Promise<UserCredential>;
 }
 
 export const AppHeader = ({
@@ -29,7 +30,7 @@ export const AppHeader = ({
   setOpened,
   color,
   user,
-  loginWithGoogle,
+  loginProvider
 }: AppHeaderProps) => {
   const matches = useMediaQuery("(min-width: 450px)");
 
@@ -49,7 +50,7 @@ export const AppHeader = ({
         <Link href="/">
           <Group>
             <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
-            <Title className=' {font-family:"inter";} text-2xl'>Social\U</Title>
+            <Title className=' {font-family:"inter";} text-2xl'>UX • Universidad Del Norte</Title>
           </Group>
         </Link>
         <Group>
@@ -60,13 +61,15 @@ export const AppHeader = ({
           )}
           {user?.photoURL && <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
           {user === null && (
-            <Button
-              size={matches ? "md" : "xs"}
-              onClick={loginWithGoogle}
-              color="orange"
-            >
-              Iniciar Sesión
-            </Button>
+            <Link href="/welcome" >
+              <Button
+                size={matches ? "md" : "xs"}
+              // onClick={loginProvider}
+                color="orange"
+              >
+                Iniciar Sesión
+              </Button>
+              </Link>
           )}
           {user && <ColorSchemeToggle />}
         </Group>

@@ -8,6 +8,7 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     signOut,
+    OAuthProvider,
     UserCredential
 } from "firebase/auth";
 import jwt_decode from "jwt-decode";
@@ -59,6 +60,7 @@ interface AuthContextInterface {
   valid: boolean|string;
   loading: boolean;
   loginWithGoogle(): Promise<UserCredential>;
+  loginWithMicrosoft(): Promise<UserCredential>;
   resetPassword(email: string): Promise<void>;
   loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
 }
@@ -134,12 +136,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (email: string, password: string) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
+  const loginWithMicrosoft = () => { 
+    const microsoftProvider = new OAuthProvider('microsoft.com');
+    microsoftProvider.setCustomParameters({
+      // Force re-consent.
+      prompt: 'select_account',
+
+      // Target specific email with login hint.
+      login_hint: "usuario@uninorte.edu.co",
+      login_type: "popup",
+     // select_account: "true",
+     // use_account: "true",
+     domain_hint: "uninorte.edu.co",
+    // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
+    });
+    return signInWithPopup(auth, microsoftProvider);
+  };
 
   const loginWithGoogle = () => {
  // console.log("google provider");
     const googleProvider = new GoogleAuthProvider();
     googleProvider.setCustomParameters({
-      login_hint: "usuario@uninorte.edu.com",
+      login_hint: "usuario@uninorte.edu.co",
       login_type: "popup",
       prompt: "select_account",
       select_account: "true",
@@ -245,6 +263,7 @@ useEffect(() => {
         valid,
         loading,
         loginWithGoogle,
+        loginWithMicrosoft,
         resetPassword,
         loginWithGoogleOneTap,
       }}

@@ -1,20 +1,17 @@
+// import { Send } from "tabler-icons-react";
+import { Timestamp } from "@firebase/firestore";
 import {
   // ActionIcon,
   // Anchor,
   Avatar,
   // Collapse,
-  Group,
-  Stack,
-  Text,
-  // Textarea,
+  Group, Text
 } from "@mantine/core";
-// import { useToggle } from "@mantine/hooks";
-import { useState } from "react";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
-// import { Send } from "tabler-icons-react";
-import { Timestamp } from "@firebase/firestore";
+// import { useToggle } from "@mantine/hooks";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export interface CommentProps {
   id: string;
@@ -23,6 +20,7 @@ export interface CommentProps {
   content: string;
   author: { name: string; image: string } | "anonimo";
   subComments?: CommentProps[];
+  //setRespondTo?: Dispatch<SetStateAction<string>>;
 }
 
 export function Comment({
@@ -31,11 +29,13 @@ export function Comment({
   author,
   subComments,
   id,
+ // setRespondTo
 }: CommentProps) {
   // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
   dayjs.extend(relativeTime);
   dayjs.locale(es);
+  //handleRespondTo = () =>{ if (author?.name) setRespondTo(author?.name && author?.name)}
 
   return (
     <div className="mt-5">
@@ -58,28 +58,16 @@ export function Comment({
         </div>
       </Group>
 
-      <div className="ml-11">
+     <div className="ml-11">
         <Text size="sm">{content}</Text>
         {/* <Anchor onClick={() => setOpen((o) => !o)} color="orange">
           Responder
         </Anchor>
+ {/* 
+        <MiniCommentForm opened={opened} postId={id} userNameToResponder={author === "anonimo" ? "Anónimo" : author.name} />
+    */}  </div> 
 
-        <Collapse in={opened}>
-          <form action="">
-            <Textarea />
-            <ActionIcon
-              type="submit"
-              component="button"
-              color="orange"
-              radius="xl"
-            >
-              <Send />
-            </ActionIcon>
-          </form>
-        </Collapse> */}
-      </div>
-
-      {subComments && (
+      {/* {subComments && (
         <Stack className="pl-4 border-l-2">
           {subComments?.map((subco, index) => (
             <Comment
@@ -93,7 +81,7 @@ export function Comment({
             />
           ))}
         </Stack>
-      )}
+      )} */}
     </div>
   );
 }

@@ -49,7 +49,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 function AuthenticationPage() {
-  const { loginWithGoogle, login, valid, logout } = useAuth();
+  const { loginWithGoogle, login, valid, logout, loginWithMicrosoft } = useAuth();
 
   const { classes } = useStyles();
 
@@ -61,7 +61,7 @@ function AuthenticationPage() {
   
 
   const handleGoogletication = async () => {
-    loginWithGoogle();
+    loginWithMicrosoft();
   };
 
   const handleLogin = () => {
@@ -135,8 +135,8 @@ function AuthenticationPage() {
           ></div>
           <div id="button-div"></div> */}
 
-          <Button onClick={handleGoogletication} radius="xl">
-            Google
+          <Button color="orange" onClick={handleGoogletication} radius="xl">
+            Cuenta Microsoft
           </Button>
 
           {/* <GoogleButton radius="xl">Google</GoogleButton>
@@ -166,7 +166,7 @@ function AuthenticationPage() {
 
         {/* <Anchor component={Link} href="/"> */}
         <Button
-          color="orange"
+          color="blue"
           onClick={handleLogin}
           fullWidth
           mt="xl"

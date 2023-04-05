@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 
 type Props = {
   postId: string;
+  respondto?: string
 };
 
 const CommentForm = (props: Props) => {

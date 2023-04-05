@@ -11,13 +11,16 @@ import {
   Paper,
   Stack,
   Text,
-  Title
+  Title,
+  ActionIcon
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ChevronLeft } from "tabler-icons-react";
 import { AuthorInfo } from "../../../components/AuthorInfo";
 // import { useFirestore } from "../../../hooks/useFirestore";
 import { CommentProps } from "../../../components/Comment/Comment";
@@ -71,6 +74,8 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
   // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
+  const [respondTo, setRespondTo] = useState("")
+
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
 
@@ -131,15 +136,34 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
   const fecha:Date = content.createdAt
 
   return (
+    
     <Layout>
       <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
       <Paper p="md" shadow="sm" radius="md">
-        {content?.image && (
-          <Image className="mb-4" radius="lg" src={content.image} />
-        )}
 
-        <Title className="mb-2 text-3xl">{content?.title}</Title>
-        { fecha&& (
+        {content?.image ? (
+           <> 
+            <Link  href="/" >
+              <ActionIcon  className="z-10 -mt-15" mt="10px" mb="-44px" ml="10px"  size="lg" radius="xl" variant="light">
+                <ChevronLeft />
+              </ActionIcon>
+            </Link>
+              
+            <Image className="mb-4" radius="lg" src={content.image} />
+            <Title className="mb-2 text-3xl">{content?.title}</Title>
+            
+          </>
+        ):(<div className="flex space-x-4"> 
+              <Link  href="/" >
+                <ActionIcon  className="z-10 -mt-15"  mb="10px"   size="lg" radius="xl" variant="light">
+                  <ChevronLeft />
+                </ActionIcon>
+              </Link>
+              <Title className="mb-2 text-3xl">{content?.title}</Title>
+        </div>)}
+        
+
+        { fecha && (
           <Text className="mb-2 italic text-stone-400">
             {dayjs(fecha).fromNow()}
           </Text>
@@ -180,12 +204,15 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
             </>
           )}
         </div>
-        <div className="my-2">
+        <div className="z-10 my-2">
           <Title className="mb-2 text-xl">Comentarios</Title>
           {console.log("consoleado", comments)}
 
-          <CommentWall postId={id} comments={comments} />
+          <CommentWall postId={id} comments={comments} 
+          //setRespondTo={setRespondTo} 
+          />
         </div>
+
       </Paper>
     </Layout>
   );
