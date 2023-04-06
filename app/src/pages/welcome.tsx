@@ -1,5 +1,5 @@
 import {
-    Anchor, Button, createStyles, Divider, Group, Image, Paper, PasswordInput, Space, Text, TextInput, Title
+  Anchor, Button, createStyles, Divider, Group, Image, Paper, PasswordInput, Space, Text, TextInput, Title
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import Link from "next/link";
@@ -77,7 +77,7 @@ function AuthenticationPage() {
       router.push("/");
       showNotification({
         id: "welcome",
-        disallowClose: true,
+        
         autoClose: 5000,
         title: "Bienvenido",
         message: "Bienvenido a la aplicación",
@@ -89,7 +89,7 @@ function AuthenticationPage() {
       logout();
       showNotification({
         id: "get-out",
-        disallowClose: true,
+        
         autoClose: 5000,
         title: "No Estas Permitido",
         message:

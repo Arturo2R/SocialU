@@ -6,7 +6,6 @@ import {
   Textarea
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { RichTextEditor } from "@mantine/tiptap";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm as hform } from "react-hook-form";
@@ -16,8 +15,6 @@ import Switc from "../components/Comment/Switc";
 import ImageDropzone from "../components/ImageDropzone";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
-import CrearNav from "../components/RTE/CrearNav";
-import TextEditor from "../components/RTE/TextEditor";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
 
@@ -161,7 +158,7 @@ const CrearPost = () => {
                   maxLength: { value:80, message: "No mas de 80 caracteres" } 
                 })}
               />
-              <CrearNav tab1={  <Textarea
+              <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
                 radius="xl"
@@ -173,12 +170,6 @@ const CrearPost = () => {
                 {...register("message",{ required: true,minLength: { value:30, message: "No menos de 30 caracteres" }, maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
                 
               />
-              } 
-              tab2={
-                <TextEditor />  
-              }
-              />
-             
               
               <Switc
                 label="Anonimo"
