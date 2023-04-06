@@ -13,6 +13,7 @@ import { AuthProvider } from "../context/AuthContext";
 // import GlobalStyles from '../lib/globalStyles'
 import "../styles/globals.css";
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
+import{ Analytics } from '@vercel/analytics/react'
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -55,10 +56,12 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           withNormalizeCSS
         >
           <Notifications/>
+
             <AuthProvider>
               {/* <GlobalStyles /> */}
               <Component {...pageProps} />
             </AuthProvider>
+            <Analytics />
         </MantineProvider>
       </ColorSchemeProvider>
     </>
