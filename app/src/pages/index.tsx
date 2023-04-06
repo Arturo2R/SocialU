@@ -1,8 +1,8 @@
 import {
-    collection, getDocs,
-    limit,
-    orderBy,
-    query
+  collection, getDocs,
+  limit,
+  orderBy,
+  query
 } from "@firebase/firestore";
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";

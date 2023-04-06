@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   Title,
+  TypographyStylesProvider,
 } from "@mantine/core";
 import { BorderRadius, Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
@@ -152,7 +153,9 @@ export const Post: FC<PostProps> = ({
           showLabel="Ver Más"
           hideLabel="Menos"
         >
-          <Text>{description}</Text>
+          <TypographyStylesProvider>
+              <div  dangerouslySetInnerHTML={{ __html: description }} />
+            </TypographyStylesProvider>
         </Spoiler>
         {event && (
           <>

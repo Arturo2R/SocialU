@@ -2,11 +2,11 @@ import {
   Button,
   Container,
   Input,
-  InputWrapper,
   Modal,
   Textarea
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
+import { RichTextEditor } from "@mantine/tiptap";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm as hform } from "react-hook-form";
@@ -16,6 +16,8 @@ import Switc from "../components/Comment/Switc";
 import ImageDropzone from "../components/ImageDropzone";
 import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
+import CrearNav from "../components/RTE/CrearNav";
+import TextEditor from "../components/RTE/TextEditor";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
 
@@ -108,7 +110,7 @@ const CrearPost = () => {
     }
     showNotification({
       id: "created-post",
-      disallowClose: true,
+      
       autoClose: 3000,
       title: "Post creado",
       message: "Se Publicó 😀",
@@ -159,7 +161,7 @@ const CrearPost = () => {
                   maxLength: { value:80, message: "No mas de 80 caracteres" } 
                 })}
               />
-              <Textarea
+              <CrearNav tab1={  <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
                 radius="xl"
@@ -171,6 +173,12 @@ const CrearPost = () => {
                 {...register("message",{ required: true,minLength: { value:30, message: "No menos de 30 caracteres" }, maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
                 
               />
+              } 
+              tab2={
+                <TextEditor />  
+              }
+              />
+             
               
               <Switc
                 label="Anonimo"
@@ -196,11 +204,11 @@ const CrearPost = () => {
                   />
               
                   
-                  <InputWrapper required={true} label="Hora">
+                  <Input.Wrapper required={true} label="Hora">
                     <Input type="time" id="time-is-value"
                     {...register("time",{ required: true })}
                       />
-                  </InputWrapper>
+                  </Input.Wrapper>
                 </>
               )}
 

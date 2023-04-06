@@ -5,9 +5,10 @@ import {
     Text,
     useMantineTheme
 } from "@mantine/core";
-import { Dropzone, DropzoneStatus, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Icon as TablerIcon, Photo, Upload, X } from "tabler-icons-react";
 import { postsBanners } from "../firebase";
 
@@ -21,35 +22,6 @@ import { postsBanners } from "../firebase";
 //     : theme.colors.gray[7];
 // }
 
-function ImageUploadIcon({
-  status,
-  ...props
-}: React.ComponentProps<TablerIcon> & { status: DropzoneStatus }) {
-  if (status.accepted) {
-    return <Upload {...props} />;
-  }
-
-  if (status.rejected) {
-    return <X {...props} />;
-  }
-
-  return <Photo {...props} />;
-}
-
-const dropzoneChildren = (status: DropzoneStatus, theme: MantineTheme) => (
-  <Group position="center" spacing="xs" style={{ pointerEvents: "none" }}>
-    <ImageUploadIcon status={status} className="text-orange-200" size={80} />
-
-    <div className="text-gray-400">
-      <Text size="xl" inline>
-        Imagén Principal (Opcional)
-      </Text>
-      <Text size="sm" color="dimmed" inline mt={7}>
-        Envia solo una imagen de máximo 5 Mb
-      </Text>
-    </div>
-  </Group>
-);
 
 export default function ImageDropzone({
   image,
@@ -104,7 +76,35 @@ export default function ImageDropzone({
           multiple={false}
           accept={IMAGE_MIME_TYPE}
         >
-          {(status: DropzoneStatus) => dropzoneChildren(status, theme)}
+          <Group position="center" spacing="xs" style={{ pointerEvents: "none" }}>
+            <Dropzone.Accept>
+            <IconUpload
+              size="3.2rem"
+              stroke={1.5}
+              color={theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6]}
+            />
+          </Dropzone.Accept>
+          <Dropzone.Reject>
+            <IconX
+              size="3.2rem"
+              stroke={1.5}
+              color={theme.colors.red[theme.colorScheme === 'dark' ? 4 : 6]}
+            />
+          </Dropzone.Reject>
+          <Dropzone.Idle>
+            <IconPhoto size="3.2rem" stroke={1.5} />
+          </Dropzone.Idle>
+
+
+            <div className="text-gray-400">
+              <Text size="xl" inline>
+                Imagén Principal (Opcional)
+              </Text>
+              <Text size="sm" color="dimmed" inline mt={7}>
+                Envia solo una imagen de máximo 5 Mb
+              </Text>
+            </div>
+          </Group>
         </Dropzone>
       )}
     </>
