@@ -1,4 +1,3 @@
-import { showNotification } from "@mantine/notifications";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider, OAuthProvider, onAuthStateChanged,
@@ -8,6 +7,7 @@ import {
   signInWithPopup,
   signOut, UserCredential
 } from "firebase/auth";
+import { notifications }  from '@mantine/notifications'
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -181,7 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setValid("unset");
     signOut(auth);
-    showNotification({
+    notifications.show({
       id: "log-out",
       
       autoClose: 5000,
@@ -235,7 +235,7 @@ const updateInfo =
 useEffect(() => {
     if (valid === false) {
       logout();
-      showNotification({
+      notifications.show({
         id: "get-out",
         
         autoClose: 5000,

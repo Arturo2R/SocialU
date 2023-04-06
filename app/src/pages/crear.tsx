@@ -5,7 +5,7 @@ import {
   Modal,
   Textarea
 } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm as hform } from "react-hook-form";
@@ -105,7 +105,7 @@ const CrearPost = () => {
     } else {
       throw new Error("No hay usuario");
     }
-    showNotification({
+    notifications.show({
       id: "created-post",
       
       autoClose: 3000,
