@@ -52,7 +52,7 @@ export const AppHeader = ({
             <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
             <Title className=' {font-family:"inter";} text-2xl'>UX</Title>
             <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <Title className=' {font-family:"inter";} text-2xl'> • Universidad Del Norte</Title>
+              <Title className=' {font-family:"inter";} text-2xl'> • βeta </Title>
             </MediaQuery>
           </Group>
         </Link>
