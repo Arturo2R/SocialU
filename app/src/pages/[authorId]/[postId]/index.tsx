@@ -210,8 +210,9 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
           )}
         </div>
        
-
-       <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content.date.seconds).format("MMM D, YYYY")}</Text>
+      {/* {content?.date && (
+        <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content?.date?.getSeconds()).format("MMM D, YYYY")}</Text>
+      )} */}
 
         <div className="z-10 my-2">
           <Title className="mb-2 text-xl">Comentarios</Title>

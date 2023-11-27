@@ -7,7 +7,7 @@ import {
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
-import { db, perf } from "../firebase";
+import { db } from "../firebase";
 
 export const getServerSideProps = async () => {
   const q = query(
