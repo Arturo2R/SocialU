@@ -112,17 +112,15 @@ export const useFirestore = () => {
         let newPost: Post = {
           // id: formData.id,
           // title: formData.title,
-          // message: formData.message,
           // image: formData.image,
           // isEvent: formData.isEvent,
           // date: formData.date,
           // anonimo: formData.anonimo,
-
           ...formData,
           message: formData.message,       
-         // ...(user.photoURL ? {
-            authorImage : user?.photoURL || "",
-         // } : {authorImage : "st",}),
+          // ...(user.photoURL ? {
+          authorImage : user?.photoURL || "",
+          // } : {authorImage : "st",}),
           useUserName: user?.configuration?.useUserName || false,
           userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,

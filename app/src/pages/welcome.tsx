@@ -1,7 +1,7 @@
 import {
-    Anchor, Button, createStyles, Divider, Group, Image, Paper, PasswordInput, Space, Text, TextInput, Title
+  Anchor, Button, createStyles, Divider, Group, Image, Paper, PasswordInput, Space, Text, TextInput, Title
 } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -75,9 +75,9 @@ function AuthenticationPage() {
     if (valid === true) {
    // console.log("is valid");
       router.push("/");
-      showNotification({
+      notifications.show({
         id: "welcome",
-        disallowClose: true,
+        
         autoClose: 5000,
         title: "Bienvenido",
         message: "Bienvenido a la aplicación",
@@ -87,9 +87,9 @@ function AuthenticationPage() {
     }
     if (valid === false) {
       logout();
-      showNotification({
+      notifications.show({
         id: "get-out",
-        disallowClose: true,
+        
         autoClose: 5000,
         title: "No Estas Permitido",
         message:

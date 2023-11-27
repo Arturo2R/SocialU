@@ -3,7 +3,7 @@ import {
     ColorSchemeProvider,
     MantineProvider
 } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
+import {  Notifications } from "@mantine/notifications";
 import { getCookie, setCookies } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
 import { AppProps } from "next/app";
@@ -15,6 +15,7 @@ import {getPerformance} from "firebase/performance"
 import "../styles/globals.css";
 import {app} from "../firebase"
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
+import{ Analytics } from '@vercel/analytics/react'
 
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
@@ -61,12 +62,13 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           withGlobalStyles
           withNormalizeCSS
         >
-          <NotificationsProvider>
+          <Notifications/>
+
             <AuthProvider>
               {/* <GlobalStyles /> */}
               <Component {...pageProps} />
             </AuthProvider>
-          </NotificationsProvider>
+            <Analytics />
         </MantineProvider>
       </ColorSchemeProvider>
     </>

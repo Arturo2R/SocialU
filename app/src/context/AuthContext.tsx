@@ -1,16 +1,13 @@
-import { showNotification } from "@mantine/notifications";
 import {
-    createUserWithEmailAndPassword,
-    GoogleAuthProvider,
-    onAuthStateChanged,
-    sendPasswordResetEmail,
-    signInWithCredential,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    signOut,
-    OAuthProvider,
-    UserCredential
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider, OAuthProvider, onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut, UserCredential
 } from "firebase/auth";
+import { notifications }  from '@mantine/notifications'
 import jwt_decode from "jwt-decode";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -184,9 +181,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setValid("unset");
     signOut(auth);
-    showNotification({
+    notifications.show({
       id: "log-out",
-      disallowClose: true,
+      
       autoClose: 5000,
       title: "Has cerrado Sesión",
       color: "red",
@@ -238,9 +235,9 @@ const updateInfo =
 useEffect(() => {
     if (valid === false) {
       logout();
-      showNotification({
+      notifications.show({
         id: "get-out",
-        disallowClose: true,
+        
         autoClose: 5000,
         title: "No Estas Permitido",
         message:

@@ -13,6 +13,7 @@ import {
   Text,
   TypographyStylesProvider,
   Title,
+  TypographyStylesProvider,
 } from "@mantine/core";
 import { BorderRadius, Check, Plus } from "tabler-icons-react";
 import Link from "next/link";

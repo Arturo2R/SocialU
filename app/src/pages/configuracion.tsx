@@ -1,11 +1,11 @@
 import {
-    Autocomplete, Button, Group,
-    NumberInput,
-    Paper,
-    Space, Stack, Switch, Text, TextInput, Title
+  Autocomplete, Button, Group,
+  NumberInput,
+  Paper,
+  Space, Stack, Switch, Text, TextInput, Title
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import { FC, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
@@ -56,15 +56,13 @@ const configuracion = (props: Props) => {
     if(user?.uid){
    // console.log("disparado")
       setLoading(true)
-      updateFirestoreProfile(user.uid,configurationData, user, setUser).then(()=>showNotification({
+      updateFirestoreProfile(user.uid,configurationData, user, setUser).then(()=>notifications.show({
         id: "created-post",
-        disallowClose: true,
         autoClose: 4000,
         title: "Perfil Actualizado",
         message: "El perfil ha sido actualizado exitosamente",
         color: "orange",
         className: "my-notification-class",
-        // icon: <FileCheck />,
       }))
       
       setLoading(false)

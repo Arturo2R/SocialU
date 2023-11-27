@@ -2,11 +2,10 @@ import {
   Button,
   Container,
   Input,
-  InputWrapper,
   Modal,
   Textarea
 } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm as hform } from "react-hook-form";
@@ -106,9 +105,9 @@ const CrearPost = () => {
     } else {
       throw new Error("No hay usuario");
     }
-    showNotification({
+    notifications.show({
       id: "created-post",
-      disallowClose: true,
+      
       autoClose: 3000,
       title: "Post creado",
       message: "Se Publicó 😀",
@@ -199,11 +198,11 @@ const CrearPost = () => {
                   />
               
                   
-                  <InputWrapper required={true} label="Hora">
+                  <Input.Wrapper required={true} label="Hora">
                     <Input type="time" id="time-is-value"
                     {...register("time",{ required: true })}
                       />
-                  </InputWrapper>
+                  </Input.Wrapper>
                 </>
               )}
 

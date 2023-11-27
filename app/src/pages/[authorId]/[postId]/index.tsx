@@ -1,7 +1,7 @@
 import {
   collection,
   doc,
-  getDoc, getDocs, limit, onSnapshot, orderBy, query
+  getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
   Center,
@@ -30,7 +30,6 @@ import Layout from "../../../components/Layout/Layout";
 import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
-import {useFirestore} from "../../../hooks/useFirestore"
 // import "bigger-picture";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
@@ -144,11 +143,10 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
 
         {content?.image ? (
            <> 
-            <Link  href="/" >
-              <ActionIcon  className="z-10 -mt-15" mt="10px" mb="-44px" ml="10px"  size="lg" radius="xl" variant="light">
+              <ActionIcon onClick={() => router.back()}  className="z-10 -mt-15" mt="10px" mb="-44px" ml="10px"  size="lg" radius="xl" variant="light">
                 <ChevronLeft />
               </ActionIcon>
-            </Link>
+           
               
             <Image className="mb-4" radius="lg" src={content.image} />
             <Title className="mb-2 text-3xl">{content?.title}</Title>
