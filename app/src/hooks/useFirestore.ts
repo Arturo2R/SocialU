@@ -15,6 +15,7 @@ import {
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
+import markdownToHtml from "../lib/mardown";
 
 const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 export const useFirestore = () => {
@@ -106,8 +107,8 @@ export const useFirestore = () => {
         console.log(path)
         const postsRef = doc(db, "posts", generatedPostId);
         const publicRef = doc(db, path, generatedPostId);
-
-
+        // const formatted = await markdownToHtml(formData.message)
+        // console.log(formatted)
         let newPost: Post = {
           // id: formData.id,
           // title: formData.title,
@@ -116,7 +117,9 @@ export const useFirestore = () => {
           // isEvent: formData.isEvent,
           // date: formData.date,
           // anonimo: formData.anonimo,
+
           ...formData,
+          message: formData.message,       
          // ...(user.photoURL ? {
             authorImage : user?.photoURL || "",
          // } : {authorImage : "st",}),

@@ -12,7 +12,8 @@ import {
   Stack,
   Text,
   Title,
-  ActionIcon
+  ActionIcon,
+  TypographyStylesProvider
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -75,7 +76,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
   const [respondTo, setRespondTo] = useState("")
-
+  console.log(content)
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
 
@@ -170,6 +171,10 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
         )}
         {content?.message && (
           <Text className="max-w-lg text-md">{content.message}</Text>
+          //  <TypographyStylesProvider>
+          //     <div className="max-w-lg text-md" dangerouslySetInnerHTML={{ __html: content.message}}></div>
+          // </TypographyStylesProvider>
+         
         )}
         {content?.anonimo === false && content.authorName ? (
           <AuthorInfo
@@ -189,8 +194,8 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
             <>
               <Title className="mb-2 text-xl">Asistentes</Title>
               <Stack>
-                {content.suscriptions?.length === 0 && (
-                  <Text>No Hay Nadie</Text>
+                {(!content.suscriptions || content.suscriptions?.length == 0) && (
+                  <Text>    Por ahora no Hay Nadie</Text>
                 )}
                 {content?.suscriptions?.map((s, index) => (
                   <SeeUser
@@ -204,6 +209,10 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
             </>
           )}
         </div>
+       
+
+       <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content.date.seconds).format("MMM D, YYYY")}</Text>
+
         <div className="z-10 my-2">
           <Title className="mb-2 text-xl">Comentarios</Title>
           {console.log("consoleado", comments)}

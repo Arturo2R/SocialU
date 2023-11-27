@@ -12,6 +12,7 @@ import {
 import { useMediaQuery } from "@mantine/hooks";
 import { NextLink } from "@mantine/next";
 import { UserCredential } from "firebase/auth";
+import { random } from "nanoid";
 // import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -34,6 +35,14 @@ export const AppHeader = ({
 }: AppHeaderProps) => {
   const matches = useMediaQuery("(min-width: 450px)");
 
+  function getRandomString(date:Date, stringList:string[]):string {
+    const randomIndex = Math.floor(date.getDate() % stringList.length);
+    return stringList[randomIndex];
+}
+
+  const stringList = ['Campus Gossip',"Chisme.app","Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions","UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect", ];
+  const randomString = getRandomString(new Date(), stringList);
+
   return (
     <Header height={70} p="md">
       <div className="flex justify-between items-center h-full">
@@ -50,10 +59,12 @@ export const AppHeader = ({
         <Link href="/">
           <Group>
             <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
-            <Title className=' {font-family:"inter";} text-2xl'>UX</Title>
-            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <Title className=' {font-family:"inter";} text-2xl'> • Universidad Del Norte</Title>
-            </MediaQuery>
+            <div className="flex">
+              <MediaQuery smallerThan="md" styles={{ display: "none" }}>
+              <Title className=' {font-family:"inter";} text-2xl mr-0 pr-2'>UX •</Title>
+              </MediaQuery>     
+              <Title className=' {font-family:"inter";} text-2xl'>{randomString}</Title>
+            </div>
           </Group>
         </Link>
         <Group>
@@ -63,17 +74,28 @@ export const AppHeader = ({
             </MediaQuery>
           )}
           {user?.photoURL && <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
-          {user === null && (
+          {(user === null)&&(loginProvider) && (
+              <Button
+                size={matches ? "md" : "xs"}
+                color="orange"
+                onClick={loginProvider}
+              >
+                Iniciar Sesión
+              </Button>
+          )}
+          {(user === null)&&(!loginProvider) && (
             <Link href="/welcome" >
               <Button
                 size={matches ? "md" : "xs"}
-              // onClick={loginProvider}
+                
                 color="orange"
               >
                 Iniciar Sesión
               </Button>
-              </Link>
+             </Link>
+
           )}
+
           {user && <ColorSchemeToggle />}
         </Group>
       </div>

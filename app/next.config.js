@@ -1,3 +1,5 @@
+const million = require('million/compiler')
+
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
@@ -18,7 +20,14 @@ const withMDX = require('@next/mdx')({
   },
 })
 
-module.exports = withMDX(withBundleAnalyzer(withPWA({
+const millionConfig = {
+  auto: true,
+  // if you're using RSC:
+  // auto: { rsc: true },
+}
+
+
+const nextConfig = withMDX(withBundleAnalyzer(withPWA({
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
@@ -44,3 +53,5 @@ module.exports = withMDX(withBundleAnalyzer(withPWA({
     ]
   },
 })));
+
+module.exports = million.next(nextConfig, millionConfig);

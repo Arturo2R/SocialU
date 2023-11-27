@@ -4,8 +4,9 @@ import { getAuth, enableIndexedDbPersistence, indexedDBLocalPersistence, browser
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { getFirestore } from 'firebase/firestore';
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import { getStorage, ref } from 'firebase/storage';
+// import { getPerformance } from "firebase/performance";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -24,6 +25,8 @@ export const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 const db = getFirestore(app);
+
+// const perf = getPerformance(app)
 
 // let analytics = getAnalytics(app)
 

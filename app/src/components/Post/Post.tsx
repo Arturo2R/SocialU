@@ -11,6 +11,7 @@ import {
   Spoiler,
   Stack,
   Text,
+  TypographyStylesProvider,
   Title,
 } from "@mantine/core";
 import { BorderRadius, Check, Plus } from "tabler-icons-react";
@@ -21,6 +22,7 @@ import { useState, FC, useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
+import markdownToHtml from "../../lib/mardown";
 // import BiggerPicture from "bigger-picture";
 // type author =
 //   | {
@@ -38,6 +40,7 @@ export interface PostProps {
   image?: string;
   description: string;
   title: string;
+  date?: Date;
   event?: boolean;
   postId?: string;
   // relevantCommentary?: Object;
@@ -96,6 +99,9 @@ export const Post: FC<PostProps> = ({
     }
     return false;
   };
+  const generateText = async (text: string) => {
+    await markdownToHtml(text)
+  }
 
   const { suscribe } = useFirestore();
   return (
@@ -153,6 +159,10 @@ export const Post: FC<PostProps> = ({
           hideLabel="Menos"
         >
           <Text>{description}</Text>
+          {/* <TypographyStylesProvider>
+          <div dangerouslySetInnerHTML={{ __html:  description}}></div>
+          
+          </TypographyStylesProvider> */}
         </Spoiler>
         {event && (
           <>
@@ -162,7 +172,6 @@ export const Post: FC<PostProps> = ({
                 size="lg"
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
-
                   setExpanded(!expanded);
                 }}
                 variant="light"
