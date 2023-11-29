@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useState, FC, useEffect } from "react";
 // import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
