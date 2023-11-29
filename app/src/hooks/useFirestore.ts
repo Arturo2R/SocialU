@@ -107,9 +107,8 @@ export const useFirestore = () => {
         console.log(path)
         const postsRef = doc(db, "posts", generatedPostId);
         const publicRef = doc(db, path, generatedPostId);
-        const content = await markdownToHtml(formData.message)
-
-
+        // const formatted = await markdownToHtml(formData.message)
+        // console.log(formatted)
         let newPost: Post = {
           // id: formData.id,
           // title: formData.title,
@@ -118,10 +117,10 @@ export const useFirestore = () => {
           // date: formData.date,
           // anonimo: formData.anonimo,
           ...formData,
+          message: formData.message,       
           // ...(user.photoURL ? {
-          message: content,
-            authorImage : user?.photoURL || "",
-         // } : {authorImage : "st",}),
+          authorImage : user?.photoURL || "",
+          // } : {authorImage : "st",}),
           useUserName: user?.configuration?.useUserName || false,
           userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,

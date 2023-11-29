@@ -8,12 +8,15 @@ import { getCookie, setCookies } from "cookies-next";
 import { GetServerSidePropsContext } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AuthProvider } from "../context/AuthContext";
+import {getPerformance} from "firebase/performance"
 // import GlobalStyles from '../lib/globalStyles'
 import "../styles/globals.css";
+import {app} from "../firebase"
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
 import{ Analytics } from '@vercel/analytics/react'
+
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -40,6 +43,10 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   //// console.log("Tirado");
   //   globalThis?.window?.google?.accounts?.id?.prompt();
   // }, []);
+  useEffect(() => {
+    getPerformance(app)    
+  }, [])
+  
 
   return (
     <>

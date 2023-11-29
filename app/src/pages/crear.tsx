@@ -153,7 +153,7 @@ const CrearPost = () => {
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
                 {...register("title",{ 
-                  required: "Email Address is required", 
+                  required: "El titulo es necesario", 
                   minLength: { value:5, message: "No menos de 5 caracteres" },
                   maxLength: { value:80, message: "No mas de 80 caracteres" } 
                 })}
@@ -161,14 +161,17 @@ const CrearPost = () => {
               <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
+                error={errors.message?.message}
                 radius="xl"
                 size="md"
                 maxLength={1000}
                 minRows={5}
                 required
                 autosize
-                {...register("message",{ required: true,minLength: { value:30, message: "No menos de 30 caracteres" }, maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
-                
+                {...register("message",{
+                  required: "La descripcion es necesaria",
+                  minLength: { value:30, message: "No menos de 10 caracteres" }, 
+                  maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
               />
               
               <Switc
@@ -189,9 +192,9 @@ const CrearPost = () => {
                 <>
                   <DatePick
                     required={true}
-                    name="date"
                     control={control}
                     label="Día De Reunion"
+                    {...register("date",{ required: true })}
                   />
               
                   

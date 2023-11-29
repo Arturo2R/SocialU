@@ -11,6 +11,7 @@ import {
   Spoiler,
   Stack,
   Text,
+  TypographyStylesProvider,
   Title,
   TypographyStylesProvider,
 } from "@mantine/core";
@@ -22,6 +23,7 @@ import { useState, FC, useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
+import markdownToHtml from "../../lib/mardown";
 // import BiggerPicture from "bigger-picture";
 // type author =
 //   | {
@@ -39,6 +41,7 @@ export interface PostProps {
   image?: string;
   description: string;
   title: string;
+  date?: Date;
   event?: boolean;
   postId?: string;
   // relevantCommentary?: Object;
@@ -97,6 +100,9 @@ export const Post: FC<PostProps> = ({
     }
     return false;
   };
+  const generateText = async (text: string) => {
+    await markdownToHtml(text)
+  }
 
   const { suscribe } = useFirestore();
   return (
@@ -153,19 +159,20 @@ export const Post: FC<PostProps> = ({
           showLabel="Ver Más"
           hideLabel="Menos"
         >
-          <TypographyStylesProvider>
-              <div  dangerouslySetInnerHTML={{ __html: description }} />
-            </TypographyStylesProvider>
+          <Text>{description}</Text>
+          {/* <TypographyStylesProvider>
+          <div dangerouslySetInnerHTML={{ __html:  description}}></div>
+          
+          </TypographyStylesProvider> */}
         </Spoiler>
         {event && (
           <>
-            <Group grow my="sm">
+            <Group grow mt="sm" >
               <Button
                 className="text-sm sm:text-base"
                 size="lg"
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
-
                   setExpanded(!expanded);
                 }}
                 variant="light"

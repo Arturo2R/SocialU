@@ -1,4 +1,4 @@
-import { Button, Footer, Group } from "@mantine/core";
+import { Button, Footer, Group, MediaQuery } from "@mantine/core";
 // import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
@@ -17,22 +17,24 @@ const AppFooter = () => {
     //   )}
     // </Footer>
     // <Protected.Component>
-    <Footer height={60} p="xs">
-      <Group grow>
-        <Link href="/crear">
-          <Button
-            className="w-full"
-            rightIcon={<Send />}
-            variant="subtle"
-            color="orange"
-            size="md"
-            title="Crear Post"
-          >
-            Crear Post
-          </Button>
-        </Link>
-      </Group>
-    </Footer>
+    // <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+      <Footer height={60} p="xs">
+        <Group grow>
+          <Link href="/crear">
+            <Button
+              fullWidth={true}
+              rightIcon={<Send />}
+              variant="subtle"
+              color="orange"
+              size="md"
+              title="Crear Post"
+            >
+              Crear Post
+            </Button>
+          </Link>
+        </Group>
+      </Footer>
+    // </MediaQuery>
     // </Protected.Component>
   );
 };

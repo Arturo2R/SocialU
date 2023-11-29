@@ -13,7 +13,7 @@ export const getServerSideProps = async () => {
   const q = query(
     collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
     orderBy("createdAt", "desc"),
-    limit(7)
+    limit(10)
   );
 
   const querySnapshot = await getDocs(q);
@@ -51,9 +51,17 @@ export default function HomePage({ data }: HomeProps) {
   "padding: 2px 4px",
   "font-size: 32px"
   ].join(";");
+
+
   
   console. log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
   
+  // const trace = perf.trace("home_page_load");
+  
+  // // Rest of page component
+  
+  // // Finish tracing
+  // trace();
 
   return (
     <Layout>

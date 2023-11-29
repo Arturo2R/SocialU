@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import { Post } from "../Post/Post";
 import SEO from "../SEO";
+import Masonry from 'react-masonry-css'
+
+import mansory from "./Feed.module.css" 
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
@@ -44,6 +47,14 @@ export function Feed({ data, user }:FeedProps) {
 
   // if (error) return <Text>{error}</Text>;
   // console.log(postsLoading);
+  const breakpointColumnsObj = {
+    1920:6,
+    1600: 3,
+    1024: 3,
+    900: 2,
+    500: 1,
+    default: 1,
+  };
   return (
     <>
       {/* {isLoading === "loading" && (
@@ -53,9 +64,16 @@ export function Feed({ data, user }:FeedProps) {
       )} */}
       {/* {isLoading === "loaded" && ( */}
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
-      <Container className="p-0 lg:px-12">
-        <Space h="md" />
-        <Stack spacing="lg" className="mx-auto max-w-sm">
+      <Container className="p-0">
+        {/* <Space h="md" /> */}
+        {/* <Stack spacing="lg" className="mx-auto max-w-sm">  */}
+        
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className={mansory.grid}          
+          columnClassName={mansory.column}>
+          {/* array of JSX items */}
+      
           {(liveData ?? data).map((post: any, index: number) => (
             <Post
               userUID={user?.uid}
@@ -78,9 +96,11 @@ export function Feed({ data, user }:FeedProps) {
               asistants={post?.suscriptions}
             />
           ))}
-        </Stack>
+        </Masonry>
+        {/* </Stack> */}
       </Container>
       {/* )} */}
+      
     </>
   );
 }
