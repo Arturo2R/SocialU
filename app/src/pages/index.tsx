@@ -54,7 +54,7 @@ export default function HomePage({ data }: HomeProps) {
 
 
   
-  console. log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
+  console.log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
   
   // const trace = perf.trace("home_page_load");
   

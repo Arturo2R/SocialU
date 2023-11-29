@@ -1,7 +1,7 @@
 import {
   Container,
-  Space,
-  Stack
+  // Space,
+  // Stack
 } from "@mantine/core";
 import { useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
@@ -57,22 +57,16 @@ export function Feed({ data, user }:FeedProps) {
   };
   return (
     <>
-      {/* {isLoading === "loading" && (
-        <Center className="my-auto h-full">
-          <Loader color="orange" size="lg" variant="bars" />
-        </Center>
-      )} */}
-      {/* {isLoading === "loaded" && ( */}
+
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
       <Container className="p-0">
-        {/* <Space h="md" /> */}
+
         {/* <Stack spacing="lg" className="mx-auto max-w-sm">  */}
         
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className={mansory.grid}          
           columnClassName={mansory.column}>
-          {/* array of JSX items */}
       
           {(liveData ?? data).map((post: any, index: number) => (
             <Post
@@ -96,10 +90,10 @@ export function Feed({ data, user }:FeedProps) {
               asistants={post?.suscriptions}
             />
           ))}
+          
         </Masonry>
         {/* </Stack> */}
       </Container>
-      {/* )} */}
       
     </>
   );

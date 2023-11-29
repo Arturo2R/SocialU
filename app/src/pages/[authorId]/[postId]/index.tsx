@@ -5,7 +5,6 @@ import {
 } from "@firebase/firestore";
 import {
   Center,
-  Select,
   Image,
   Loader,
   Paper,
@@ -13,7 +12,6 @@ import {
   Text,
   Title,
   ActionIcon,
-  TypographyStylesProvider
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -69,12 +67,12 @@ export async function getServerSideProps(context:any) {
 // }
 
 const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
-  // const router = useRouter();
+  const router = useRouter();
   // const { postId, authorId } = router.query;
   // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
-  const [respondTo, setRespondTo] = useState("")
+  // const [respondTo, setRespondTo] = useState("")
   console.log(content)
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
