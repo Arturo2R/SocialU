@@ -58,13 +58,15 @@ export const AppHeader = ({
         </MediaQuery>
         <Link href="/">
           <Group>
+            {/* <div className="flex space-x-2"> */}
             <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
-            <div className="flex">
-              <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <Title className=' {font-family:"inter";} text-2xl mr-0 pr-2'>UX •</Title>
-              </MediaQuery>     
-              <Title className=' {font-family:"inter";} text-2xl'>{randomString}</Title>
-            </div>
+              <MediaQuery smallerThan="sm" styles={{ display: "none" }}>
+                <Title order={3}>UX •</Title>
+              </MediaQuery>
+              <MediaQuery query="(max-width: 400px)" styles={{ display: "none" }}>
+                <Title order={3}>{randomString}</Title>
+              </MediaQuery>
+            {/* </div> */}
           </Group>
         </Link>
         <Group>

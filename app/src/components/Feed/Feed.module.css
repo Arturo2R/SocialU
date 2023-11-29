@@ -3,7 +3,7 @@
   display: -ms-flexbox; /* Not needed if autoprefixing */
   display: flex;
   margin-left: -20px; /* gutter size offset */
-  width: auto;
+  width: 100%;
 }
 .column {
   padding-left: 20px; /* gutter size */
@@ -13,5 +13,19 @@
 /* Style your items */
 .column > article { /* change div to reference your elements you put in <Masonry> */
   /* background: grey; */
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Optional, different gutter size on mobile */
+@media (max-width: 500px) {
+  .grid {
+    margin-left: 0; /* gutter size offset */
+  }
+  .column {
+    padding-left: 0; /* gutter size offset */
+  }
+  .column > article {
+    margin-bottom: 15px; /* space between items */
+  }
 }
