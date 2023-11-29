@@ -108,9 +108,9 @@ export const Post: FC<PostProps> = ({
       <Card withBorder p="xs" radius="md">
         <Link 
           href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
-
+          className="X"
         >
-          <a className="X">
+          <>
             {image && (
               <Card.Section className={styles.mainImage}>
                 <Image
@@ -136,16 +136,14 @@ export const Post: FC<PostProps> = ({
             )}
             {/* <Badge>{category}</Badge> */}
             <Title order={3} className="text-xl font-bold">{title}</Title>
-          </a>
+            </>
         </Link>
         {author !== "anonimo" ? (
           <Link href={`/${author.id}`} >
-            <a >
               <Group className="mt-1" spacing="xs">
                 {author?.image && <Image alt={`${author.name} avatar image`} width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
                 <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
               </Group>
-            </a>
           </Link>
         ) : (
           <Text color="orange">Anónimo</Text>

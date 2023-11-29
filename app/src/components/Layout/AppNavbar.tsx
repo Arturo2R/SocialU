@@ -74,18 +74,18 @@ export default function NavbarSimple({ opened }: Props) {
   const [active, setActive] = useState("Billing");
 
   const links = data.map((item) => (
-    <Link href={item.link} key={item.label}>
-      <a
-        onClick={() => {
-          setActive(item.label);
-        }}
-        className={cx(classes.link, {
-          [classes.linkActive]: item.label === active,
-        })}
-      >
+    <Link href={item.link} key={item.label}
+      onClick={() => {
+        setActive(item.label);
+      }}
+      className={cx(classes.link, {
+        [classes.linkActive]: item.label === active,
+      })}
+    >
+      <>
         <item.icon color="orange" className={classes.linkIcon} />
         <span>{item.label}</span>
-      </a>
+      </>
     </Link>
   ));
 
