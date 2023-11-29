@@ -49,9 +49,9 @@ export function Feed({ data, user }:FeedProps) {
   // console.log(postsLoading);
   const breakpointColumnsObj = {
     1920:6,
-    1600: 2,
-    1024: 2,
-    800: 2,
+    1600: 3,
+    1024: 3,
+    900: 2,
     500: 1,
     default: 1,
   };
@@ -65,12 +65,12 @@ export function Feed({ data, user }:FeedProps) {
       {/* {isLoading === "loaded" && ( */}
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
       <Container className="p-0">
-        <Space h="md" />
+        {/* <Space h="md" /> */}
         {/* <Stack spacing="lg" className="mx-auto max-w-sm">  */}
         
         <Masonry
           breakpointCols={breakpointColumnsObj}
-          className={mansory.grid}
+          className={mansory.grid}          
           columnClassName={mansory.column}>
           {/* array of JSX items */}
       

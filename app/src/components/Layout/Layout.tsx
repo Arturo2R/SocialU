@@ -7,6 +7,7 @@ import AppFooter from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 import { BellRinging, Send, Settings } from 'tabler-icons-react';
+import { useMediaQuery } from "@mantine/hooks";
 
 // import AppSidebar from "./AppSidebar";
 
@@ -68,6 +69,7 @@ export default function Layout({ children }: LayoutProps) {
   const theme = useMantineTheme();
 
   const [opened, setOpened] = useState<boolean>(false);
+  const matches = useMediaQuery('(max-width: 900px)');
   // const [active, setActive] = useState<boolean>();
   // const [hecho, setHecho] = useState<boolean>(false);
   // const items = navLinks.map((link) => (
@@ -107,7 +109,8 @@ export default function Layout({ children }: LayoutProps) {
         fixed
         navbar={<AppNavbar opened={opened} />}
         // aside={<AppSidebar />}
-        footer={router.pathname === "/" ? <AppFooter /> : <></>}
+        
+        footer={router.pathname === "/" && matches ? <AppFooter /> : <></>}
         header={
           <AppHeader
             opened={opened}

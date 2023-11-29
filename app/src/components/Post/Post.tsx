@@ -167,7 +167,7 @@ export const Post: FC<PostProps> = ({
         </Spoiler>
         {event && (
           <>
-            <Group grow my="sm">
+            <Group grow mt="sm" >
               <Button
                 className="text-sm sm:text-base"
                 size="lg"
