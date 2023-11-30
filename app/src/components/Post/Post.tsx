@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { useState, FC, useEffect } from "react";
 // import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
@@ -114,7 +114,7 @@ export const Post: FC<PostProps> = ({
             {image && (
               <Card.Section className={styles.mainImage}>
                 <Image
-                  src={image}
+                  src={"https://firebasestorage.googleapis.com/v0/b/socialu-c62e6.appspot.com/o/postsBanners%2FIMG-20231119-WA0025.jpg?alt=media&token=2140eeb9-aba2-4127-b785-1a75a7992e16"}
                   alt={title}
                   width={380}
                   height={240}
