@@ -16,6 +16,7 @@ import {
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -136,27 +137,29 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
   return (
     
     <Layout>
+      
       <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
+      <span className="hidden bg-dark/50 dark:bg-white/50"></span>
       <Paper p="md" shadow="sm" radius="md">
 
         {content?.image ? (
            <> 
-              <ActionIcon onClick={() => router.back()}  className="z-10 -mt-15" mt="10px" mb="-44px" ml="10px"  size="lg" radius="xl" variant="light">
+              <ActionIcon component={Link} href={`/#${id}`} scroll={false} classNames={{root: "bg-dark/50 dark:bg-white/50", loader: "text-dark/80 dark:bg-white/80"}} className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" variant="white" color="light">
                 <ChevronLeft />
               </ActionIcon>
            
               
             <Image className="mb-4" radius="lg" src={content.image} />
-            <Title className="mb-2 text-3xl">{content?.title}</Title>
+            <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
             
           </>
         ):(<div className="flex space-x-4"> 
               <Link  href="/" >
-                <ActionIcon  className="z-10 -mt-15"  mb="10px"   size="lg" radius="xl" variant="light">
+                  <ActionIcon component={Link} href={`/#${id}`} scroll={false} classNames={{root: "bg-dark/50 dark:bg-white/50", loader: "text-dark/80 dark:bg-white/80"}} className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" variant="white" color="light">
                   <ChevronLeft />
                 </ActionIcon>
               </Link>
-              <Title className="mb-2 text-3xl">{content?.title}</Title>
+              <Title order={2} mb="sm">{content?.title}</Title>
         </div>)}
         
 
@@ -188,7 +191,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
         <div className="my-4">
           {content?.isEvent && (
             <>
-              <Title className="mb-2 text-xl">Asistentes</Title>
+              <Title order={3} mb="sm">Asistentes</Title>
               <Stack>
                 {(!content.suscriptions || content.suscriptions?.length == 0) && (
                   <Text>    Por ahora no Hay Nadie</Text>
@@ -211,7 +214,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
       )} */}
 
         <div className="z-10 my-2">
-          <Title className="mb-2 text-xl">Comentarios</Title>
+          <Title order={3} mb="sm">Comentarios</Title>
           {console.log("consoleado", comments)}
 
           <CommentWall postId={id} comments={comments} 

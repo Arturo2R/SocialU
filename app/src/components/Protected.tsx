@@ -22,7 +22,7 @@ export function Route({ children }: Props) {
 
   useEffect(() => {
     if (!user) {
-      router.push("/welcome");
+      router.push("/");
     }
   }, [user, loading]);
 

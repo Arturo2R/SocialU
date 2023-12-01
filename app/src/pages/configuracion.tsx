@@ -134,7 +134,7 @@ const configuracion = (props: Props) => {
                description="Usar el nombre de usuario en lugar del nombre real para las publicaciones y comentarios" 
                {...form.getInputProps("useUserName")}
                />
-            <Button loading={loading} mt="sm" type="submit" color="orange" radius="md" uppercase>Guardar</Button>  
+            <Button loading={loading} mt="sm" type="submit" color="orange" radius="md" className="uppercase">Guardar</Button>  
           </Stack>
           </form>
         </Paper>
@@ -154,10 +154,10 @@ interface SCF {
 
 const SwitchConfiguration: FC<SCF> =({title, description, value, onChange})=> {
   return( <Group
-    position="apart"
+    justify="space-between"
     // className={classes.item}
-    noWrap
-    spacing="xl"
+    wrap="nowrap"
+    gap="xl"
   >
     <div>
       <Text className="font-medium">{title}</Text>

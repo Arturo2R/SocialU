@@ -183,7 +183,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut(auth);
     notifications.show({
       id: "log-out",
-      
       autoClose: 5000,
       title: "Has cerrado Sesión",
       color: "red",

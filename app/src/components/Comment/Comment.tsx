@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 // import { useToggle } from "@mantine/hooks";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 export interface CommentProps {
   id: string;

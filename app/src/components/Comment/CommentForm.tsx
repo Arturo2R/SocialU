@@ -1,4 +1,4 @@
-import { ActionIcon, Checkbox, Group, Switch, Textarea } from "@mantine/core";
+import { ActionIcon,Switch, Textarea } from "@mantine/core";
 import React from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";

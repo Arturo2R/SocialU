@@ -1,37 +1,58 @@
-import {
-    ColorScheme,
-    ColorSchemeProvider,
-    MantineProvider
-} from "@mantine/core";
 import {  Notifications } from "@mantine/notifications";
-import { getCookie, setCookies } from "cookies-next";
-import { GetServerSidePropsContext } from "next";
-import { AppProps } from "next/app";
-import Head from "next/head";
+// import { getCookie, setCookies } from "cookies-next";
+// import { GetServerSidePropsContext } from "next";
+import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
 import { AuthProvider } from "../context/AuthContext";
 import {getPerformance} from "firebase/performance"
 // import GlobalStyles from '../lib/globalStyles'
-import "../styles/globals.css";
 import {app} from "../firebase"
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
 import{ Analytics } from '@vercel/analytics/react'
+import Head from "next/head";
 
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import "../styles/globals.css";
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
+import { useFirestore } from "../hooks/useFirestore";
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
+
+export default function App(props: AppProps & { colorScheme: MantineColorScheme }) {
   const { Component, pageProps } = props;
-  const [colorScheme, setColorScheme] = useState<ColorScheme>(
-    props.colorScheme
-  );
+  // const {
+    // data: liveData,
+    // error: dataError,
+    // postsLoading,
+  //   fetchData,
+  // } = useFirestore();
 
-  const toggleColorScheme = (value?: ColorScheme) => {
-    const nextColorScheme =
-      value || (colorScheme === "dark" ? "light" : "dark");
-    setColorScheme(nextColorScheme);
-    setCookies("mantine-color-scheme", nextColorScheme, {
-      maxAge: 60 * 60 * 24 * 30,
-    });
-  };
+  useEffect(() => {
+    // setIsLoading("loading");
+    // fetchData()//.then(() => setIsLoading("loaded"));
+    // return () => {
+    // };
+    // console.log("FECHEADO PAPA")
+    getPerformance(app)    
+  }, []);
+  // const [colorScheme, setColorScheme] = useState<ColorScheme>(
+  //   props.colorScheme
+  // );
+
+  // const toggleColorScheme = (value?: ColorScheme) => {
+  //   const nextColorScheme =
+  //     value || (colorScheme === "dark" ? "light" : "dark");
+  //   setColorScheme(nextColorScheme);
+  //   setCookies("mantine-color-scheme", nextColorScheme, {
+  //     maxAge: 60 * 60 * 24 * 30,
+  //   });
+  // };
 
   // useEffect(() => {
   //   globalThis?.window?.google?.accounts?.id?.initialize({
@@ -43,9 +64,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   //// console.log("Tirado");
   //   globalThis?.window?.google?.accounts?.id?.prompt();
   // }, []);
-  useEffect(() => {
-    getPerformance(app)    
-  }, [])
+
   
 
   return (
@@ -53,14 +72,13 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       <Head>
         <title>Social U</title>
       </Head>
-      <ColorSchemeProvider
+      {/* <ColorSchemeProvider
         colorScheme={colorScheme}
         toggleColorScheme={toggleColorScheme}
-      >
-        <MantineProvider
-          theme={{ colorScheme }}
-          withGlobalStyles
-          withNormalizeCSS
+      > */}
+        <MantineProvider theme={theme}
+          // withGlobalStyles
+          // withNormalizeCSS
         >
           <Notifications/>
 
@@ -70,11 +88,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             </AuthProvider>
             <Analytics />
         </MantineProvider>
-      </ColorSchemeProvider>
+      {/* </ColorSchemeProvider> */}
     </>
   );
 }
 
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
-});
+// App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
+//   colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
+// });

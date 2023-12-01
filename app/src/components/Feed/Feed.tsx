@@ -1,15 +1,13 @@
 import {
-  Container,
-  // Space,
-  // Stack
+  Container
 } from "@mantine/core";
 import { useEffect } from "react";
+import Masonry from 'react-masonry-css';
 import { useFirestore } from "../../hooks/useFirestore";
 import { Post } from "../Post/Post";
 import SEO from "../SEO";
-import Masonry from 'react-masonry-css'
+import mansory from "./Feed.module.css";
 
-import mansory from "./Feed.module.css" 
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
@@ -62,7 +60,7 @@ export function Feed({ data, user }:FeedProps) {
       <Container className="p-0">
 
         {/* <Stack spacing="lg" className="mx-auto max-w-sm">  */}
-        
+        {/* ts-ignore */}
         <Masonry
           breakpointCols={breakpointColumnsObj}
           className={mansory.grid}          

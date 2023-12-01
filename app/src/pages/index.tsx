@@ -45,13 +45,12 @@ interface HomeProps {
 
 export default function HomePage({ data }: HomeProps) {
   const { user } = useAuth()
-  
+
   let baseStyles = [
   "color: #FD7E14",
   "padding: 2px 4px",
   "font-size: 32px"
   ].join(";");
-
 
   
   console.log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);

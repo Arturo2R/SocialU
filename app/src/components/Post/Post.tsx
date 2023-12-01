@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useState, FC, useEffect } from "react";
 // import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
@@ -104,7 +104,7 @@ export const Post: FC<PostProps> = ({
 
   const { suscribe } = useFirestore();
   return (
-    <article className="px">
+    <article className="px" id={postId}>
       <Card withBorder p="xs" radius="md">
         <Link 
           href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
@@ -114,7 +114,7 @@ export const Post: FC<PostProps> = ({
             {image && (
               <Card.Section className={styles.mainImage}>
                 <Image
-                  src={"https://firebasestorage.googleapis.com/v0/b/socialu-c62e6.appspot.com/o/postsBanners%2FIMG-20231119-WA0025.jpg?alt=media&token=2140eeb9-aba2-4127-b785-1a75a7992e16"}
+                  src={image}
                   alt={title}
                   width={380}
                   height={240}
@@ -140,7 +140,7 @@ export const Post: FC<PostProps> = ({
         </Link>
         {author !== "anonimo" ? (
           <Link href={`/${author.id}`} >
-              <Group className="mt-1" spacing="xs">
+              <Group className="mt-1" gap="xs">
                 {author?.image && <Image alt={`${author.name} avatar image`} width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
                 <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
               </Group>
@@ -166,7 +166,7 @@ export const Post: FC<PostProps> = ({
             <Group grow mt="sm" >
               <Button
                 className="text-sm sm:text-base"
-                size="lg"
+                size="compact-lg"
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
                   setExpanded(!expanded);
@@ -174,28 +174,26 @@ export const Post: FC<PostProps> = ({
                 variant="light"
                 color="orange"
                 disabled={aja()}
-                compact
               // rightIcon={<ChevronsRight />}
               >
                 {asistants?.length} Asistentes
               </Button>
               <Button
-                compact
                 className="text-sm sm:text-base"
-                size="lg"
+                size="compact-lg"
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
                   setSuscribed(!suscribed);
                   typeof postId === "string" && suscribe(postId, suscribed);
                 }}
                 color="orange"
-                rightIcon={suscribed ? <Check /> : <Plus />}
+                rightSection={suscribed ? <Check /> : <Plus />}
               >
                 {suscribed ? "Asistiré" : "Unirme"}
               </Button>
             </Group>
             <Collapse in={expanded}>
-              <Stack spacing="xs">
+              <Stack gap="xs" mt="xs">
                 {/* <Spoiler
                       maxHeight={180}
                       showLabel="Ver Más"

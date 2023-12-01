@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { Comment, CommentProps } from "./Comment";
 import CommentForm from "./CommentForm";
 import { auth } from "../../firebase";
-import { Transition } from "@mantine/core";
+// import { Transition } from "@mantine/core";
 
 type CommentWallProps = {
   comments?: CommentProps[];

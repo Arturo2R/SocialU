@@ -1,5 +1,5 @@
 import { Switch } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { useController, useForm } from "react-hook-form";
 
 interface Props { control:any, name:string, label:string, required:boolean }
@@ -16,11 +16,11 @@ function DatePick({ control, name, label, required }:Props) {
   });
 
   return (
-    <DatePicker
+    <DatePickerInput
       required={required}//{watch("isEvent")}
       locale="es"
       placeholder="Escojer Dia De Reunion"
-      transition="pop-bottom-left"
+      // transition="pop-bottom-left"
       label={label}
       color="orange"
       onChange={field.onChange} // send value to hook form 
