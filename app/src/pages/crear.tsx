@@ -3,7 +3,8 @@ import {
   Container,
   Input,
   Modal,
-  Textarea
+  Textarea,
+  TypographyStylesProvider
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
@@ -17,8 +18,9 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
-
-
+import {Editor} from "novel"
+import { useEditor } from "@tiptap/react";
+import Placeholder from '@tiptap/extension-placeholder'
 
 // type Props = {};
 interface FormInputs {
@@ -155,14 +157,14 @@ const CrearPost = () => {
                 {...register("title",{ 
                   required: "El titulo es necesario", 
                   minLength: { value:5, message: "No menos de 5 caracteres" },
-                  maxLength: { value:80, message: "No mas de 80 caracteres" } 
+                  maxLength: { value:80, message: "No más de 80 caracteres" } 
                 })}
               />
+              <div className="hidden !p-0"></div>
               <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
                 error={errors.message?.message}
-                radius="xl"
                 size="md"
                 maxLength={1000}
                 minRows={5}
@@ -170,10 +172,28 @@ const CrearPost = () => {
                 autosize
                 {...register("message",{
                   required: "La descripcion es necesaria",
-                  minLength: { value:30, message: "No menos de 10 caracteres" }, 
-                  maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
+                  minLength: { value:20, message: "No menos de 20 caracteres" }, 
+                  maxLength: { value:1000, message: "No más de 1000 caracteres" } })}
               />
-              
+              <TypographyStylesProvider pl="0">
+                <Editor 
+                  storageKey="socialu-editor-contente"
+                  className=" relative min-h-[300px] w-full "
+                  extensions={
+                      [
+                        Placeholder.configure({
+                          placeholder: "Hombre que bueno, Pressiona el '*' for commands, or '++' for AI autocomplete...",
+                          includeChildren: true,
+                        })
+                    ]
+                  }
+                  editorProps={{
+                    attributes:{
+                      class:"prose-md  focus:novel-outline-none novel-max-w-full"
+                    }
+                  }}
+                />
+              </TypographyStylesProvider>
               <Switc
                 label="Anonimo"
                 control={control}
@@ -213,7 +233,7 @@ const CrearPost = () => {
               variant="filled"
               color="orange"
               size="md"
-              className="mt-4 w-full"
+              className="self-end mt-4 w-full"
             >
               Enviar Post
             </Button>

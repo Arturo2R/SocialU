@@ -80,7 +80,6 @@ export const AppHeader = ({
                 component={Link}
                 href="/welcome"
                 size={matches ? "md" : "xs"}
-                
                 color="orange"
               >
                 Iniciar Sesión
