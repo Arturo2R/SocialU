@@ -9,7 +9,6 @@ import {
 } from "firebase/auth";
 import { notifications }  from '@mantine/notifications'
 import jwt_decode from "jwt-decode";
-import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useState } from "react";
 import { X } from "tabler-icons-react";
 // import { useStore } from "../store";
@@ -124,7 +123,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const { createOrFetchUser, updateProfile:updateFirestoreProfile } = useFirestore();
 
-  const router = useRouter();
 
   const signup = (email: string, password: string) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -202,7 +200,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // });
     // }
 
-const updateInfo = 
 
   useEffect(() => {
  // console.log("unsubuscribe effect", valid);
@@ -236,8 +233,7 @@ useEffect(() => {
       logout();
       notifications.show({
         id: "get-out",
-        
-        autoClose: 5000,
+        autoClose: false,
         title: "No Estas Permitido",
         message:
           "No estas usando un correo universtario de una de nuestras universidades permitidas",

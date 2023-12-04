@@ -15,7 +15,6 @@ import {
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
-import markdownToHtml from "../lib/mardown";
 
 const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 export const useFirestore = () => {
@@ -336,15 +335,17 @@ export const useFirestore = () => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
-
+      console.log(userRef)
+      
       const data = {
         ...user,
         ...Payload,
-          configuration: {
-            anonimoDefault: Payload.anonimoDefault,
-            useUserName: Payload.useUserName,
-          }
+        configuration: {
+          anonimoDefault: Payload.anonimoDefault,
+          useUserName: Payload.useUserName,
         }
+      }
+      console.log("data", data);
         
         // ...(Payload. && { photoURL: Payload.photoURL }),
         // ...(Payload.photoURL && { photoURL: Payload.photoURL }),

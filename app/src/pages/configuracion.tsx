@@ -6,7 +6,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
@@ -19,7 +19,7 @@ const configuracion = (props: Props) => {
   const [anonimo, setAnonimo]= useState<boolean>(false)
   const [useUserName, setuseUserName] = useState<boolean>(false)
 
-  const { resetPassword, user, setUser} = useAuth();
+  const { user, setUser} = useAuth();
   const {updateProfile: updateFirestoreProfile, updatingProfile} = useFirestore()
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -51,8 +51,16 @@ const configuracion = (props: Props) => {
     //   image: {},
     // },
   });
+  
+  useEffect(() => {
+    console.log(user);
+  }, [user])
+  
 
   const saveConfiguration = (configurationData: any) => {
+    console.log("configurationData: ", configurationData);
+    // console.log("touched: ", form.touched())
+    
     if(user?.uid){
    // console.log("disparado")
       setLoading(true)

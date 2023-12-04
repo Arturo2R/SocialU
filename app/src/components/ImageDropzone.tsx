@@ -23,7 +23,8 @@ export default function ImageDropzone({
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
   const addImage = (file: File[]) => {
-  // console.log(file);
+    console.log(file);
+
 
     setImage(file[0]);
     const reader = new FileReader();

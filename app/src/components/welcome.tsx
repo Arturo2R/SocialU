@@ -89,8 +89,7 @@ function AuthenticationPage() {
       logout();
       notifications.show({
         id: "get-out",
-        
-        autoClose: 5000,
+        autoClose: false,
         title: "No Estas Permitido",
         message:
           "No estas usando un correo universtario de una de nuestras universidades permitidas",

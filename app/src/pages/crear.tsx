@@ -178,7 +178,7 @@ const CrearPost = () => {
               <TypographyStylesProvider pl="0">
                 <Editor 
                   storageKey="socialu-editor-contente"
-                  className=" relative min-h-[300px] w-full "
+                  className=" relative min-h-[200px] w-full "
                   extensions={
                       [
                         Placeholder.configure({
@@ -192,7 +192,9 @@ const CrearPost = () => {
                       class:"prose-md  focus:novel-outline-none novel-max-w-full"
                     }
                   }}
+                  onDebouncedUpdate={(value) => console.log("content", value?.getJSON())}
                 />
+                
               </TypographyStylesProvider>
               <Switc
                 label="Anonimo"

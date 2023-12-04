@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { useState, FC, useEffect } from "react";
 // import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
@@ -120,8 +120,6 @@ export const Post: FC<PostProps> = ({
                   height={240}
                   color="orange"
                   loading="lazy"
-                  layout="responsive"
-                  sizes="50vw"
                   quality={70}
                   // style="margin: -10px -10px 10px -10px; display:block"
                   // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
@@ -129,9 +127,14 @@ export const Post: FC<PostProps> = ({
                   // width={380}
                   // withPlaceholder
                   // placeholder={<Text align="center">This image contained the meaning of life</Text>}
+                  // layout="fill"
                   className="w-full"
-                // layout="fill"
-                />
+                  sizes="50vw"
+                  // style={{
+                  //   width: "100%",
+                  //   height: "auto"
+                  // }} 
+                  />
               </Card.Section>
             )}
             {/* <Badge>{category}</Badge> */}
@@ -141,7 +144,17 @@ export const Post: FC<PostProps> = ({
         {author !== "anonimo" ? (
           <Link href={`/${author.id}`} >
               <Group className="mt-1" gap="xs">
-                {author?.image && <Image alt={`${author.name} avatar image`} width="30" height="30" quality={30} src={author?.image} className="rounded-full" />}
+                {author?.image && <Image
+                  alt={`${author.name} avatar image`}
+                  width="30"
+                  height="30"
+                  quality={30}
+                  src={author?.image}
+                  className="rounded-full"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto"
+                  }} />}
                 <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
               </Group>
           </Link>
