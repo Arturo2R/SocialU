@@ -13,9 +13,9 @@ import Head from "next/head";
 
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
+import "../styles/globals.css";
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import "../styles/globals.css";
 
 import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
 import { useFirestore } from "../hooks/useFirestore";
