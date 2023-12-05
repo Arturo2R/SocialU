@@ -6,7 +6,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";

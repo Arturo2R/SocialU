@@ -21,7 +21,6 @@ import { useFirestore } from "../hooks/useFirestore";
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
 import {Editor} from "novel"
-import "./crear.module.css"
 
 // import dynamic from 'next/dynamic';
 // const Editor = dynamic(() => import('novel').then((module) => module.Editor));
