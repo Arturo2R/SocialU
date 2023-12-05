@@ -1,3 +1,5 @@
+import App from "../pages/_app";
+
 export {};
 
 declare global {
@@ -24,9 +26,8 @@ declare global {
     useUserName: boolean;
   }
 
-  interface UserState extends User {
-    configuration: AppConfiguration;
-  }
+  type UserState = User & AppConfiguration
+  
 
   interface FormPost {
     title: string;
@@ -39,6 +40,7 @@ declare global {
     // comments: string[]; ////Comments are not implemented yet
     // suscribed: string[];
   }
+  
   interface Post extends FormPost {
     useUserName: boolean;
     authorEmail: string; 
@@ -55,6 +57,58 @@ declare global {
     authorImage: string;
     userName?: string;
   }
+
+  
+interface googleResponse {
+  credential: string;
+  clientId: string;
+  select_by: string;
+}
+
+interface googleDecodedResponse {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  picture: string;
+  sub: string;
+  given_name: string;
+  family_name: string;
+  locale: string;
+}
+
+interface Login {
+  email: string;
+  password: string;
+}
+
+interface AuthContextInterface {
+  signup(email: string, password: string): Promise<UserCredential>;
+  login(email: string, password: string): Promise<UserCredential>;
+  user: UserState | null;
+  setUser: Function
+  logout(): void;
+  valid: boolean|string;
+  loading: boolean;
+  loginWithGoogle(): Promise<UserCredential>;
+  loginWithMicrosoft(): Promise<UserCredential>;
+  resetPassword(email: string): Promise<void>;
+  loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
+}
+interface University {
+  name: string;
+  domain: string;
+}
+interface superUser {
+  email: string;
+  uid: string;
+  displayName?: string;
+  photoURL?: string;
+  username?: string;
+  phoneNumber?: number;
+  university: University;
+  description?: string;
+  carrer?: string;
+}
 
   interface anything {
     [field: string]: any | [];

@@ -18,9 +18,15 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
+// import { useEditor } from "@tiptap/react";
+// import Placeholder from '@tiptap/extension-placeholder'
 import {Editor} from "novel"
-import { useEditor } from "@tiptap/react";
-import Placeholder from '@tiptap/extension-placeholder'
+import "./crear.module.css"
+
+// import dynamic from 'next/dynamic';
+// const Editor = dynamic(() => import('novel').then((module) => module.Editor));
+
+
 
 // type Props = {};
 interface FormInputs {
@@ -39,12 +45,12 @@ const CrearPost = () => {
       time: "", //
       date: "",
       image: "",
-      anonimo: user?.configuration?.anonimoDefault || false,
+      anonimo: user?.anonimoDefault || false,
     }
   });
   console.log(errors);
   
-  console.log(user?.configuration?.anonimoDefault)
+  console.log(user?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false) // #MOdal
   //image state
@@ -52,7 +58,7 @@ const CrearPost = () => {
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const { createPost } = useFirestore();
+  const { createPost, creatingPost } = useFirestore();
   
 
   const router = useRouter();
@@ -175,31 +181,30 @@ const CrearPost = () => {
                   minLength: { value:20, message: "No menos de 20 caracteres" }, 
                   maxLength: { value:1000, message: "No más de 1000 caracteres" } })}
               />
-              <TypographyStylesProvider pl="0">
+                <TypographyStylesProvider pl="0">
                 <Editor 
                   storageKey="socialu-editor-contente"
-                  className=" relative min-h-[200px] w-full "
-                  extensions={
-                      [
-                        Placeholder.configure({
-                          placeholder: "Hombre que bueno, Pressiona el '*' for commands, or '++' for AI autocomplete...",
-                          includeChildren: true,
-                        })
-                    ]
-                  }
+                  className=" relative min-h-[200px] w-full " 
+                  // extensions={
+                  //     [
+                  //       Placeholder.configure({
+                  //         placeholder: "Hombre que bueno, Pressiona el '*' for commands, or '++' for AI autocomplete...",
+                  //         includeChildren: true,
+                  //       })
+                  //   ]
+                  // }
                   editorProps={{
                     attributes:{
                       class:"prose-md  focus:novel-outline-none novel-max-w-full"
                     }
                   }}
-                  onDebouncedUpdate={(value) => console.log("content", value?.getJSON())}
+                  onDebouncedUpdate={(value) =>setValue("message", value?.getHTML() || "s")}
                 />
-                
-              </TypographyStylesProvider>
+              </TypographyStylesProvider> 
               <Switc
                 label="Anonimo"
                 control={control}
-                def={user?.configuration?.anonimoDefault || false}
+                def={user?.anonimoDefault || false}
                 name="anonimo"
               />
               <Switc
@@ -231,11 +236,12 @@ const CrearPost = () => {
             </div>
 
             <Button
+              loading={creatingPost == "loading"}
               type="submit"
               variant="filled"
               color="orange"
               size="md"
-              className="self-end mt-4 w-full"
+              className="self-end w-full mt-4"
             >
               Enviar Post
             </Button>
