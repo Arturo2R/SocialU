@@ -2,7 +2,7 @@ import {  Notifications } from "@mantine/notifications";
 // import { getCookie, setCookies } from "cookies-next";
 // import { GetServerSidePropsContext } from "next";
 import type { AppProps } from "next/app";
-import { useState, useEffect } from "react";
+import {  useEffect } from "react";
 import { AuthProvider } from "../context/AuthContext";
 import {getPerformance} from "firebase/performance"
 // import GlobalStyles from '../lib/globalStyles'
@@ -13,12 +13,13 @@ import Head from "next/head";
 
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
-import "../styles/globals.css";
-import '@mantine/core/styles.css';
+// import 'novel/dist/'; // Novel Editor styles
 import '@mantine/notifications/styles.css';
+import '@mantine/core/styles.css';
+import "../styles/globals.css";
 
 import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
-import { useFirestore } from "../hooks/useFirestore";
+// import { useFirestore } from "../hooks/useFirestore";
 
 const theme = createTheme({
   /** Put your mantine theme override here */

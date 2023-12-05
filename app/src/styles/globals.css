@@ -9,10 +9,7 @@
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
 
-/* @tailwind base; */
-@tailwind components;
-@tailwind utilities;
-/* @tailwind variants; */
+
 
 *,
 ::before,
@@ -218,14 +215,14 @@ select {
 2. Remove default button styles.
 */
 
-button,
+/* button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
-  -webkit-appearance: button; /* 1 */
-  /*background-color: transparent;  Mantineと競合してボタンが透明になってしまうためコメントアウト */
-  background-image: none; /* 2 */
-}
+  -webkit-appearance: button; 
+   background-color: transparent;   
+  background-image: none;
+} */
 
 /*
 Use the modern Firefox focus style for all focusable elements.
@@ -739,6 +736,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+/* @tailwind variants; */
 
 body {
   font-family: "inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -746,4 +747,14 @@ body {
 
 .ProseMirror {
   @apply !p-0 ;
+}
+
+.mantine-Button-root {
+  background-color: var(--button-bg) !important;
+  color: var(--button-color) !important;
+
+}
+
+.mantine-Button-root:hover {
+  background-color: var(--button-hover) !important;
 }
