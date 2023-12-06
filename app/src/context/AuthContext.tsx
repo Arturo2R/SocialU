@@ -9,10 +9,10 @@ import {
 } from "firebase/auth";
 import { notifications }  from '@mantine/notifications'
 import jwt_decode from "jwt-decode";
-import { createContext, useContext, useEffect, useState } from "react";
 import { X } from "tabler-icons-react";
 // import { useStore } from "../store";
 import { auth } from "../firebase";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 
 

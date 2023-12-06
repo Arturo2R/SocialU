@@ -13,7 +13,7 @@ import {
   setDoc, updateDoc, where
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 
 const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
@@ -31,7 +31,12 @@ export const useFirestore = () => {
   const [creating, setCreating] = useState<boolean>(false);
   // const {user} = useStore()
 
-
+  // useEffect(() => {
+  //   // setIsLoading("loading");
+  //   fetchData()//.then(() => setIsLoading("loaded"));
+  //   // return () => {
+  //   // };
+  // }, []);
   // const fetchMore = async () => { 
   //   try {
   //     const q = query(

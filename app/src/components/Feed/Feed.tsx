@@ -7,6 +7,7 @@ import { useFirestore } from "../../hooks/useFirestore";
 import { Post } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
+import { useData } from "../../context/DataStateContext";
 
 // import InfiniteScroll from 'react-infinite-scroller';
 
@@ -21,19 +22,7 @@ export function Feed({ data, user }:FeedProps) {
   // error state
   // const [error, setError] = useState<Error | null>(null);
   // const [isLoading, setIsLoading] = useState<"loading" | "loaded">("loading");
-  const {
-    data: liveData,
-    // error: dataError,
-    // postsLoading,
-    fetchData,
-  } = useFirestore();
-  // console.log(data);
-  useEffect(() => {
-    // setIsLoading("loading");
-    fetchData()//.then(() => setIsLoading("loaded"));
-    // return () => {
-    // };
-  }, []);
+  const {data:liveData} = useData()
 
   // if (postsLoading === "loading") {
   //   return (

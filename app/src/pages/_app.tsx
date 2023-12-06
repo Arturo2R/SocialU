@@ -19,6 +19,7 @@ import '@mantine/core/styles.css';
 import "../styles/globals.css";
 
 import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
+import { DataStateProvider } from "../context/DataStateContext";
 // import { useFirestore } from "../hooks/useFirestore";
 
 const theme = createTheme({
@@ -85,7 +86,10 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
 
             <AuthProvider>
               {/* <GlobalStyles /> */}
-              <Component {...pageProps} />
+              <DataStateProvider>
+
+                <Component {...pageProps} />
+              </DataStateProvider>
             </AuthProvider>
             <Analytics />
         </MantineProvider>
