@@ -144,8 +144,8 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
 
         {content?.image ? (
            <> 
-              <ActionIcon component={Link} href={`/#${id}`} scroll={false} classNames={{root: "bg-dark/50 dark:bg-white/50", loader: "text-dark/80 dark:bg-white/80"}} className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" variant="white" color="light">
-                <ChevronLeft />
+              <ActionIcon variant="light" component={Link} classNames={{root: "!flex justify-items-center"}} href={`/`} scroll={false}  color="rgba(255, 255, 255, 1)" className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
+                <ChevronLeft  />
               </ActionIcon>
            
               
@@ -155,7 +155,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
           </>
         ):(<div className="flex space-x-4"> 
               <Link  href="/" >
-                  <ActionIcon component={Link} href={`/#${id}`} scroll={false} classNames={{root: "bg-dark/50 dark:bg-white/50", loader: "text-dark/80 dark:bg-white/80"}} className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" variant="white" color="light">
+              <ActionIcon variant="light" component={Link} classNames={{root: "!flex justify-items-center"}} href={`/`} scroll={false}  color="rgba(255, 255, 255, 1)" className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
                   <ChevronLeft />
                 </ActionIcon>
               </Link>

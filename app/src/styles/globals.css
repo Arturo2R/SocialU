@@ -749,6 +749,10 @@ body {
   @apply !p-0 ;
 }
 
+.fdasdflask {
+  @apply !flex justify-self-center;
+}
+
 .mantine-Button-root {
   background-color: var(--button-bg) !important;
   color: var(--button-color) !important;
@@ -757,4 +761,13 @@ body {
 
 .mantine-Button-root:hover {
   background-color: var(--button-hover) !important;
+}
+
+.mantine-ActionIcon-root {
+  background-color: var(--ai-bg) !important;
+  color: var(--ai-color) !important;
+}
+
+.mantine-ActionIcon-root:hover {
+  background-color: var(--ai-hover) !important;
 }

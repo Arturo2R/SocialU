@@ -103,6 +103,9 @@ interface AuthContextInterface {
   resetPassword(email: string): Promise<void>;
   loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
 }
+
+
+
 interface University {
   name: string;
   domain: string;
