@@ -40,8 +40,17 @@ declare global {
     // comments: string[]; ////Comments are not implemented yet
     // suscribed: string[];
   }
+
+  type imageData = {
+    width: number;
+    height: number;
+  }
+
+  interface ComputedPost extends FormPost {
+    imageData?: imageData;
+  }
   
-  interface Post extends FormPost {
+  interface Post extends ComputedPost {
     useUserName: boolean;
     authorEmail: string; 
     id?: string;

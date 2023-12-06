@@ -37,6 +37,7 @@ export interface PostProps {
   author:
   | { image?: string | null; name: string; id: string }
   | "anonimo";
+  imageData?: imageData;
   image?: string;
   description: string;
   title: string;
@@ -67,6 +68,7 @@ export const Post: FC<PostProps> = ({
   asistants,
   event,
   userUID,
+  imageData
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -117,8 +119,8 @@ export const Post: FC<PostProps> = ({
                 <Image
                   src={image}
                   alt={title}
-                  width={380}
-                  height={240}
+                  width={imageData?.width || 380}
+                  height={imageData?.height || 240}
                   color="orange"
                   loading="lazy"
                   quality={70}

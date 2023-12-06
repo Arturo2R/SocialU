@@ -98,7 +98,7 @@ export const useFirestore = () => {
   };
 
   const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | "error" | false>(false)
-  const createPost = async (formData: FormPost, user: UserState) => {
+  const createPost = async (formData: ComputedPost, user: UserState) => {
     if (auth.currentUser  && auth.currentUser.email) {
       try {
         setCreatingPost("loading");
@@ -129,6 +129,9 @@ export const useFirestore = () => {
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
+        
+
+
 
         if (formData.anonimo) {
           await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });

@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { postsBanners } from "../firebase";
 import '@mantine/dropzone/styles.css';
 
@@ -12,13 +12,16 @@ export default function ImageDropzone({
   setImage,
   imageUrl,
   setImageUrl,
+  setImageData,
 }: {
   image: File | null | string;
   setImage: (image: File | null) => void;
   imageUrl: string | null;
   setImageUrl: (imageUrl: string | null) => void;
+  setImageData: ({width, height}:{width: number, height: number}) => void;
 }) {
   const [i64, set64] = useState<string | null>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
@@ -42,11 +45,22 @@ export default function ImageDropzone({
       getDownloadURL(image.ref).then((url) => setImageUrl(url));
     });
   };
+
+
+
   return (
     <>
     {i64 && image ? (
-        <Image radius="md" src={i64} />
-      ) : (
+      <Image radius="md" src={i64} ref={imageRef} onLoad={() => {
+        if (imageRef.current) {
+          const { naturalWidth, naturalHeight } = imageRef.current;
+          console.log("Natural Width:", naturalWidth);
+          console.log("Natural Height:", naturalHeight);
+          setImageData({ width: naturalWidth, height: naturalHeight });
+        }
+      }} />    
+      
+    ) : (
     <Dropzone
       onDrop={(files: File[]) => {
         // uploadBytes(storageRef, file);

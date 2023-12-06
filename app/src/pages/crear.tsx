@@ -59,6 +59,8 @@ const CrearPost = () => {
 
   const { createPost, creatingPost } = useFirestore();
   
+  const [imageData, setImageData] = useState<{width: number, height: number} | null>(null);
+
 
   const router = useRouter();
   
@@ -107,14 +109,18 @@ const CrearPost = () => {
 
   const submitPost:SubmitHandler<FormPost> = postValues => {
     if(user){
-      console.log("sip", postValues)
-      createPost(postValues, user);
+      let payload: ComputedPost = postValues
+      if(postValues.image && imageData) {
+        payload = {...postValues, imageData: imageData}
+      }
+      console.log("sip", payload)
+      createPost(payload, user);
     } else {
       throw new Error("No hay usuario");
     }
     notifications.show({
       id: "created-post",
-      
+  
       autoClose: 3000,
       title: "Post creado",
       message: "Se Publicó 😀",
@@ -147,6 +153,7 @@ const CrearPost = () => {
                 setImageUrl={setImageUrl}
                 image={image}
                 setImage={setImage}
+                setImageData={setImageData}
               />
               <Textarea
                 variant="unstyled"

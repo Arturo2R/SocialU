@@ -37,7 +37,7 @@ export function Feed({ data, user }:FeedProps) {
 
   // if (postsLoading === "loading") {
   //   return (
-  //     <Center className="my-auto h-full">
+  //     <Center className="h-full my-auto">
   //       <Loader color="orange" size="lg" variant="bars" />
   //     </Center>
   //   );
@@ -59,7 +59,7 @@ export function Feed({ data, user }:FeedProps) {
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
       <Container className="p-0">
 
-        {/* <Stack spacing="lg" className="mx-auto max-w-sm">  */}
+        {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
         {/* ts-ignore */}
         <Masonry
           breakpointCols={breakpointColumnsObj}
@@ -68,6 +68,7 @@ export function Feed({ data, user }:FeedProps) {
       
           {(liveData ?? data).map((post: any, index: number) => (
             <Post
+              imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}
               author={

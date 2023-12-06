@@ -16,7 +16,7 @@ import {
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Head from "next/head";
+import NextImage from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -125,7 +125,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
   if (loading) {
     return (
       <Layout>
-        <Center className="my-auto h-full">
+        <Center className="h-full my-auto">
           <Loader color="orange" size="lg" variant="bars" />
         </Center>
       </Layout>
@@ -149,7 +149,7 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
               </ActionIcon>
            
               
-            <Image className="mb-4" radius="lg" src={content.image} />
+            <Image alt="Nose"  width={content?.imageData?.width || "100%"} height={content?.imageData?.height || "auto"} className="mb-4" radius="lg" src={content.image}  />
             <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
             
           </>
