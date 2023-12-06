@@ -97,10 +97,11 @@ export const useFirestore = () => {
     return postSnap;
   };
 
+  const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | "error" | false>(false)
   const createPost = async (formData: FormPost, user: UserState) => {
     if (auth.currentUser  && auth.currentUser.email) {
       try {
-        setLoading(true);
+        setCreatingPost("loading");
 
         const generatedPostId = await nanoid(7);
         console.log(path)
@@ -120,7 +121,7 @@ export const useFirestore = () => {
           // ...(user.photoURL ? {
           authorImage : user?.photoURL || "",
           // } : {authorImage : "st",}),
-          useUserName: user?.configuration?.useUserName || false,
+          useUserName: user?.useUserName || false,
           userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
@@ -128,8 +129,7 @@ export const useFirestore = () => {
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
-        console.log(newPost)
-        // let Payload: Post
+
         if (formData.anonimo) {
           await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
         } else {
@@ -140,9 +140,10 @@ export const useFirestore = () => {
 
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
+        setCreatingPost("error")
         console.log(thiserror.message);
       } finally {
-        setLoading(false);
+        setCreatingPost("loaded")
       }
     } else {
    // console.log("Inautorizado");
@@ -335,17 +336,12 @@ export const useFirestore = () => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
-      console.log(userRef)
       
       const data = {
         ...user,
         ...Payload,
-        configuration: {
-          anonimoDefault: Payload.anonimoDefault,
-          useUserName: Payload.useUserName,
-        }
       }
-      console.log("data", data);
+      console.log("data la data despues de update profile", data);
         
         // ...(Payload. && { photoURL: Payload.photoURL }),
         // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
@@ -359,9 +355,8 @@ export const useFirestore = () => {
       }))
 
       await updateDoc(userRef, data)
-
     } catch (error) {
-   // console.log(error)
+      console.error(error)
       setUpdatingProfile("error")
     } finally {
       setUpdatingProfile("loaded")
@@ -411,6 +406,7 @@ export const useFirestore = () => {
     updateProfile,
     updatingProfile,
     fetchData,
+    creatingPost,
     createPost,
     createOrFetchUser,
     fetchPost,

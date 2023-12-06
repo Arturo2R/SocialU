@@ -1,18 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { Timestamp } from "@firebase/firestore";
-import {
-  // Anchor,
-  // Avatar,
-  Button,
-  Card,
-  Collapse,
-  Group,
-  // Image,
-  Spoiler,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -22,6 +9,20 @@ import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
 import markdownToHtml from "../../lib/mardown";
+
+import {
+  // Anchor,
+  // Avatar,
+  Card,
+  Collapse,
+  Group,
+  // Image,
+  Spoiler,
+  Stack,
+  Text,
+  Title,
+  Button,
+} from "@mantine/core";
 // import BiggerPicture from "bigger-picture";
 // type author =
 //   | {
@@ -68,7 +69,7 @@ export const Post: FC<PostProps> = ({
   userUID,
 }) => {
   const [expanded, setExpanded] = useState(false);
- 
+
 
 
 
@@ -106,7 +107,7 @@ export const Post: FC<PostProps> = ({
   return (
     <article className="px" id={postId}>
       <Card withBorder p="xs" radius="md">
-        <Link 
+        <Link
           href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
           className="X"
         >
@@ -130,33 +131,33 @@ export const Post: FC<PostProps> = ({
                   // layout="fill"
                   className="w-full"
                   sizes="50vw"
-                  // style={{
-                  //   width: "100%",
-                  //   height: "auto"
-                  // }} 
-                  />
+                // style={{
+                //   width: "100%",
+                //   height: "auto"
+                // }} 
+                />
               </Card.Section>
             )}
             {/* <Badge>{category}</Badge> */}
             <Title order={3} className="text-xl font-bold">{title}</Title>
-            </>
+          </>
         </Link>
         {author !== "anonimo" ? (
           <Link href={`/${author.id}`} >
-              <Group className="mt-1" gap="xs">
-                {author?.image && <Image
-                  alt={`${author.name} avatar image`}
-                  width="30"
-                  height="30"
-                  quality={30}
-                  src={author?.image}
-                  className="rounded-full"
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto"
-                  }} />}
-                <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
-              </Group>
+            <Group className="mt-1" gap="xs">
+              {author?.image && <Image
+                alt={`${author.name} avatar image`}
+                width="30"
+                height="30"
+                quality={30}
+                src={author?.image}
+                className="rounded-full"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto"
+                }} />}
+              <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
+            </Group>
           </Link>
         ) : (
           <Text color="orange">Anónimo</Text>
