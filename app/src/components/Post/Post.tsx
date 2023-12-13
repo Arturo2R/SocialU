@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { Timestamp } from "@firebase/firestore";
 import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,7 +7,7 @@ import { useState, FC, useEffect } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
-import markdownToHtml from "../../lib/mardown";
+// import markdownToHtml from "../../lib/mardown";
 
 import {
   // Anchor,
@@ -33,33 +32,9 @@ import {
 //     }
 //   | "anonimo";
 
-export interface PostProps {
-  author:
-  | { image?: string | null; name: string; id: string }
-  | "anonimo";
-  imageData?: imageData;
-  image?: string;
-  description: string;
-  title: string;
-  date?: Date;
-  event?: boolean;
-  postId?: string;
-  // relevantCommentary?: Object;
-  asistants?: {
-    user: {
-      image: string;
-      name: string;
-      ref: `user/${string}`;
-    };
-    suscribedAt?: Timestamp;
-  }[];
-  // key: number;
-  userUID?: string;
-}
 
 
-
-export const Post: FC<PostProps> = ({
+export const PostCard: FC<PostCardProps> = ({
   author,
   title,
   image,
@@ -96,14 +71,14 @@ export const Post: FC<PostProps> = ({
 
 
   const aja = () => {
-    if (asistants === undefined || asistants.length === 0) {
+    if (asistants === undefined || asistants.length == 0) {
       return true;
     }
     return false;
   };
-  const generateText = async (text: string) => {
-    await markdownToHtml(text)
-  }
+  // const generateText = async (text: string) => {
+  //   await markdownToHtml(text)
+  // }
 
   const { suscribe } = useFirestore();
   return (
@@ -190,7 +165,7 @@ export const Post: FC<PostProps> = ({
                 variant="light"
                 color="orange"
                 disabled={aja()}
-              // rightIcon={<ChevronsRight />}
+                // rightIcon={<ChevronsRight />}
               >
                 {asistants?.length} Asistentes
               </Button>

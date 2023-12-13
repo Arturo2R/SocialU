@@ -45,7 +45,7 @@ html {
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    Roboto,
+    /* Roboto, */
     "Helvetica Neue",
     Arial,
     "Noto Sans",
@@ -757,6 +757,16 @@ body {
   background-color: var(--button-bg) !important;
   color: var(--button-color) !important;
 
+}
+.mantine-Button-root:disabled {
+  background-color: var(--_disabled-bg) !important;
+  color: var(--_disabled-color) !important;
+  border: var(--_button-bd) !important;
+  cursor: var(--_button-cursor) !important;
+}
+
+.mantine-Button-root:disabled:hover {
+  background-color:  var(--_disabled-bg) !important;
 }
 
 .mantine-Button-root:hover {

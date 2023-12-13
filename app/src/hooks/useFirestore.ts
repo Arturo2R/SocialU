@@ -13,7 +13,7 @@ import {
   setDoc, updateDoc, where
 } from "firebase/firestore";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth, db } from "../firebase";
 
 const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
@@ -24,19 +24,9 @@ export const useFirestore = () => {
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
   >();
-  const [lastVisible, setLastVisible] = useState();
-
-  // console.log("path", path);
-  // creating state
   const [creating, setCreating] = useState<boolean>(false);
-  // const {user} = useStore()
 
-  // useEffect(() => {
-  //   // setIsLoading("loading");
-  //   fetchData()//.then(() => setIsLoading("loaded"));
-  //   // return () => {
-  //   // };
-  // }, []);
+
   // const fetchMore = async () => { 
   //   try {
   //     const q = query(
@@ -168,7 +158,7 @@ export const useFirestore = () => {
     if (auth.currentUser?.displayName) {
       try {
         setLoading(true);
-     // console.log("Tirado", auth.currentUser.displayName);
+        // console.log("Tirado", auth.currentUser.displayName);
         const postRef = doc(db, path, postId);
         const Payload: letSuscribe = {
           postId,
@@ -182,6 +172,7 @@ export const useFirestore = () => {
           },
         };
 
+
         if (remove === false) {
           await updateDoc(postRef, {
             suscriptions: arrayUnion(Payload),
@@ -192,12 +183,12 @@ export const useFirestore = () => {
           });
         }
       } catch (error) {
-     // console.log("errorsaso", error);
+        // console.log("errorsaso", error);
       } finally {
         setLoading(false);
       }
     } else {
-   // console.log("Nada Papi");
+      // console.log("Nada Papi");
     }
   };
 
@@ -320,7 +311,7 @@ export const useFirestore = () => {
             setter(Payload);
             await setDoc(userRef, Payload);
           } catch (error) {
-         // console.log(error);
+              console.log(error);
           } finally {
             setCreating(false);
             // console.log(useStore.getState().user);
@@ -328,7 +319,7 @@ export const useFirestore = () => {
         }
       }
     } catch (error) {
-   // console.log(error);
+      console.error(error);
     }
   };
 

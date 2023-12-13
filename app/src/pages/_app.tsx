@@ -2,13 +2,12 @@ import {  Notifications } from "@mantine/notifications";
 // import { getCookie, setCookies } from "cookies-next";
 // import { GetServerSidePropsContext } from "next";
 import type { AppProps } from "next/app";
-import {  useEffect } from "react";
 import { AuthProvider } from "../context/AuthContext";
-import {getPerformance} from "firebase/performance"
+// import {getPerformance} from "firebase/performance"
 // import GlobalStyles from '../lib/globalStyles'
-import {app} from "../firebase"
+// import {app} from "../firebase"
 // import { allowedUniversities, emailDomainRegex } from "../hooks";
-import{ Analytics } from '@vercel/analytics/react'
+// import{ Analytics } from '@vercel/analytics/react'
 import Head from "next/head";
 
 // Import styles of packages that you've installed.
@@ -35,14 +34,14 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
   //   fetchData,
   // } = useFirestore();
 
-  useEffect(() => {
+  // useEffect(() => {
     // setIsLoading("loading");
     // fetchData()//.then(() => setIsLoading("loaded"));
     // return () => {
     // };
     // console.log("FECHEADO PAPA")
-    getPerformance(app)    
-  }, []);
+  //   getPerformance(app)    
+  // }, []);
   // const [colorScheme, setColorScheme] = useState<ColorScheme>(
   //   props.colorScheme
   // );
@@ -91,13 +90,10 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
                 <Component {...pageProps} />
               </DataStateProvider>
             </AuthProvider>
-            <Analytics />
+            {/* <Analytics /> */}
         </MantineProvider>
       {/* </ColorSchemeProvider> */}
     </>
   );
 }
 
-// App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-//   colorScheme: getCookie("mantine-color-scheme", ctx) || "light",
-// });

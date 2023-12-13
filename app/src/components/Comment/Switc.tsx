@@ -1,5 +1,5 @@
 import { Switch } from "@mantine/core";
-import { useController, useForm } from "react-hook-form";
+import { useController } from "react-hook-form";
 
 interface Props { control:any, name:string, label:string, def?:boolean }
 

@@ -1,4 +1,5 @@
 import App from "../pages/_app";
+import { Timestamp } from "@firebase/firestore";
 
 export {};
 
@@ -50,6 +51,30 @@ declare global {
     imageData?: imageData;
   }
   
+  interface PostCardProps  {
+    author:
+    | { image?: string | null; name: string; id: string }
+    | "anonimo";
+    imageData?: imageData;
+    image?: string;
+    description: string;
+    title: string;
+    date?: Date;
+    event?: boolean;
+    postId?: string;
+    // relevantCommentary?: Object;
+    asistants?: {
+      user: {
+        image: string;
+        name: string;
+        ref: `user/${string}`;
+      };
+      suscribedAt?: Timestamp;
+    }[];
+    // key: number;
+    userUID?: string;
+  }
+
   interface Post extends ComputedPost {
     useUserName: boolean;
     authorEmail: string; 
@@ -91,17 +116,17 @@ interface Login {
 }
 
 interface AuthContextInterface {
-  signup(email: string, password: string): Promise<UserCredential>;
-  login(email: string, password: string): Promise<UserCredential>;
+  // signup(email: string, password: string): Promise<UserCredential>;
+  // login(email: string, password: string): Promise<UserCredential>;
   user: UserState | null;
   setUser: Function
   logout(): void;
   valid: boolean|string;
   loading: boolean;
-  loginWithGoogle(): Promise<UserCredential>;
+  // loginWithGoogle():? Promise<UserCredential>;
   loginWithMicrosoft(): Promise<UserCredential>;
-  resetPassword(email: string): Promise<void>;
-  loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
+  // resetPassword(email: string): Promise<void>;
+  // loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
 }
 
 

@@ -1,5 +1,5 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useEffect, useRef, useState } from "react";
+import React, {  useRef, useState } from "react";
 import { postsBanners } from "../firebase";
 import '@mantine/dropzone/styles.css';
 

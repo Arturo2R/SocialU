@@ -1,10 +1,8 @@
 import {
   Container
 } from "@mantine/core";
-import { useEffect } from "react";
 import Masonry from 'react-masonry-css';
-import { useFirestore } from "../../hooks/useFirestore";
-import { Post } from "../Post/Post";
+import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
 import { useData } from "../../context/DataStateContext";
@@ -56,7 +54,7 @@ export function Feed({ data, user }:FeedProps) {
           columnClassName={mansory.column}>
       
           {(liveData ?? data).map((post: any, index: number) => (
-            <Post
+            <PostCard
               imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}

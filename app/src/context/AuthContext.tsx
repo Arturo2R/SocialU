@@ -1,14 +1,17 @@
 import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider, OAuthProvider, onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithCredential,
-  signInWithEmailAndPassword,
+  // createUserWithEmailAndPassword,
+  // GoogleAuthProvider, 
+  // sendPasswordResetEmail,
+  // signInWithCredential,
+  // signInWithEmailAndPassword,
+  // UserCredential
+  onAuthStateChanged,
+  OAuthProvider, 
   signInWithPopup,
-  signOut, UserCredential
+  signOut, 
 } from "firebase/auth";
 import { notifications }  from '@mantine/notifications'
-import jwt_decode from "jwt-decode";
+// import jwt_decode from "jwt-decode";
 import { X } from "tabler-icons-react";
 // import { useStore } from "../store";
 import { auth } from "../firebase";
@@ -20,11 +23,11 @@ export const authContext = createContext<AuthContextInterface | undefined>(
   undefined
 );
 
-const allowedUniversities: University[] = [
-  { name: "Universidad Del Norte", domain: "uninorte.edu.co" },
-];
 
 export const StudentValidation = (email: string): boolean => {
+  const allowedUniversities: University[] = [
+    { name: "Universidad Del Norte", domain: "uninorte.edu.co" },
+  ];
   const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
   let validated: boolean = false;
   let hostDomain = email;
@@ -61,16 +64,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  const { createOrFetchUser, updateProfile:updateFirestoreProfile } = useFirestore();
+  const { createOrFetchUser } = useFirestore();
 
+  // ! Dont delete this, it will be used later
+  // const signup = (email: string, password: string) => {
+  //   return createUserWithEmailAndPassword(auth, email, password);
+  // };
 
-  const signup = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const login = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
+  // ! Dont delete this, it will be used later
+  // const login = (email: string, password: string) => {
+  //   return signInWithEmailAndPassword(auth, email, password);
+  // };
   const loginWithMicrosoft = () => { 
     const microsoftProvider = new OAuthProvider('microsoft.com');
     microsoftProvider.setCustomParameters({
@@ -88,31 +92,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return signInWithPopup(auth, microsoftProvider);
   };
 
-  const loginWithGoogle = () => {
- // console.log("google provider");
-    const googleProvider = new GoogleAuthProvider();
-    googleProvider.setCustomParameters({
-      login_hint: "usuario@uninorte.edu.co",
-      login_type: "popup",
-      prompt: "select_account",
-      select_account: "true",
-      use_account: "true",
-      hd: "uninorte.edu.co",
-    });
-    return signInWithPopup(auth, googleProvider);
-  };
+  // ! Dont delete this, it will be used later
+//   const loginWithGoogle = () => {
+//  // console.log("google provider");
+//     const googleProvider = new GoogleAuthProvider();
+//     googleProvider.setCustomParameters({
+//       login_hint: "usuario@uninorte.edu.co",
+//       login_type: "popup",
+//       prompt: "select_account",
+//       select_account: "true",
+//       use_account: "true",
+//       hd: "uninorte.edu.co",
+//     });
+//     return signInWithPopup(auth, googleProvider);
+//   };
 
-  const loginWithGoogleOneTap = (
-    response: googleResponse
-  ): Promise<UserCredential> => {
- // console.log("google one tap");
-    const data: googleDecodedResponse = jwt_decode(response.credential);
- // console.log(data);
-    const cred = GoogleAuthProvider.credential(response.credential);
-    // Sign in with credential from the Google user.
-    // console.log(user)
-    return signInWithCredential(auth, cred);
-  };
+
+  // ! Dont delete this, it will be used later
+//   const loginWithGoogleOneTap = (
+//     response: googleResponse
+//   ): Promise<UserCredential> => {
+//  // console.log("google one tap");
+//     const data: googleDecodedResponse = jwt_decode(response.credential);
+//  // console.log(data);
+//     const cred = GoogleAuthProvider.credential(response.credential);
+//     // Sign in with credential from the Google user.
+//     // console.log(user)
+//     return signInWithCredential(auth, cred);
+//   };
 
   const logout = () => {
  // console.log("Se fue");
@@ -129,8 +136,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const resetPassword = async (email: string): Promise<void> =>
-    sendPasswordResetEmail(auth, email);
+  // ! Dont delete this, it will be used later
+  // const resetPassword = async (email: string): Promise<void> =>
+  //   sendPasswordResetEmail(auth, email);
 
     // const updateUser =(configurationData:any)=>{
     //   auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
@@ -151,24 +159,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
      // console.log("elusuario", user);
       } else {
-     // console.log("No hay usuario");
+        console.log("No hay usuario");
       }
     });
-    return () => unsubuscribe();
-  }, [auth]);
-
-  useEffect(() => {
- // console.log("antes de validar el correo ", user?.email, " es", valid);
     if (user?.email) {
       const quees = StudentValidation(user.email);
-   // console.log("la validacion es", quees);
+    // console.log("la validacion es", quees);
       setValid(quees);
     }
- // console.log("despues de validar el correo ", user?.email, " es", valid);
-  }, [user]);
-
-  
-useEffect(() => {
     if (valid === false) {
       logout();
       notifications.show({
@@ -182,22 +180,25 @@ useEffect(() => {
         // className: "my-notification-class",
       });
     }
-  }, [valid]);
+    return () => unsubuscribe();
+  }, [auth]);
+
+
 
   return (
     <authContext.Provider
       value={{
-        signup,
-        login,
+        // signup,
+        // login,
         user,
         setUser,
         logout,
         valid,
         loading,
-        loginWithGoogle,
+        // loginWithGoogle,
         loginWithMicrosoft,
-        resetPassword,
-        loginWithGoogleOneTap,
+        // resetPassword,
+        // loginWithGoogleOneTap,
       }}
     >
       {children}

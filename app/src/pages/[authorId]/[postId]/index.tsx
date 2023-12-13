@@ -4,9 +4,7 @@ import {
   getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
-  Center,
   Image,
-  Loader,
   Paper,
   Stack,
   Text,
@@ -16,7 +14,7 @@ import {
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
-import NextImage from "next/image";
+// import NextImage from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -122,15 +120,15 @@ const PostPage = ({data:content, postId: id, authorId}: PostPageProps) => {
     // };
   }, []);
 
-  if (loading) {
-    return (
-      <Layout>
-        <Center className="h-full my-auto">
-          <Loader color="orange" size="lg" variant="bars" />
-        </Center>
-      </Layout>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <Layout>
+  //       <Center className="h-full my-auto">
+  //         <Loader color="orange" size="lg" variant="bars" />
+  //       </Center>
+  //     </Layout>
+  //   );
+  // }
   // if (error) return <Text>{error}</Text>;
   const fecha:Date = content.createdAt
 
