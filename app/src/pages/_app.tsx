@@ -1,70 +1,51 @@
 import {  Notifications } from "@mantine/notifications";
-// import { getCookie, setCookies } from "cookies-next";
-// import { GetServerSidePropsContext } from "next";
+
 import type { AppProps } from "next/app";
 import { AuthProvider } from "../context/AuthContext";
-// import {getPerformance} from "firebase/performance"
-// import GlobalStyles from '../lib/globalStyles'
-// import {app} from "../firebase"
-// import { allowedUniversities, emailDomainRegex } from "../hooks";
-// import{ Analytics } from '@vercel/analytics/react'
+
 import Head from "next/head";
 
-// Import styles of packages that you've installed.
-// All packages except `@mantine/hooks` require styles imports
-// import 'novel/dist/'; // Novel Editor styles
+
 import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css';
 import "../styles/globals.css";
 
 import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
 import { DataStateProvider } from "../context/DataStateContext";
-// import { useFirestore } from "../hooks/useFirestore";
+import posthog from 'posthog-js'
+import { PostHogProvider } from 'posthog-js/react'
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
+  // Check that PostHog is client-side (used to handle Next.js SSR)
+if (typeof window !== 'undefined') {
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
+    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+    // Enable debug mode in development
+    loaded: (posthog) => {
+      if (process.env.NODE_ENV === 'development') posthog.debug()
+    }
+  })
+}
+
 export default function App(props: AppProps & { colorScheme: MantineColorScheme }) {
   const { Component, pageProps } = props;
-  // const {
-    // data: liveData,
-    // error: dataError,
-    // postsLoading,
-  //   fetchData,
-  // } = useFirestore();
+  const router = useRouter()
 
-  // useEffect(() => {
-    // setIsLoading("loading");
-    // fetchData()//.then(() => setIsLoading("loaded"));
-    // return () => {
-    // };
-    // console.log("FECHEADO PAPA")
-  //   getPerformance(app)    
-  // }, []);
-  // const [colorScheme, setColorScheme] = useState<ColorScheme>(
-  //   props.colorScheme
-  // );
+  useEffect(() => {
+    // Track page views
+    const handleRouteChange = () => posthog?.capture('$pageview')
+    router.events.on('routeChangeComplete', handleRouteChange)
 
-  // const toggleColorScheme = (value?: ColorScheme) => {
-  //   const nextColorScheme =
-  //     value || (colorScheme === "dark" ? "light" : "dark");
-  //   setColorScheme(nextColorScheme);
-  //   setCookies("mantine-color-scheme", nextColorScheme, {
-  //     maxAge: 60 * 60 * 24 * 30,
-  //   });
-  // };
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [])
 
-  // useEffect(() => {
-  //   globalThis?.window?.google?.accounts?.id?.initialize({
-  //     client_id:
-  //       "931771205523-v4jmgj8eu0cbuhqm4hep94q7lg3odpkm.apps.googleusercontent.com",
-  //     callback: console.log,
-  //     auto_select: true,
-  //   });
-  //// console.log("Tirado");
-  //   globalThis?.window?.google?.accounts?.id?.prompt();
-  // }, []);
 
   
 
@@ -73,26 +54,16 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
       <Head>
         <title>Social U</title>
       </Head>
-      {/* <ColorSchemeProvider
-        colorScheme={colorScheme}
-        toggleColorScheme={toggleColorScheme}
-      > */}
-        <MantineProvider theme={theme}
-          // withGlobalStyles
-          // withNormalizeCSS
-        >
+      <PostHogProvider client={posthog}>
+        <MantineProvider theme={theme}>
           <Notifications/>
-
             <AuthProvider>
-              {/* <GlobalStyles /> */}
               <DataStateProvider>
-
                 <Component {...pageProps} />
               </DataStateProvider>
             </AuthProvider>
-            {/* <Analytics /> */}
         </MantineProvider>
-      {/* </ColorSchemeProvider> */}
+      </PostHogProvider>
     </>
   );
 }
