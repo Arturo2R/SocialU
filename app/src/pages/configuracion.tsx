@@ -91,6 +91,7 @@ const configuracion = (props: Props) => {
               <Space h="md" />
               <Title order={2}>Perfil</Title>
               <TextInput
+                disabled
                 label="Nombre De Usuario" // rightSections=""
                 {...form.getInputProps("userName")}
               />
@@ -181,8 +182,8 @@ const SwitchConfiguration: FC<SCF> =({title, description, value, onChange})=> {
          )}
     </div>
     <Switch
-      onLabel="ON"
-      offLabel="OFF"
+      onLabel="SI"
+      offLabel="NO"
       checked={value}
       onChange={(e)=>onChange(e.currentTarget.checked)}
       // className={classes.switch}

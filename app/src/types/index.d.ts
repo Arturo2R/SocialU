@@ -16,9 +16,9 @@ declare global {
     displayName?: string;
     photoURL?: string;
     userName?: string;
-    phoneNumber?: number;
+    phoneNumber?: number | "";
     description?: string;
-    semester?: number;
+    semester?: number | "";
     career: string;
   }
 
