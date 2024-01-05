@@ -39,7 +39,7 @@ const MiniCommentForm = ({opened, postId, userNameToResponder,  }: Props) => {
                     mt="sm"
                     mb="md"
                     label="Anonimo"
-                    color="orange"
+                    color={DEFAULT_COLOR}
                     {...field}
                   />
                   )
@@ -48,7 +48,7 @@ const MiniCommentForm = ({opened, postId, userNameToResponder,  }: Props) => {
             <ActionIcon
               type="submit"
               component="button"
-              color="orange"
+              color={DEFAULT_COLOR}
               radius="xl"
               >
               <Send />

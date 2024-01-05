@@ -1,6 +1,7 @@
 import { Switch } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useController, useForm } from "react-hook-form";
+import { DEFAULT_COLOR } from "../../constants";
 
 interface Props { control:any, name:string, label:string, required:boolean }
 
@@ -22,7 +23,7 @@ function DatePick({ control, name, label, required }:Props) {
       placeholder="Escojer Dia De Reunion"
       // transition="pop-bottom-left"
       label={label}
-      color="orange"
+      color={DEFAULT_COLOR}
       onChange={field.onChange} // send value to hook form 
       onBlur={field.onBlur} // notify when input is touched/blur
       value={field.value} // input value

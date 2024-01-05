@@ -81,7 +81,7 @@ function AuthenticationPage() {
         autoClose: 5000,
         title: "Bienvenido",
         message: "Bienvenido a la aplicación",
-        color: "orange",
+        color: {DEFAULT_COLOR},
         className: "my-notification-class",
       });
     }
@@ -134,7 +134,7 @@ function AuthenticationPage() {
           ></div>
           <div id="button-div"></div> */}
 
-          <Button color="orange" onClick={handleGoogletication} radius="xl">
+          <Button color={DEFAULT_COLOR} onClick={handleGoogletication} radius="xl">
             Cuenta Microsoft
           </Button>
 
@@ -178,7 +178,7 @@ function AuthenticationPage() {
         <Text align="center" mt="md">
           No tienes una cuenta?{" "}
           <Anchor<"a">
-            color="orange"
+            color={DEFAULT_COLOR}
             href="#"
             weight={700}
             onClick={(event) => event.preventDefault()}
@@ -189,7 +189,7 @@ function AuthenticationPage() {
         <Space h="xl" />
         <Text align="center" lineClamp={3}>
           Si continuas aceptas los{" "}
-          <Anchor color="orange" weight={700} component={Link} href="/terminos">
+          <Anchor color={DEFAULT_COLOR} weight={700} component={Link} href="/terminos">
             Terminos De Servicio
           </Anchor>{" "}
           de SocialU y confirmas que has leído nuestra{" "}

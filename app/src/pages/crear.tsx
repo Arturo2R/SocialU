@@ -18,9 +18,13 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
+import { DEFAULT_COLOR } from "../constants";
+// import { DatePicker, DatePickerInput } from "@mantine/dates";
+import '@mantine/dates/styles.css';
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
-import {Editor} from "novel"
+// import {Editor} from "novel"
+// import Editor from "../components/Editor"
 
 // import dynamic from 'next/dynamic';
 // const Editor = dynamic(() => import('novel').then((module) => module.Editor));
@@ -42,7 +46,7 @@ const CrearPost = () => {
       message: "",
       isEvent: false,
       time: "", //
-      date: "",
+      date: null,
       image: "",
       anonimo: user?.anonimoDefault || false,
     }
@@ -120,11 +124,10 @@ const CrearPost = () => {
     }
     notifications.show({
       id: "created-post",
-  
       autoClose: 3000,
       title: "Post creado",
       message: "Se Publicó 😀",
-      color: "orange",
+      color: DEFAULT_COLOR,
       className: "my-notification-class",
       icon: <FileCheck />,
     });
@@ -187,26 +190,9 @@ const CrearPost = () => {
                   minLength: { value:20, message: "No menos de 20 caracteres" }, 
                   maxLength: { value:1000, message: "No más de 1000 caracteres" } })}
               />
-                <TypographyStylesProvider pl="0">
-                <Editor 
-                  storageKey="socialu-editor-contente"
-                  className=" relative min-h-[200px] w-full " 
-                  // extensions={
-                  //     [
-                  //       Placeholder.configure({
-                  //         placeholder: "Hombre que bueno, Pressiona el '*' for commands, or '++' for AI autocomplete...",
-                  //         includeChildren: true,
-                  //       })
-                  //   ]
-                  // }
-                  editorProps={{
-                    attributes:{
-                      class:"prose-md  focus:novel-outline-none novel-max-w-full"
-                    }
-                  }}
-                  onDebouncedUpdate={(value) =>setValue("message", value?.getHTML() || "s")}
-                />
-              </TypographyStylesProvider> 
+                {/* <TypographyStylesProvider pl="0">
+                <Editor />
+              </TypographyStylesProvider>  */}
               <Switc
                 label="Anonimo"
                 control={control}
@@ -245,7 +231,7 @@ const CrearPost = () => {
               loading={creatingPost == "loading"}
               type="submit"
               variant="filled"
-              color="orange"
+              color={DEFAULT_COLOR}
               size="md"
               className="self-end w-full mt-4"
             >

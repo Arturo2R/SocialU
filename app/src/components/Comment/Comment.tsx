@@ -60,7 +60,7 @@ export function Comment({
 
      <div className="ml-11">
         <Text size="sm">{content}</Text>
-        {/* <Anchor onClick={() => setOpen((o) => !o)} color="orange">
+        {/* <Anchor onClick={() => setOpen((o) => !o)} color={DEFAULT_COLOR}>
           Responder
         </Anchor>
  {/* 

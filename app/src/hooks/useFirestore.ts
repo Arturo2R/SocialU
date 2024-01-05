@@ -15,8 +15,8 @@ import {
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
+import {PATH} from "../constants"
 
-const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>();
@@ -30,7 +30,7 @@ export const useFirestore = () => {
   // const fetchMore = async () => { 
   //   try {
   //     const q = query(
-  //       collection(db, path),
+  //       collection(db, PATH),
   //       orderBy("createdAt", "desc"),
   //       limit(20),
   //       startAfter(lastVisible)
@@ -52,7 +52,7 @@ export const useFirestore = () => {
     try {
 
       const q = query(
-        collection(db, path),
+        collection(db, PATH),
         orderBy("createdAt", "desc"),
         limit(100)
       );
@@ -81,7 +81,7 @@ export const useFirestore = () => {
     let postSnap: any;
     try {
       setLoading(true);
-      const postRef = doc(db, path, id);
+      const postRef = doc(db, PATH, id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
     } catch (error) {
@@ -99,9 +99,9 @@ export const useFirestore = () => {
         setCreatingPost("loading");
 
         const generatedPostId = await nanoid(7);
-        console.log(path)
+        console.log(PATH)
         const postsRef = doc(db, "posts", generatedPostId);
-        const publicRef = doc(db, path, generatedPostId);
+        const publicRef = doc(db, PATH, generatedPostId);
         // const formatted = await markdownToHtml(formData.message)
         // console.log(formatted)
         let newPost: Post = {
@@ -159,7 +159,7 @@ export const useFirestore = () => {
       try {
         setLoading(true);
         // console.log("Tirado", auth.currentUser.displayName);
-        const postRef = doc(db, path, postId);
+        const postRef = doc(db, PATH, postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),
@@ -220,7 +220,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
-        const publicRef = collection(db, path, data.postId, "comments");
+        const publicRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -231,7 +231,7 @@ export const useFirestore = () => {
             userName: user.userName || "",
           },
           postedAt: serverTimestamp(),
-          parentId: null,
+          parentId: "",
           postId: data.postId,
         };
 

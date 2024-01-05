@@ -22,6 +22,7 @@ import {
   Title,
   Button,
 } from "@mantine/core";
+import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
 // import BiggerPicture from "bigger-picture";
 // type author =
 //   | {
@@ -96,7 +97,7 @@ export const PostCard: FC<PostCardProps> = ({
                   alt={title}
                   width={imageData?.width || 380}
                   height={imageData?.height || 240}
-                  color="orange"
+                  color={DEFAULT_COLOR}
                   loading="lazy"
                   quality={70}
                   // style="margin: -10px -10px 10px -10px; display:block"
@@ -116,7 +117,7 @@ export const PostCard: FC<PostCardProps> = ({
               </Card.Section>
             )}
             {/* <Badge>{category}</Badge> */}
-            <Title order={3} className="text-xl font-bold">{title}</Title>
+            <Title lineClamp={2} order={3} className="text-xl font-bold">{title}</Title>
           </>
         </Link>
         {author !== "anonimo" ? (
@@ -137,7 +138,7 @@ export const PostCard: FC<PostCardProps> = ({
             </Group>
           </Link>
         ) : (
-          <Text color="orange">Anónimo</Text>
+          <Text color={DEFAULT_COLOR}>Anónimo</Text>
         )}
         <Spoiler
           className="mt-1"
@@ -163,13 +164,15 @@ export const PostCard: FC<PostCardProps> = ({
                   setExpanded(!expanded);
                 }}
                 variant="light"
-                color="orange"
+                gradient={DEFAULT_GRADIENT}
                 disabled={aja()}
                 // rightIcon={<ChevronsRight />}
               >
                 {asistants?.length} Asistentes
               </Button>
               <Button
+                variant="gradient"
+                gradient={DEFAULT_GRADIENT}
                 className="text-sm sm:text-base"
                 size="compact-lg"
                 onClick={(e: { stopPropagation: () => void }) => {
@@ -177,7 +180,6 @@ export const PostCard: FC<PostCardProps> = ({
                   setSuscribed(!suscribed);
                   typeof postId === "string" && suscribe(postId, suscribed);
                 }}
-                color="orange"
                 rightSection={suscribed ? <Check /> : <Plus />}
               >
                 {suscribed ? "Asistiré" : "Unirme"}

@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 
 // import { Post, PostProps } from "./Post";
 import {Button} from "@mantine/core"
+import { DEFAULT_COLOR } from '../../constants';
 
 export default {
   component: Button,
@@ -15,7 +16,7 @@ interface ButtonProps {
   gradient?: {from: string, to: string}
   loaderPosition?: "right" | "left"  
   loading?: boolean
-  color: "orange"
+  color: {DEFAULT_COLOR}
 }
 
 
@@ -25,7 +26,7 @@ export const Default = Template.bind({});
 
 Default.args = {
   children: "Texto",
-  color: "orange",
+  color: {DEFAULT_COLOR},
   variant: "light",
   loading: false
 };

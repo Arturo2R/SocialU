@@ -1,6 +1,7 @@
 import { Anchor, Avatar, Group, Text } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
+import { DEFAULT_COLOR } from "../../constants";
 // import { Url } from "url";
 
 type Props = {
@@ -17,7 +18,7 @@ const SeeUser = ({ id, name, image }: Props) => (
       ) : (
         <Avatar
           size="sm"
-          color="orange"
+          color={DEFAULT_COLOR}
           alt={`${name} dosent have a photo to share`}
           radius="xl"
         />

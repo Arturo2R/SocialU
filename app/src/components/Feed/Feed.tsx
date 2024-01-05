@@ -25,7 +25,7 @@ export function Feed({ data, user }:FeedProps) {
   // if (postsLoading === "loading") {
   //   return (
   //     <Center className="h-full my-auto">
-  //       <Loader color="orange" size="lg" variant="bars" />
+  //       <Loader color={DEFAULT_COLOR} size="lg" variant="bars" />
   //     </Center>
   //   );
   // }

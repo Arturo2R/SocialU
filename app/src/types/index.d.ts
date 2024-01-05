@@ -35,7 +35,8 @@ declare global {
     message: string; // !TODO: Change property name to content
     image?: string;
     isEvent?: boolean;
-    date?: Date | string;
+    date?: Date | null;
+    time?: string;
     anonimo: boolean;
     // author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
     // comments: string[]; ////Comments are not implemented yet

@@ -14,6 +14,7 @@ import { random } from "nanoid";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
+import { DEFAULT_COLOR } from "../../constants";
 
 interface AppHeaderProps {
   opened: boolean;
@@ -69,7 +70,7 @@ export const AppHeader = ({
           {(user === null)&&(loginProvider) && (
               <Button
                 size={matches ? "md" : "xs"}
-                color="orange"
+                color={DEFAULT_COLOR}
                 onClick={loginProvider}
                 
               >
@@ -81,7 +82,7 @@ export const AppHeader = ({
                 component={Link}
                 href="/welcome"
                 size={matches ? "md" : "xs"}
-                color="orange"
+                color={DEFAULT_COLOR}
               >
                 Iniciar Sesión
               </Button>

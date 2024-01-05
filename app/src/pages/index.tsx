@@ -1,13 +1,15 @@
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
+import { PATH } from "../constants";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
+
 
 export const getServerSideProps = async () => {
   const { collection, getDocs, limit, orderBy, query } = await import("@firebase/firestore");
 
   const q = query(
-    collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"),
+    collection(db, PATH),
     orderBy("createdAt", "desc"),
     limit(5)
   );
@@ -18,8 +20,8 @@ export const getServerSideProps = async () => {
     id: doc.id,
     ...doc.data(),
     createdAt: doc?.data()?.createdAt?.toJSON(),
-    ...(doc.data().date !== "" && { date: doc?.data()?.date?.toJSON() }),
-    ...(typeof doc.data().time !== "string" && {
+    ...(doc.data().date && { date: doc?.data()?.date?.toJSON() }),
+    ...(doc.data().time !== "" && {
       time: doc?.data()?.time?.toJSON(),
     }),
   }));

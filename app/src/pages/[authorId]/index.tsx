@@ -60,7 +60,7 @@ export default function UserInfoAction() {
         <Text ta="center" className="max-w-sm mx-auto my-2 italic">
           {author?.description}
         </Text>
-        {/* <Button variant="outline" className="mx-auto" color="orange" mt="md">
+        {/* <Button variant="outline" className="mx-auto" color={DEFAULT_COLOR} mt="md">
           Send message
         </Button> */}
       </Paper>

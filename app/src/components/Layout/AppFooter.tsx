@@ -3,6 +3,7 @@ import { Button, Group } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 import { Send } from "tabler-icons-react";
+import { DEFAULT_COLOR } from "../../constants";
 
 const AppFooter = () => {
   // const matches = useMediaQuery("(min-width: 700px)");
@@ -26,7 +27,7 @@ const AppFooter = () => {
               fullWidth={true}
               rightSection={<Send />}
               variant="subtle"
-              color="orange"
+              color={DEFAULT_COLOR}
               size="md"
               title="Crear Post"
             >

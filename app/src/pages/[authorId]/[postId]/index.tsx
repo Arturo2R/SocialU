@@ -27,6 +27,7 @@ import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
 import { useMediaQuery } from "@mantine/hooks";
+import { DEFAULT_COLOR, PATH } from "../../../constants";
 // import "bigger-picture";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
@@ -35,16 +36,16 @@ import { useMediaQuery } from "@mantine/hooks";
 export interface PostPageProps { data: Post, postId: string; authorId: string };
 dayjs.extend(relativeTime);
 dayjs.locale(es);
-const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
+// const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
 export async function getServerSideProps(context: any) {
   const { postId, authorId } = context.params
-
-  const postRef = doc(db, path, postId);
+  console.log(PATH)
+  const postRef = doc(db, PATH, postId);
 
   const postSnap: anything = await getDoc(postRef);
-  // console.log(postSnap.data());
-  const data = postSnap.data()
+  const data:Post = postSnap.data()
+  console.log(data);
   
   // if (!data) {
     
@@ -52,12 +53,13 @@ export async function getServerSideProps(context: any) {
   //     notFound: true,
   //   }
   // }
-
+  
+  
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
-    ...(data.date !== "" && { date: data.date?.toJSON() }),
-    ...(typeof data.time !== "string" && { time: data.time?.toJSON() }),
+    ...(data?.date && { date: data.date.toJSON() }),
+    ...(data?.time && { time: JSON.stringify(data.time) }),
   }
   return {
     props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
@@ -65,7 +67,7 @@ export async function getServerSideProps(context: any) {
 }
 
 // export async function getStaticPaths(){
-//   const q = query(collection(db, path), limit(100))
+//   const q = query(collection(db, PATH), limit(100))
 
 //   const posts = await getDocs(q)
 //   posts.metadata.
@@ -96,14 +98,13 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState<CommentProps[] | undefined>();
 
-  const path = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
 
   const fetchComments = async () => {
     try {
       setLoading(true);
       let q = query(
-        collection(db, path, id, "comments"),
+        collection(db, PATH, id, "comments"),
         orderBy("postedAt", "desc")
         // limit(20)
       );
@@ -145,7 +146,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   //   return (
   //     <Layout>
   //       <Center className="h-full my-auto">
-  //         <Loader color="orange" size="lg" variant="bars" />
+  //         <Loader color={DEFAULT_COLOR} size="lg" variant="bars" />
   //       </Center>
   //     </Layout>
   //   );
@@ -164,18 +165,16 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
         {content?.image ? (
           <>
-            <ActionIcon variant="light" component={Link} classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false} color="rgba(255, 255, 255, 1)" className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
+            <ActionIcon variant="light" color="gray" component={Link}  classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
             <Image component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
             <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
-          <Link href="/" >
-            <ActionIcon variant="light" component={Link} classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false} color="rgba(255, 255, 255, 1)" className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
+            <ActionIcon variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-          </Link>
           <Title order={2} mb="sm">{content?.title}</Title>
         </div>)}
 
@@ -201,7 +200,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             icon
           />
         ) : (
-          <Text color="orange" size="lg">
+          <Text color={DEFAULT_COLOR} size="lg">
             Anonimo
           </Text>
         )}

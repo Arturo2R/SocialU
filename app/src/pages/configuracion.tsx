@@ -10,6 +10,7 @@ import { FC, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
+import { DEFAULT_COLOR } from "../constants";
 // import { useStore } from "../store";
 
 type Props = {};
@@ -73,7 +74,7 @@ const configuracion = (props: Props) => {
         autoClose: 4000,
         title: "Perfil Actualizado",
         message: "El perfil ha sido actualizado exitosamente",
-        color: "orange",
+        color: DEFAULT_COLOR,
         className: "my-notification-class",
       }))
     }
@@ -147,7 +148,7 @@ const configuracion = (props: Props) => {
                description="Usar el nombre de usuario en lugar del nombre real para las publicaciones y comentarios" 
                {...form.getInputProps("useUserName")}
                />
-            <Button loading={updatingProfile == "loading" || !user} mt="sm" type="submit" color="orange" radius="md" className="uppercase">Guardar</Button>  
+            <Button loading={updatingProfile == "loading" || !user} mt="sm" type="submit" color={DEFAULT_COLOR} radius="md" className="uppercase">Guardar</Button>  
           </Stack>
           </form>
         </Paper>
@@ -187,7 +188,7 @@ const SwitchConfiguration: FC<SCF> =({title, description, value, onChange})=> {
       checked={value}
       onChange={(e)=>onChange(e.currentTarget.checked)}
       // className={classes.switch}
-      color="orange"
+      color={DEFAULT_COLOR}
       size="lg" />
   </Group>);
 }
