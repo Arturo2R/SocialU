@@ -12,7 +12,9 @@ type Props = {
 
 const SeeUser = ({ id, name, image }: Props) => (
   <Anchor component={Link} href={`/${id}`}>
-    <Group>
+    <Group gap="xs"
+      wrap="nowrap"
+    >
       {image ? (
         <Avatar size="sm" src={image} alt={` a photo of ${name}`} radius="xl" />
       ) : (
@@ -23,7 +25,7 @@ const SeeUser = ({ id, name, image }: Props) => (
           radius="xl"
         />
       )}
-      <Text>{name}</Text>
+      <Text truncate="end">{name}</Text>
     </Group>
   </Anchor>
 );

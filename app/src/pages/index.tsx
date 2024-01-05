@@ -21,8 +21,8 @@ export const getServerSideProps = async () => {
     ...doc.data(),
     createdAt: doc?.data()?.createdAt?.toJSON(),
     ...(doc.data().date && { date: doc?.data()?.date?.toJSON() }),
-    ...(doc.data().time !== "" && {
-      time: doc?.data()?.time?.toJSON(),
+    ...(doc.data().time && {
+      time: JSON.stringify(doc?.data()?.time),
     }),
   }));
 
