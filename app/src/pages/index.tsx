@@ -1,41 +1,35 @@
-import {
-  collection, getDocs,
-  limit,
-  orderBy,
-  query
-} from "@firebase/firestore";
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
+import { PATH } from "../constants";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 
+
 export const getServerSideProps = async () => {
+  const { collection, getDocs, limit, orderBy, query } = await import("@firebase/firestore");
+
   const q = query(
-    collection(db, process.env.NEXT_PUBLIC_DB_COLLECTION_PATH||"developmentPosts"),
+    collection(db, PATH),
     orderBy("createdAt", "desc"),
-    limit(7)
+    limit(5)
   );
 
   const querySnapshot = await getDocs(q);
 
-  const data = querySnapshot.docs.map((doc: anything) => ({
+  const data = querySnapshot.docs.map((doc: any) => ({
     id: doc.id,
     ...doc.data(),
     createdAt: doc?.data()?.createdAt?.toJSON(),
-    ...(doc.data().date !== "" && { date: doc?.data()?.date?.toJSON() }),
-    ...(typeof doc.data().time !== "string" && {
-      time: doc?.data()?.time?.toJSON(),
+    ...(doc.data().date && { date: doc?.data()?.date?.toJSON() }),
+    ...(doc.data().time && {
+      time: JSON.stringify(doc?.data()?.time),
     }),
-    // time: doc?.data()?.time?.toJSON(),
-    // date: doc.title,
   }));
-
-  // console.log(data);
 
   return {
     props: {
       data,
-    }, // will be passed to the page component as props
+    },
   };
 };
 
@@ -44,20 +38,19 @@ interface HomeProps {
 }
 
 export default function HomePage({ data }: HomeProps) {
-  const { user } = useAuth()
-  
+  const { user } = useAuth();
+
   let baseStyles = [
-  "color: #FD7E14",
-  "padding: 2px 4px",
-  "font-size: 32px"
+    "color: #FD7E14",
+    "padding: 2px 4px",
+    "font-size: 32px",
   ].join(";");
-  
-  console. log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
-  
+
+  console.log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
 
   return (
     <Layout>
-      <Feed data={data} user={user||undefined} />
+      <Feed data={data} user={user || undefined} />
     </Layout>
   );
 }

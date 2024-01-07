@@ -15,9 +15,8 @@ import {
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
-import markdownToHtml from "../lib/mardown";
+import {PATH} from "../constants"
 
-const path: string = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>();
@@ -25,18 +24,13 @@ export const useFirestore = () => {
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
   >();
-  const [lastVisible, setLastVisible] = useState();
-
-  // console.log("path", path);
-  // creating state
   const [creating, setCreating] = useState<boolean>(false);
-  // const {user} = useStore()
 
 
   // const fetchMore = async () => { 
   //   try {
   //     const q = query(
-  //       collection(db, path),
+  //       collection(db, PATH),
   //       orderBy("createdAt", "desc"),
   //       limit(20),
   //       startAfter(lastVisible)
@@ -58,7 +52,7 @@ export const useFirestore = () => {
     try {
 
       const q = query(
-        collection(db, path),
+        collection(db, PATH),
         orderBy("createdAt", "desc"),
         limit(100)
       );
@@ -87,7 +81,7 @@ export const useFirestore = () => {
     let postSnap: any;
     try {
       setLoading(true);
-      const postRef = doc(db, path, id);
+      const postRef = doc(db, PATH, id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
     } catch (error) {
@@ -98,18 +92,18 @@ export const useFirestore = () => {
     return postSnap;
   };
 
-  const createPost = async (formData: FormPost, user: UserState) => {
+  const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | "error" | false>(false)
+  const createPost = async (formData: ComputedPost, user: UserState) => {
     if (auth.currentUser  && auth.currentUser.email) {
       try {
-        setLoading(true);
+        setCreatingPost("loading");
 
         const generatedPostId = await nanoid(7);
-        console.log(path)
+        console.log(PATH)
         const postsRef = doc(db, "posts", generatedPostId);
-        const publicRef = doc(db, path, generatedPostId);
-        const content = await markdownToHtml(formData.message)
-
-
+        const publicRef = doc(db, PATH, generatedPostId);
+        // const formatted = await markdownToHtml(formData.message)
+        // console.log(formatted)
         let newPost: Post = {
           // id: formData.id,
           // title: formData.title,
@@ -118,11 +112,11 @@ export const useFirestore = () => {
           // date: formData.date,
           // anonimo: formData.anonimo,
           ...formData,
+          message: formData.message,       
           // ...(user.photoURL ? {
-          message: content,
-            authorImage : user?.photoURL || "",
-         // } : {authorImage : "st",}),
-          useUserName: user?.configuration?.useUserName || false,
+          authorImage : user?.photoURL || "",
+          // } : {authorImage : "st",}),
+          useUserName: user?.useUserName || false,
           userName:  user?.userName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
@@ -130,8 +124,10 @@ export const useFirestore = () => {
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
-        console.log(newPost)
-        // let Payload: Post
+        
+
+
+
         if (formData.anonimo) {
           await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
         } else {
@@ -142,9 +138,10 @@ export const useFirestore = () => {
 
         await setDoc(postsRef, newPost);
       } catch (thiserror: any) {
+        setCreatingPost("error")
         console.log(thiserror.message);
       } finally {
-        setLoading(false);
+        setCreatingPost("loaded")
       }
     } else {
    // console.log("Inautorizado");
@@ -161,8 +158,8 @@ export const useFirestore = () => {
     if (auth.currentUser?.displayName) {
       try {
         setLoading(true);
-     // console.log("Tirado", auth.currentUser.displayName);
-        const postRef = doc(db, path, postId);
+        // console.log("Tirado", auth.currentUser.displayName);
+        const postRef = doc(db, PATH, postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),
@@ -175,6 +172,7 @@ export const useFirestore = () => {
           },
         };
 
+
         if (remove === false) {
           await updateDoc(postRef, {
             suscriptions: arrayUnion(Payload),
@@ -185,12 +183,12 @@ export const useFirestore = () => {
           });
         }
       } catch (error) {
-     // console.log("errorsaso", error);
+        // console.log("errorsaso", error);
       } finally {
         setLoading(false);
       }
     } else {
-   // console.log("Nada Papi");
+      // console.log("Nada Papi");
     }
   };
 
@@ -222,7 +220,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
-        const publicRef = collection(db, path, data.postId, "comments");
+        const publicRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -233,7 +231,7 @@ export const useFirestore = () => {
             userName: user.userName || "",
           },
           postedAt: serverTimestamp(),
-          parentId: null,
+          parentId: "",
           postId: data.postId,
         };
 
@@ -313,7 +311,7 @@ export const useFirestore = () => {
             setter(Payload);
             await setDoc(userRef, Payload);
           } catch (error) {
-         // console.log(error);
+              console.log(error);
           } finally {
             setCreating(false);
             // console.log(useStore.getState().user);
@@ -321,7 +319,7 @@ export const useFirestore = () => {
         }
       }
     } catch (error) {
-   // console.log(error);
+      console.error(error);
     }
   };
 
@@ -337,15 +335,12 @@ export const useFirestore = () => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
-
+      
       const data = {
         ...user,
         ...Payload,
-          configuration: {
-            anonimoDefault: Payload.anonimoDefault,
-            useUserName: Payload.useUserName,
-          }
-        }
+      }
+      console.log("data la data despues de update profile", data);
         
         // ...(Payload. && { photoURL: Payload.photoURL }),
         // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
@@ -359,9 +354,8 @@ export const useFirestore = () => {
       }))
 
       await updateDoc(userRef, data)
-
     } catch (error) {
-   // console.log(error)
+      console.error(error)
       setUpdatingProfile("error")
     } finally {
       setUpdatingProfile("loaded")
@@ -411,6 +405,7 @@ export const useFirestore = () => {
     updateProfile,
     updatingProfile,
     fetchData,
+    creatingPost,
     createPost,
     createOrFetchUser,
     fetchPost,

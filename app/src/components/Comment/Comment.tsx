@@ -11,11 +11,11 @@ import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 // import { useToggle } from "@mantine/hooks";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 export interface CommentProps {
   id: string;
-  parentId: string | null;
+  parentId?: string;
   postedAt: Timestamp;
   content: string;
   author: { name: string; image: string } | "anonimo";
@@ -60,7 +60,7 @@ export function Comment({
 
      <div className="ml-11">
         <Text size="sm">{content}</Text>
-        {/* <Anchor onClick={() => setOpen((o) => !o)} color="orange">
+        {/* <Anchor onClick={() => setOpen((o) => !o)} color={DEFAULT_COLOR}>
           Responder
         </Anchor>
  {/* 

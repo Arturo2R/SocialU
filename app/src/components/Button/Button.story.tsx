@@ -1,13 +1,15 @@
-import { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 // import React from 'react';import React from "react";
 
 // import { Post, PostProps } from "./Post";
 import {Button} from "@mantine/core"
+import { DEFAULT_COLOR } from '../../constants';
 
-export default {
+const meta: Meta<typeof Button> = {
   component: Button,
-  title: "Button",
-}as Meta;
+}
+
+export default meta;
 
 interface ButtonProps {
   children: string,
@@ -15,39 +17,16 @@ interface ButtonProps {
   gradient?: {from: string, to: string}
   loaderPosition?: "right" | "left"  
   loading?: boolean
-  color: "orange"
+  color: string
 }
 
+type Story = StoryObj<ButtonProps>;
 
-const Template: Story<ButtonProps> = (args) => (<Button {...args} />);
+export const Primary: Story = {
+  args: {
+    children: "Button",
+    variant: 'filled',
+    color: DEFAULT_COLOR
+  }
+}
 
-export const Default = Template.bind({});
-
-Default.args = {
-  children: "Texto",
-  color: "orange",
-  variant: "light",
-  loading: false
-};
-
-// export const Simple = Template.bind({});
-
-// Simple.args = {
-//   ...Default.args,
-//   event: true,
-//   postId: "kljfsld",
-//   author: {
-//     image: "/profile.jpg",
-//     name: "Arturo R",
-//     id: "fsdkldj",
-//   },
-//   asistants: [
-//     {
-//       user: { 
-//         name: "Juan",
-//         image: "https://source.unsplash.com/random/30x40",
-//         ref: "user/kljlafds",
-//       }
-//     },
-//   ],
-// };

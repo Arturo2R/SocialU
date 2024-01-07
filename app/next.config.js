@@ -1,8 +1,13 @@
+const million = require('million/compiler')
+
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const withPWA = require('next-pwa')
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+})
 
 // next.config.js
 const withMDX = require('@next/mdx')({
@@ -18,19 +23,44 @@ const withMDX = require('@next/mdx')({
   },
 })
 
-module.exports = withMDX(withBundleAnalyzer(withPWA({
+const millionConfig = {
+  auto: true,
+  // if you're using RSC:
+  // auto: { rsc: true },
+}
+
+
+const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  pwa: {
-    dest: 'public',
-    disable: process.env.NODE_ENV === 'development',
-  },
   images: {
-    domains: ['source.unsplash.com', "lh3.googleusercontent.com", 'example2.com', 'firebasestorage.googleapis.com', 'source.unsplash.com']
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+      },
+    ],
   },
+  experimental: {
+    scrollRestoration: true
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
+
   async headers() {
     return [
       {
@@ -44,3 +74,5 @@ module.exports = withMDX(withBundleAnalyzer(withPWA({
     ]
   },
 })));
+
+module.exports = million.next(nextConfig, millionConfig);

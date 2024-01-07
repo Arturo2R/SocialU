@@ -1,8 +1,9 @@
-import { Button, Footer, Group } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 // import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
 import { Send } from "tabler-icons-react";
+import { DEFAULT_COLOR } from "../../constants";
 
 const AppFooter = () => {
   // const matches = useMediaQuery("(min-width: 700px)");
@@ -17,22 +18,24 @@ const AppFooter = () => {
     //   )}
     // </Footer>
     // <Protected.Component>
-    <Footer height={60} p="xs">
-      <Group grow>
-        <Link href="/crear">
-          <Button
-            className="w-full"
-            rightIcon={<Send />}
-            variant="subtle"
-            color="orange"
-            size="md"
-            title="Crear Post"
-          >
-            Crear Post
-          </Button>
-        </Link>
-      </Group>
-    </Footer>
+    // <MediaQuery largerThan="sm" styles={{ display: "none" }}>
+      <footer >
+        <Group grow>
+            <Button 
+              component={Link}
+              href="/crear"
+              fullWidth={true}
+              rightSection={<Send />}
+              variant="subtle"
+              color={DEFAULT_COLOR}
+              size="md"
+              title="Crear Post"
+            >
+              Crear Post
+            </Button>
+        </Group>
+      </footer>
+    // </MediaQuery>
     // </Protected.Component>
   );
 };

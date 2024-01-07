@@ -10,13 +10,13 @@
       "label": "yarn: dev"
     },
     {
-      "type": "npm",
+      "type": "bun",
       "script": "dev",
       "path": "app",
       "problemMatcher": [
         "$tsc"
       ],
-      "label": "npm: dev - app",
+      "label": "bun: dev - app",
       "detail": "NODE_ENV='development' && next dev"
     }
   ]

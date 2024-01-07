@@ -1,46 +1,33 @@
-import {
-    Group,
-    Image,
-    MantineTheme,
-    Text,
-    useMantineTheme
-} from "@mantine/core";
-import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { IconPhoto, IconUpload, IconX } from "@tabler/icons-react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
-import { Icon as TablerIcon, Photo, Upload, X } from "tabler-icons-react";
+import React, {  useRef, useState } from "react";
 import { postsBanners } from "../firebase";
+import '@mantine/dropzone/styles.css';
 
-// function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
-//   return status.accepted
-//     ? theme.colors[theme.primaryColor][theme.colorScheme === "dark" ? 4 : 6]
-//     : status.rejected
-//     ? theme.colors.red[theme.colorScheme === "dark" ? 4 : 6]
-//     : theme.colorScheme === "dark"
-//     ? theme.colors.dark[0]
-//     : theme.colors.gray[7];
-// }
-
+import { Group, Text, rem, Image } from '@mantine/core';
+import { IconUpload, IconPhoto, IconX } from '@tabler/icons-react';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 
 export default function ImageDropzone({
   image,
   setImage,
   imageUrl,
   setImageUrl,
+  setImageData,
 }: {
   image: File | null | string;
   setImage: (image: File | null) => void;
   imageUrl: string | null;
   setImageUrl: (imageUrl: string | null) => void;
+  setImageData: ({width, height}:{width: number, height: number}) => void;
 }) {
-  // image state
   const [i64, set64] = useState<string | null>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
   const addImage = (file: File[]) => {
- // console.log(file);
+    console.log(file);
+
 
     setImage(file[0]);
     const reader = new FileReader();
@@ -59,54 +46,63 @@ export default function ImageDropzone({
     });
   };
 
-  const theme = useMantineTheme();
+
+
   return (
     <>
-      {i64 && image ? (
-        <Image radius="md" src={i64} />
-      ) : (
-        <Dropzone
-          onDrop={(files: File[]) => {
-            // uploadBytes(storageRef, file);
-            addImage(files);
-         // console.log("accepted files", files);
-          }}
-          onReject={(files: unknown) => console.log("rejected files", files)}
-          maxSize={3 * 1024 ** 2}
-          multiple={false}
-          accept={IMAGE_MIME_TYPE}
-        >
-          <Group position="center" spacing="xs" style={{ pointerEvents: "none" }}>
-            <Dropzone.Accept>
-            <IconUpload
-              size="3.2rem"
-              stroke={1.5}
-              color={theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6]}
-            />
-          </Dropzone.Accept>
-          <Dropzone.Reject>
-            <IconX
-              size="3.2rem"
-              stroke={1.5}
-              color={theme.colors.red[theme.colorScheme === 'dark' ? 4 : 6]}
-            />
-          </Dropzone.Reject>
-          <Dropzone.Idle>
-            <IconPhoto size="3.2rem" stroke={1.5} />
-          </Dropzone.Idle>
+    {i64 && image ? (
+      <Image radius="md" src={i64} ref={imageRef} onLoad={() => {
+        if (imageRef.current) {
+          const { naturalWidth, naturalHeight } = imageRef.current;
+          console.log("Natural Width:", naturalWidth);
+          console.log("Natural Height:", naturalHeight);
+          setImageData({ width: naturalWidth, height: naturalHeight });
+        }
+      }} />    
+      
+    ) : (
+    <Dropzone
+      onDrop={(files: File[]) => {
+        // uploadBytes(storageRef, file);
+        addImage(files);
+      // console.log("accepted files", files);
+      }}
+      onReject={(files: unknown) => console.log("rejected files", files)}
+      maxSize={3 * 1024 ** 2}
+      multiple={false}
+      accept={IMAGE_MIME_TYPE}
+      
+    >
+      <Group  justify="center" gap="xl" mih={100} style={{ pointerEvents: 'none' }}>
+        <Dropzone.Accept>
+          <IconUpload
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Accept>
+        <Dropzone.Reject>
+          <IconX
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-red-6)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Reject>
+        <Dropzone.Idle>
+          <IconPhoto
+            style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-dimmed)' }}
+            stroke={1.5}
+          />
+        </Dropzone.Idle>
 
-
-            <div className="text-gray-400">
-              <Text size="xl" inline>
-                Imagén Principal (Opcional)
-              </Text>
-              <Text size="sm" color="dimmed" inline mt={7}>
-                Envia solo una imagen de máximo 5 Mb
-              </Text>
-            </div>
-          </Group>
-        </Dropzone>
-      )}
+        <div>
+          <Text size="xl" inline>
+            Imagén Principal (Opcional)
+          </Text>
+          <Text size="sm" c="dimmed" inline mt={7}>
+            Envia solo una imagen de máximo 5 Mb
+          </Text>
+        </div>
+      </Group>
+    </Dropzone>)}
     </>
   );
 }

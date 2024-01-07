@@ -3,7 +3,8 @@ import {
   Container,
   Input,
   Modal,
-  Textarea
+  Textarea,
+  TypographyStylesProvider
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
@@ -17,6 +18,16 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
+import { DEFAULT_COLOR } from "../constants";
+// import { DatePicker, DatePickerInput } from "@mantine/dates";
+import '@mantine/dates/styles.css';
+// import { useEditor } from "@tiptap/react";
+// import Placeholder from '@tiptap/extension-placeholder'
+// import {Editor} from "novel"
+// import Editor from "../components/Editor"
+
+// import dynamic from 'next/dynamic';
+// const Editor = dynamic(() => import('novel').then((module) => module.Editor));
 
 
 
@@ -26,6 +37,29 @@ interface FormInputs {
   MyCheckbox: boolean
 }
 
+export const checkImage = async (url:string, cacheImage?:boolean): Promise<boolean> => {
+  let data = {
+    "DataRepresentation":"URL",
+    "Value": url
+  };
+  let isPorn : boolean = false
+  try {
+    let response = await fetch(process.env.NEXT_PUBLIC_AZURE_NAP_URL + `/contentmoderator/moderate/v1.0/ProcessImage/Evaluate${cacheImage ?"?CacheImage=true" : ""}`  , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': process.env.NEXT_PUBLIC_AZURE_NAP_KEY || "",
+      },
+      body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    isPorn = result.IsImageAdultClassified
+  } catch (error) {
+    console.error("Un error mirando la imagen", error)
+  }
+  return isPorn
+}
 
 const CrearPost = () => {
   const {user} = useAuth()
@@ -35,14 +69,14 @@ const CrearPost = () => {
       message: "",
       isEvent: false,
       time: "", //
-      date: "",
+      date: null,
       image: "",
-      anonimo: user?.configuration?.anonimoDefault || false,
+      anonimo: user?.anonimoDefault || false,
     }
   });
   console.log(errors);
   
-  console.log(user?.configuration?.anonimoDefault)
+  console.log(user?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false) // #MOdal
   //image state
@@ -50,38 +84,17 @@ const CrearPost = () => {
 
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const { createPost } = useFirestore();
+  const { createPost, creatingPost } = useFirestore();
   
+  const [imageData, setImageData] = useState<{width: number, height: number} | null>(null);
+
 
   const router = useRouter();
   
 
-  const checkImage = async (url:string): Promise<boolean> => {
-    let data = {
-      "DataRepresentation":"URL",
-      "Value": url
-    };
-    let isPorn : boolean = false
-    try {
-      let response = await fetch('https://nap.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate?', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Ocp-Apim-Subscription-Key': 'a4b85165c2584472a9f2b5dd6101525f',
-        },
-        body: JSON.stringify(data)
-      });
-  
-      let result = await response.json();
-      console.log(result)
-      isPorn = result.IsImageAdultClassified
-    } catch (error) {
-      console.error("Un error mirando la imagen", error)
-    }
-    return isPorn
-  }
-
+  const [imageChecking, setImageChecking] = useState<null|"loading"|"loaded">(null)
   useEffect(() => {
+    setImageChecking("loading")
     if(imageUrl){
       checkImage(imageUrl)
         .then(porn =>{ 
@@ -95,23 +108,27 @@ const CrearPost = () => {
         }
         )
     }
+    setImageChecking("loading")
   }, [imageUrl]);
 
 
   const submitPost:SubmitHandler<FormPost> = postValues => {
     if(user){
-      console.log("sip", postValues)
-      createPost(postValues, user);
+      let payload: ComputedPost = postValues
+      if(postValues.image && imageData) {
+        payload = {...postValues, imageData: imageData}
+      }
+      console.log("sip", payload)
+      createPost(payload, user);
     } else {
       throw new Error("No hay usuario");
     }
     notifications.show({
       id: "created-post",
-      
       autoClose: 3000,
       title: "Post creado",
       message: "Se Publicó 😀",
-      color: "orange",
+      color: DEFAULT_COLOR,
       className: "my-notification-class",
       icon: <FileCheck />,
     });
@@ -140,6 +157,7 @@ const CrearPost = () => {
                 setImageUrl={setImageUrl}
                 image={image}
                 setImage={setImage}
+                setImageData={setImageData}
               />
               <Textarea
                 variant="unstyled"
@@ -153,28 +171,33 @@ const CrearPost = () => {
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
                 {...register("title",{ 
-                  required: "Email Address is required", 
+                  required: "El titulo es necesario", 
                   minLength: { value:5, message: "No menos de 5 caracteres" },
-                  maxLength: { value:80, message: "No mas de 80 caracteres" } 
+                  maxLength: { value:80, message: "No más de 80 caracteres" } 
                 })}
               />
+              <div className="hidden !p-0"></div>
               <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
-                radius="xl"
+                error={errors.message?.message}
                 size="md"
                 maxLength={1000}
                 minRows={5}
                 required
                 autosize
-                {...register("message",{ required: true,minLength: { value:30, message: "No menos de 30 caracteres" }, maxLength: { value:1000, message: "No mas de 1000 caracteres" } })}
-                
+                {...register("message",{
+                  required: "La descripcion es necesaria",
+                  minLength: { value:20, message: "No menos de 20 caracteres" }, 
+                  maxLength: { value:1000, message: "No más de 1000 caracteres" } })}
               />
-              
+                {/* <TypographyStylesProvider pl="0">
+                <Editor />
+              </TypographyStylesProvider>  */}
               <Switc
                 label="Anonimo"
                 control={control}
-                def={user?.configuration?.anonimoDefault || false}
+                def={user?.anonimoDefault || false}
                 name="anonimo"
               />
               <Switc
@@ -189,9 +212,9 @@ const CrearPost = () => {
                 <>
                   <DatePick
                     required={true}
-                    name="date"
                     control={control}
                     label="Día De Reunion"
+                    {...register("date",{ required: true })}
                   />
               
                   
@@ -206,11 +229,12 @@ const CrearPost = () => {
             </div>
 
             <Button
+              loading={creatingPost == "loading"}
               type="submit"
               variant="filled"
-              color="orange"
+              color={DEFAULT_COLOR}
               size="md"
-              className="mt-4 w-full"
+              className="self-end w-full mt-4"
             >
               Enviar Post
             </Button>

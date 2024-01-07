@@ -6,37 +6,37 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { FC, useState } from "react";
+import { FC, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
+import { DEFAULT_COLOR } from "../constants";
 // import { useStore } from "../store";
 
 type Props = {};
 
 const configuracion = (props: Props) => {
   // const { user } = useStore.getState();
-  const [anonimo, setAnonimo]= useState<boolean>(false)
-  const [useUserName, setuseUserName] = useState<boolean>(false)
 
-  const { resetPassword, user, setUser} = useAuth();
+  const { user, setUser} = useAuth();
   const {updateProfile: updateFirestoreProfile, updatingProfile} = useFirestore()
 
-  const [loading, setLoading] = useState<boolean>(false)
-
+  // const [loading, setLoading] = useState<boolean>(false)
+  const formdata:UserState = {
+    userName: user?.userName || "" ,
+    email: user?.email || "",
+    displayName: user?.displayName || "",
+    semester: user?.semester || "",
+    photoURL: user?.photoURL || "",
+    career: user?.career ||"",
+    // password: "",
+    phoneNumber: user?.phoneNumber || "",
+    anonimoDefault: user?.anonimoDefault || false, 
+    useUserName: user?.useUserName  || false,
+  }
+  
   const form = useForm({
-    initialValues: {
-      userName: user?.userName ,
-      email: user?.email,
-      displayName: user?.displayName,
-      semester: user?.semester || "",
-      photoURL: user?.photoURL,
-      career: user?.career ||"",
-      // password: "",
-      phoneNumber: user?.phoneNumber || "",
-      anonimoDefault: user?.configuration?.anonimoDefault || false, 
-      useUserName: user?.configuration?.useUserName  || false,
-    },
+    initialValues: formdata,
     // validate: {
     //   title: {
     //     minLength: 3,
@@ -51,23 +51,36 @@ const configuracion = (props: Props) => {
     //   image: {},
     // },
   });
+  
+  useEffect(() => {
+      form.setValues(formdata)
+      // * THis are for when i implement react-hook-form
+      // * loop trough formdata and set values
+      // * Object.keys(formdata).forEach((key) => {
+      // *   form.setValue(key, formdata[key])
+      // *    // console.log(key, formdata[key])
+      // *})
+  }, [user])
+  
 
   const saveConfiguration = (configurationData: any) => {
+    console.log("configurationData: ", configurationData);
+    // console.log("touched: ", form.touched())
+    
     if(user?.uid){
    // console.log("disparado")
-      setLoading(true)
       updateFirestoreProfile(user.uid,configurationData, user, setUser).then(()=>notifications.show({
         id: "created-post",
         autoClose: 4000,
         title: "Perfil Actualizado",
         message: "El perfil ha sido actualizado exitosamente",
-        color: "orange",
+        color: DEFAULT_COLOR,
         className: "my-notification-class",
       }))
-      
-      setLoading(false)
     }
   };
+
+  
 
   return (
     // <Protected.Route>
@@ -79,6 +92,7 @@ const configuracion = (props: Props) => {
               <Space h="md" />
               <Title order={2}>Perfil</Title>
               <TextInput
+                disabled
                 label="Nombre De Usuario" // rightSections=""
                 {...form.getInputProps("userName")}
               />
@@ -134,7 +148,7 @@ const configuracion = (props: Props) => {
                description="Usar el nombre de usuario en lugar del nombre real para las publicaciones y comentarios" 
                {...form.getInputProps("useUserName")}
                />
-            <Button loading={loading} mt="sm" type="submit" color="orange" radius="md" uppercase>Guardar</Button>  
+            <Button loading={updatingProfile == "loading" || !user} mt="sm" type="submit" color={DEFAULT_COLOR} radius="md" className="uppercase">Guardar</Button>  
           </Stack>
           </form>
         </Paper>
@@ -154,10 +168,10 @@ interface SCF {
 
 const SwitchConfiguration: FC<SCF> =({title, description, value, onChange})=> {
   return( <Group
-    position="apart"
+    justify="space-between"
     // className={classes.item}
-    noWrap
-    spacing="xl"
+    wrap="nowrap"
+    gap="xl"
   >
     <div>
       <Text className="font-medium">{title}</Text>
@@ -169,12 +183,12 @@ const SwitchConfiguration: FC<SCF> =({title, description, value, onChange})=> {
          )}
     </div>
     <Switch
-      onLabel="ON"
-      offLabel="OFF"
+      onLabel="SI"
+      offLabel="NO"
       checked={value}
       onChange={(e)=>onChange(e.currentTarget.checked)}
       // className={classes.switch}
-      color="orange"
+      color={DEFAULT_COLOR}
       size="lg" />
   </Group>);
 }

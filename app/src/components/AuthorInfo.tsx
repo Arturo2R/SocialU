@@ -1,25 +1,7 @@
-import {
-  Avatar, createStyles, Group, Text, UnstyledButton
-} from '@mantine/core';
 import Link from 'next/link';
-import React from 'react';
-import { ChevronRight } from 'tabler-icons-react';
-
-const useStyles = createStyles((theme) => ({
-  user: {
-    display: 'block',
-    width: '100%',
-    padding: theme.spacing.md,
-    color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-    '&:hover': {
-      backgroundColor:
-        theme.colorScheme === 'dark'
-          ? theme.colors.dark[8]
-          : theme.colors.gray[0],
-    },
-  },
-}));
+import { UnstyledButton, Group, Avatar, Text, rem } from '@mantine/core';
+import { IconChevronRight } from '@tabler/icons-react';
+import classes from './UserButton.module.css';
 
 interface AuthorInfoProps {
   image: string;
@@ -35,26 +17,30 @@ export function AuthorInfo({
   email,
   icon,
   link,
-  ...others
 }: AuthorInfoProps) {
-  const { classes } = useStyles();
-
   return (
-    <UnstyledButton className={classes.user} {...others}>
+    <UnstyledButton className={classes.user}>
       <Link href={`/${link||name}`}>
-        <Group>
-          <Avatar src={image} radius="xl" />
-          <div style={{ flex: 1 }}>
-            <Text size="sm" weight={500}>
-              {name}
-            </Text>
-            <Text color="dimmed" size="xs">
-              {email}
-            </Text>
-          </div>
-          {icon || <ChevronRight size={14} />}
-        </Group>
+      <Group>
+        <Avatar
+          src={image}
+          radius="xl"
+        />
+
+        <div style={{ flex: 1 }}>
+          <Text size="sm" fw={500}>
+            {name}
+          </Text>
+
+          <Text c="dimmed" size="xs">
+            {email}
+          </Text>
+        </div>
+
+        {icon || <IconChevronRight style={{ width: rem(14), height: rem(14) }} stroke={1.5} />}
+      </Group>
       </Link>
     </UnstyledButton>
   );
 }
+

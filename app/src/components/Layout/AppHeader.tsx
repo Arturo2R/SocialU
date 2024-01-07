@@ -3,19 +3,18 @@ import {
   Burger,
   Button,
   Group,
-  Header,
-  MediaQuery,
   Text,
   Title,
   Image,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { NextLink } from "@mantine/next";
 import { UserCredential } from "firebase/auth";
+import { random } from "nanoid";
 // import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
+import { DEFAULT_COLOR } from "../../constants";
 
 interface AppHeaderProps {
   opened: boolean;
@@ -32,51 +31,66 @@ export const AppHeader = ({
   user,
   loginProvider
 }: AppHeaderProps) => {
-  const matches = useMediaQuery("(min-width: 450px)");
+  const matches = useMediaQuery("(max-width: 400px)");
+
+  function getRandomString(date:Date, stringList:string[]):string {
+    const randomIndex = Math.floor(date.getDate() % stringList.length);
+    return stringList[randomIndex];
+  }
+
+  const stringList = ['Campus Gossip',"Chisme.app","Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions","UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect", ];
+  const randomString = getRandomString(new Date(), stringList);
 
   return (
-    <Header height={70} p="md">
-      <div className="flex justify-between items-center h-full">
-        <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-          <Burger
+      <Group px="md" h="100%" justify="space-between" >
+        <Burger
             opened={opened}
             onClick={() => setOpened((o) => !o)}
             size="sm"
             color={color}
-            mr="xl"
+            hiddenFrom="sm"
             title="Hamburger"
-          />
-        </MediaQuery>
+        />
         <Link href="/">
           <Group>
-            <Image src="/logologo.svg" width={30} height={30} alt="Social U Logo" />
-            <Title className=' {font-family:"inter";} text-2xl'>UX</Title>
-            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <Title className=' {font-family:"inter";} text-2xl'> • Universidad Del Norte</Title>
-            </MediaQuery>
+            {/* <div className="flex space-x-2"> */}
+            <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
+              <Title className="hidden sm:block" order={3} >UX •</Title>
+              
+              <Title order={3}>{randomString}</Title>
+              
+            {/* </div> */}
           </Group>
         </Link>
         <Group>
           {user?.displayName && (
-            <MediaQuery smallerThan="md" styles={{ display: "none" }}>
-              <Text>{user?.displayName}</Text>
-            </MediaQuery>
+              <Text  className="hidden md:block">{user?.displayName}</Text>
           )}
           {user?.photoURL && <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
-          {user === null && (
-            <Link href="/welcome" >
+          {(user === null)&&(loginProvider) && (
               <Button
                 size={matches ? "md" : "xs"}
-              // onClick={loginProvider}
-                color="orange"
+                color={DEFAULT_COLOR}
+                onClick={loginProvider}
+                
               >
                 Iniciar Sesión
               </Button>
-              </Link>
           )}
+          {(user === null)&&(!loginProvider) && (
+              <Button
+                component={Link}
+                href="/welcome"
+                size={matches ? "md" : "xs"}
+                color={DEFAULT_COLOR}
+              >
+                Iniciar Sesión
+              </Button>
+
+          )}
+
           {user && <ColorSchemeToggle />}
         </Group>
-      </div>
-    </Header>
+      </Group>
   );
 };

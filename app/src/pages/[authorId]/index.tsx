@@ -48,22 +48,19 @@ export default function UserInfoAction() {
         radius="md"
         withBorder
         p="lg"
-        sx={(theme) => ({
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.white,
-        })}
+        bg="var(--mantine-color-body)"
       >
         <Avatar src={avatar} size={120} radius={120} mx="auto" />
-        <Text align="center" size="lg" weight={500} mt="md">
+        <Text ta="center" size="lg" w={500} mt="md">
           {author?.userName}
         </Text>
-        <Text align="center" color="dimmed" size="sm">
+        <Text ta="center" color="dimmed" size="sm">
           {email} • {job}
         </Text>
-        <Text align="center" className="mx-auto my-2 max-w-sm italic">
+        <Text ta="center" className="max-w-sm mx-auto my-2 italic">
           {author?.description}
         </Text>
-        {/* <Button variant="outline" className="mx-auto" color="orange" mt="md">
+        {/* <Button variant="outline" className="mx-auto" color={DEFAULT_COLOR} mt="md">
           Send message
         </Button> */}
       </Paper>

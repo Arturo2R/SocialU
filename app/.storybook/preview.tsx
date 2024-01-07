@@ -1,24 +1,43 @@
-import { useDarkMode } from "storybook-dark-mode";
-import { MantineProvider, ColorSchemeProvider } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
+// Import styles of packages that you've installed.
+// All packages except `@mantine/hooks` require styles imports
+import '@mantine/notifications/styles.css';
+import '@mantine/core/styles.css';
 import "../src/styles/globals.css";
-export const parameters = { layout: "fullscreen" };
 
-function ThemeWrapper(props: { children: React.ReactNode }) {
-  const a = 2;
-  return (
-    <ColorSchemeProvider colorScheme="light" toggleColorScheme={() => {}}>
-      <MantineProvider
-        theme={{ colorScheme: useDarkMode() ? "dark" : "light" }}
-        withGlobalStyles
-        withNormalizeCSS
-      >
-        <NotificationsProvider>{props.children}</NotificationsProvider>
-      </MantineProvider>
-    </ColorSchemeProvider>
-  );
+import React, { useEffect } from 'react';
+import { addons } from '@storybook/preview-api';
+import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
+import {
+  MantineProvider,
+  useMantineColorScheme,
+} from '@mantine/core';
+// theme.ts file from previous step
+// import { theme } from '../src/theme';
+
+const channel = addons.getChannel();
+
+function ColorSchemeWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { setColorScheme } = useMantineColorScheme();
+  const handleColorScheme = (value: boolean) =>
+    setColorScheme(value ? 'dark' : 'light');
+
+  useEffect(() => {
+    channel.on(DARK_MODE_EVENT_NAME, handleColorScheme);
+    return () => channel.off(DARK_MODE_EVENT_NAME, handleColorScheme);
+  }, [channel]);
+
+  return <>{children}</>;
 }
 
 export const decorators = [
-  (renderStory: Function) => <ThemeWrapper>{renderStory()}</ThemeWrapper>,
+  (renderStory: any) => (
+    <ColorSchemeWrapper>{renderStory()}</ColorSchemeWrapper>
+  ),
+  (renderStory: any) => (
+    <MantineProvider>{renderStory()}</MantineProvider>
+  ),
 ];

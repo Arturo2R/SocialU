@@ -1,12 +1,12 @@
 import {
-  Container,
-  Space,
-  Stack
+  Container
 } from "@mantine/core";
-import { useEffect } from "react";
-import { useFirestore } from "../../hooks/useFirestore";
-import { Post } from "../Post/Post";
+import Masonry from 'react-masonry-css';
+import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
+import mansory from "./Feed.module.css";
+import { useData } from "../../context/DataStateContext";
+
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
@@ -20,44 +20,42 @@ export function Feed({ data, user }:FeedProps) {
   // error state
   // const [error, setError] = useState<Error | null>(null);
   // const [isLoading, setIsLoading] = useState<"loading" | "loaded">("loading");
-  const {
-    data: liveData,
-    // error: dataError,
-    // postsLoading,
-    fetchData,
-  } = useFirestore();
-  // console.log(data);
-  useEffect(() => {
-    // setIsLoading("loading");
-    fetchData()//.then(() => setIsLoading("loaded"));
-    // return () => {
-    // };
-  }, []);
+  const {data:liveData} = useData()
 
   // if (postsLoading === "loading") {
   //   return (
-  //     <Center className="my-auto h-full">
-  //       <Loader color="orange" size="lg" variant="bars" />
+  //     <Center className="h-full my-auto">
+  //       <Loader color={DEFAULT_COLOR} size="lg" variant="bars" />
   //     </Center>
   //   );
   // }
 
   // if (error) return <Text>{error}</Text>;
   // console.log(postsLoading);
+  const breakpointColumnsObj = {
+    1920:6,
+    1600: 3,
+    1024: 3,
+    900: 2,
+    500: 1,
+    default: 1,
+  };
   return (
     <>
-      {/* {isLoading === "loading" && (
-        <Center className="my-auto h-full">
-          <Loader color="orange" size="lg" variant="bars" />
-        </Center>
-      )} */}
-      {/* {isLoading === "loaded" && ( */}
+
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
-      <Container className="p-0 lg:px-12">
-        <Space h="md" />
-        <Stack spacing="lg" className="mx-auto max-w-sm">
+      <Container className="p-0">
+
+        {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
+        {/* ts-ignore */}
+        <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className={mansory.grid}          
+          columnClassName={mansory.column}>
+      
           {(liveData ?? data).map((post: any, index: number) => (
-            <Post
+            <PostCard
+              imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}
               author={
@@ -78,9 +76,11 @@ export function Feed({ data, user }:FeedProps) {
               asistants={post?.suscriptions}
             />
           ))}
-        </Stack>
+          
+        </Masonry>
+        {/* </Stack> */}
       </Container>
-      {/* )} */}
+      
     </>
   );
 }

@@ -1,10 +1,11 @@
-import { ActionIcon, Checkbox, Group, Switch, Textarea } from "@mantine/core";
+import { ActionIcon,Switch, Textarea } from "@mantine/core";
 import React from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
 import { useFirestore } from "../../hooks/useFirestore";
 import { useAuth } from "../../context/AuthContext";
+import { DEFAULT_COLOR } from "../../constants";
 
 type Props = {
   postId: string;
@@ -47,7 +48,7 @@ const CommentForm = (props: Props) => {
           {...form.getInputProps("content")}
         />
         <Switch
-          color="orange"
+          color={DEFAULT_COLOR}
           label="Enviar Anonimamente"
           checked={anonimo}
           onChange={(e) => {
@@ -60,7 +61,7 @@ const CommentForm = (props: Props) => {
       
       <ActionIcon
         className="flex-none"
-        color="orange"
+        color={DEFAULT_COLOR}
         size="xl"
         radius="md"
         variant="light"

@@ -1,14 +1,18 @@
-import { createGetInitialProps } from "@mantine/next";
 import Document, { Html, Head, Main, NextScript } from "next/document";
-import Script from "next/script";
-const getInitialProps = createGetInitialProps();
+// import Script from "next/script";
+import { ColorSchemeScript } from '@mantine/core';
 
 export default class _Document extends Document {
-  static getInitialProps = getInitialProps;
   render() {
     return (
       <Html lang="es">
         <Head>
+          <ColorSchemeScript defaultColorScheme="auto" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `history.scrollRestoration = "manual"`,
+            }}
+           />
           {/* <link rel="shortcut icon" href="/favicon.svg" /> */}
           <link
             rel="apple-touch-icon"
@@ -87,10 +91,10 @@ export default class _Document extends Document {
             color="#5bbad5"
           /> */}
           <link rel="shortcut icon" href="/favicon.ico" />
-          <link
+          {/* <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
-          />
+          /> */}
 
           {/* <meta name="twitter:card" content="summary" />
           <meta name="twitter:url" content="https://yourdomain.com" />
