@@ -1,43 +1,109 @@
-import { Meta, Story } from '@storybook/react';
-// import React from 'react';import React from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import { PostCard } from "./Post";
 
-import { Post, PostProps } from "./Post";
-
-export default {
-  component: Post,
-  title: "Post",
-}as Meta;
-
-
-const Template: Story<PostProps> = (args) => (<div className="max-w-md"><Post {...args} /></div>);
-
-export const Default = Template.bind({});
-
-Default.args = {
-  title: "Post title",
-  description: "CUal quier vaina",
-  author: "anonimo",
-  userUID: "kfjñalskfjañlskdfjslk"
+const meta: Meta<typeof PostCard> = {
+  component: PostCard,
 };
 
-export const Simple = Template.bind({});
+export default meta;
 
-Simple.args = {
-  ...Default.args,
-  event: true,
-  postId: "kljfsld",
-  author: {
-    image: "/profile.jpg",
-    name: "Arturo R",
-    id: "fsdkldj",
-  },
-  asistants: [
-    {
-      user: { 
-        name: "Juan",
-        image: "https://source.unsplash.com/random/30x40",
-        ref: "user/kljlafds",
-      }
+type Story = StoryObj<PostCardProps>;
+
+// interface PostCardProps  {
+//     author:
+//     | { image?: string | null; name: string; id: string }
+//     | "anonimo";
+//     imageData?: imageData;
+//     image?: string;
+//     description: string;
+//     title: string;
+//     date?: Date;
+//     event?: boolean;
+//     postId?: string;
+//     // relevantCommentary?: Object;
+//     asistants?: {
+//       user: {
+//         image: string;
+//         name: string;
+//         ref: `user/${string}`;
+//       };
+//       suscribedAt?: Timestamp;
+//     }[];
+//     // key: number;
+//     userUID?: string;
+//   }
+
+export const SimpleConImagenVerticalLarga: Story = {
+  args: {
+    author: "anonimo",
+    title: "title",
+    image: "https://firebasestorage.googleapis.com/v0/b/socialu-c62e6.appspot.com/o/postsBanners%2F28487583.webp?alt=media&token=bd0acffd-2910-46cd-b0be-11487f75c935",
+    description: "description",
+    postId: "postId",
+    userUID: "userUID",
     },
-  ],
 };
+
+export const conAutor: Story = {
+    args: {
+        author: {
+            id: "id",
+            name: "Julian Roberto Pajaro",
+            image: "https://firebasestorage.googleapis.com/v0/b/socialu-c62e6.appspot.com/o/postsBanners%2F28487583.webp?alt=media&token=bd0acffd-2910-46cd-b0be-11487f75c935",  
+        },
+        title: "Que Pasa mi Cuate",
+        description: "Esta es una descripción mock de un post",
+        postId: "postId",
+        userUID: "userUID",
+        },
+    };
+
+
+    // ...
+
+    export const ConImagenHorizontal: Story = {
+        args: {
+            author: {
+                id: "id",
+                name: "John Doe",
+                image: "https://example.com/john-doe.jpg",
+            },
+            title: "Lorem ipsum dolor sit amet",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae metus euismod, aliquet nunc id, aliquam nunc.",
+            postId: "postId",
+            userUID: "userUID",
+        },
+    };
+
+    export const SinImagen: Story = {
+        args: {
+            author: {
+                id: "id",
+                name: "Jane Smith",
+                image: null,
+            },
+            title: "Nulla facilisi",
+            description: "Nulla facilisi. Sed euismod, urna a aliquet tincidunt, nunc nunc tincidunt urna, nec tincidunt urna nunc ac tellus.",
+            postId: "postId",
+            userUID: "userUID",
+        },
+    };
+
+    export const ConEvento: Story = {
+        args: {
+            author: {
+                id: "id",
+                name: "Alice Johnson",
+                image: "https://example.com/alice-johnson.jpg",
+            },
+            title: "Event Title",
+            description: "This is a description of an event post",
+            postId: "postId",
+            userUID: "userUID",
+            event: true,
+        },
+    };
+
+    // ...
+
+

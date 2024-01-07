@@ -15,7 +15,7 @@ import { useState } from "react";
 
 export interface CommentProps {
   id: string;
-  parentId: string | null;
+  parentId?: string;
   postedAt: Timestamp;
   content: string;
   author: { name: string; image: string } | "anonimo";

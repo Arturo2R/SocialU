@@ -37,6 +37,29 @@ interface FormInputs {
   MyCheckbox: boolean
 }
 
+export const checkImage = async (url:string, cacheImage?:boolean): Promise<boolean> => {
+  let data = {
+    "DataRepresentation":"URL",
+    "Value": url
+  };
+  let isPorn : boolean = false
+  try {
+    let response = await fetch(process.env.NEXT_PUBLIC_AZURE_NAP_URL + `/contentmoderator/moderate/v1.0/ProcessImage/Evaluate${cacheImage ?"?CacheImage=true" : ""}`  , {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Ocp-Apim-Subscription-Key': process.env.NEXT_PUBLIC_AZURE_NAP_KEY || "",
+      },
+      body: JSON.stringify(data)
+    });
+
+    let result = await response.json();
+    isPorn = result.IsImageAdultClassified
+  } catch (error) {
+    console.error("Un error mirando la imagen", error)
+  }
+  return isPorn
+}
 
 const CrearPost = () => {
   const {user} = useAuth()
@@ -69,32 +92,9 @@ const CrearPost = () => {
   const router = useRouter();
   
 
-  const checkImage = async (url:string): Promise<boolean> => {
-    let data = {
-      "DataRepresentation":"URL",
-      "Value": url
-    };
-    let isPorn : boolean = false
-    try {
-      let response = await fetch('https://nap.cognitiveservices.azure.com/contentmoderator/moderate/v1.0/ProcessImage/Evaluate?', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Ocp-Apim-Subscription-Key': 'a4b85165c2584472a9f2b5dd6101525f',
-        },
-        body: JSON.stringify(data)
-      });
-  
-      let result = await response.json();
-      console.log(result)
-      isPorn = result.IsImageAdultClassified
-    } catch (error) {
-      console.error("Un error mirando la imagen", error)
-    }
-    return isPorn
-  }
-
+  const [imageChecking, setImageChecking] = useState<null|"loading"|"loaded">(null)
   useEffect(() => {
+    setImageChecking("loading")
     if(imageUrl){
       checkImage(imageUrl)
         .then(porn =>{ 
@@ -108,6 +108,7 @@ const CrearPost = () => {
         }
         )
     }
+    setImageChecking("loading")
   }, [imageUrl]);
 
 

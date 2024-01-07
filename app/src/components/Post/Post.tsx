@@ -3,19 +3,14 @@ import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, FC, useEffect } from "react";
-// import { useAuth } from "../../context/AuthContext";
 import { useFirestore } from "../../hooks/useFirestore";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
-// import markdownToHtml from "../../lib/mardown";
 
 import {
-  // Anchor,
-  // Avatar,
   Card,
   Collapse,
   Group,
-  // Image,
   Spoiler,
   Stack,
   Text,
@@ -23,16 +18,6 @@ import {
   Button,
 } from "@mantine/core";
 import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
-// import BiggerPicture from "bigger-picture";
-// type author =
-//   | {
-//       image: string;
-//       name: string;
-//       id?: string;
-//       // ref?: `user/${string}`;
-//     }
-//   | "anonimo";
-
 
 
 export const PostCard: FC<PostCardProps> = ({
@@ -48,16 +33,10 @@ export const PostCard: FC<PostCardProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
-
-
-
-
-  // useEffect(() => {
-  const sera = (): boolean => {
+  const suscribeUserIfNotSuscribed = (): boolean => {
     let isSuscribed: boolean
     if (event && asistants && userUID) {
       isSuscribed = asistants.some((item) => {
-        // console.log(item.user.ref, `user/${user?.uid}`)
         return item.user.ref == `user/${userUID}`
       })
     } else { isSuscribed = false }
@@ -67,11 +46,11 @@ export const PostCard: FC<PostCardProps> = ({
   const [suscribed, setSuscribed] = useState<boolean>(false);
 
   useEffect(() => {
-    setSuscribed(sera())
+    setSuscribed(suscribeUserIfNotSuscribed())
   }, [asistants])
 
 
-  const aja = () => {
+  const show0IfThereisNoSuscribers = () => {
     if (asistants === undefined || asistants.length == 0) {
       return true;
     }
@@ -83,7 +62,7 @@ export const PostCard: FC<PostCardProps> = ({
 
   const { suscribe } = useFirestore();
   return (
-    <article className="px" id={postId}>
+    <article className="max-w-sm px" id={postId}>
       <Card withBorder p="xs" radius="md">
         <Link
           href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
@@ -165,7 +144,7 @@ export const PostCard: FC<PostCardProps> = ({
                 }}
                 variant="light"
                 gradient={DEFAULT_GRADIENT}
-                disabled={aja()}
+                disabled={show0IfThereisNoSuscribers()}
                 // rightIcon={<ChevronsRight />}
               >
                 {asistants?.length} Asistentes
