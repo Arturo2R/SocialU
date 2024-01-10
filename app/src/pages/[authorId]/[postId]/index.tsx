@@ -10,6 +10,7 @@ import {
   Text,
   Title,
   ActionIcon,
+  Loader,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -28,6 +29,7 @@ import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
 import { useMediaQuery } from "@mantine/hooks";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
+import { GetStaticPaths } from "next";
 // import "bigger-picture";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
@@ -38,7 +40,7 @@ dayjs.extend(relativeTime);
 dayjs.locale(es);
 // const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
-export async function getServerSideProps(context: any) {
+export async function getStaticProps(context: any) {
   const { postId, authorId } = context.params
   console.log(PATH)
   const postRef = doc(db, PATH, postId);
@@ -46,15 +48,12 @@ export async function getServerSideProps(context: any) {
   const postSnap: anything = await getDoc(postRef);
   const data:Post = postSnap.data()
   console.log(data);
-  
   // if (!data) {
     
   //   return {
   //     notFound: true,
   //   }
-  // }
-  
-  
+  // }  
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
@@ -62,17 +61,24 @@ export async function getServerSideProps(context: any) {
     ...(data?.time && { time: JSON.stringify(data.time) }),
   }
   return {
+    revalidate: 90,
     props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
   }
 }
 
-// export async function getStaticPaths(){
-//   const q = query(collection(db, PATH), limit(100))
-
-//   const posts = await getDocs(q)
-//   posts.metadata.
-//   const ids = posts.docs.map((obj) => obj.id);
-// }
+export const getStaticPaths = (async () => {
+  return {
+    paths: [
+      {
+        params: {
+          postId: 'yWzSVpu',
+          authorId: 'anonimo',
+        },
+      }, // See the "paths" section below
+    ],
+    fallback: "blocking", // false or "blocking"
+  }
+}) satisfies GetStaticPaths
 
 const PageWrapper = ({ children }: any) => {
   const matches = useMediaQuery('(min-width: 780px)', true, {
@@ -94,51 +100,31 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
   // const [respondTo, setRespondTo] = useState("")
-  console.log(content)
-  const [loading, setLoading] = useState(false);
+  console.log(id)
   const [comments, setComments] = useState<CommentProps[] | undefined>();
 
-
-
-  const fetchComments = async () => {
-    try {
-      setLoading(true);
-      let q = query(
-        collection(db, PATH, id, "comments"),
-        orderBy("postedAt", "desc")
-        // limit(20)
-      );
-
-      onSnapshot(q, (querySnapshot: any) => {
-        const commentsDB = querySnapshot.docs
-          .map((doc: anything) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .map((comment: any) => ({
-            ...comment,
-            author: comment.anonimo === true ? "anonimo" : comment.author,
-          }));
-        // console.log("raw", commentsDB);
-        setComments(commentsDB);
-      });
-
-      // const querySnapshot = await getDocs(q);
-
-      // console.log("nested data", nestComments(commentsDB));
-    } catch (error) {
-      // console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    // fetchContent();
-    fetchComments();
-    // return () => {
-    //   setComments(undefined);
-    // };
+    let q = query(
+      collection(db, PATH, id, "comments"),
+      orderBy("postedAt", "desc")
+      // limit(20)
+    );
+    const unsuscribe = onSnapshot(q, (querySnapshot: any) => {
+      const commentsDB = querySnapshot.docs
+        .map((doc: anything) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .map((comment: any) => ({
+          ...comment,
+          author: comment.anonimo === true ? "anonimo" : comment.author,
+        }));
+      // console.log("raw", commentsDB);
+      setComments(commentsDB);
+    });
+    return () => {
+      unsuscribe()
+    };
   }, []);
   
   
@@ -152,6 +138,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   //   );
   // }
   // if (error) return <Text>{error}</Text>;
+  
   const fecha: Date = content.createdAt
 
   return (
@@ -168,7 +155,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <ActionIcon variant="light" color="gray" component={Link}  classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-            <Image component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
+            <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
             <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
@@ -230,12 +217,9 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       )} */}
 
         <div className="z-10 my-2">
+          
           <Title order={3} mb="sm" >Comentarios</Title>
-          {console.log("consoleado", comments)}
-
-          <CommentWall postId={id} comments={comments}
-          //setRespondTo={setRespondTo} 
-          />
+            <CommentWall postId={id} comments={comments}/>
         </div>
 
       </PageWrapper>
