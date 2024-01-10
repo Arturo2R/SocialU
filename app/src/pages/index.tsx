@@ -1,8 +1,8 @@
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
-import { PATH } from "../constants";
+// import { PATH } from "../constants";
 import { useAuth } from "../context/AuthContext";
-import { db } from "../firebase";
+// import { db } from "../firebase";
 
 
 

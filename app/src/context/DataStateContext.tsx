@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 
 interface DataStateContextInterface {
-    data: Post[];
+    data: Post[] | undefined;
+    postsLoading: "loading" | "loaded" | "error";
     // error: any;
     // loading: boolean;
     // fetchData: () => void;
@@ -24,6 +25,7 @@ export function DataStateProvider({ children }: { children: React.ReactNode }) {
         // error: dataError,
         // postsLoading,
         fetchData,
+        postsLoading
       } = useFirestore();
 
       useEffect(() => {
@@ -37,6 +39,7 @@ return (
     <dataStateContext.Provider
         value={{
         data,
+        postsLoading
         }}
     >
         {children}

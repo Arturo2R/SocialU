@@ -2,8 +2,8 @@ import Link from "next/link";
 import { useState } from 'react';
 import { Group, Code } from '@mantine/core';
 import {
-  IconLogout,
-} from '@tabler/icons-react';
+  Logout,
+} from 'tabler-icons-react';
 // import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './NavbarSimple.module.css';
 import { useAuth } from "../../context/AuthContext";
@@ -51,7 +51,7 @@ export function AppNavbar() {
         </a> */}
         <Protected.Component>
           <a href="#" className={classes.link} onClick={() => logout()}>
-            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <Logout className={classes.linkIcon} stroke="1.5" />
             <span>Logout</span>
           </a>
         </Protected.Component>
