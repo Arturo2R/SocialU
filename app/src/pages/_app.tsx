@@ -15,21 +15,25 @@ import { DataStateProvider } from "../context/DataStateContext";
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
   // Check that PostHog is client-side (used to handle Next.js SSR)
-if (typeof window !== 'undefined') {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
-    // Enable debug mode in development
-    loaded: (posthog) => {
-      if (process.env.NODE_ENV === 'development') posthog.debug()
-    }
-  })
+  if (typeof window !== 'undefined') {
+    setTimeout(() => {
+      // Your code here
+      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
+        opt_in_site_apps: true,
+        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+        // Enable debug mode in development
+        loaded: (posthog) => {
+          if (process.env.NODE_ENV === 'development') posthog.debug()
+        }
+    })
+  }, 0);
 }
 
 export default function App(props: AppProps & { colorScheme: MantineColorScheme }) {

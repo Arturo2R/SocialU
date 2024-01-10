@@ -7,7 +7,6 @@ import {
   getDoc, getDocs, limit,
   onSnapshot,
   orderBy,
-  // QuerySnapshot,
   query,
   serverTimestamp,
   setDoc, updateDoc, where

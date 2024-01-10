@@ -1,6 +1,5 @@
 import { Paper, TypographyStylesProvider } from '@mantine/core'
 import React from 'react'
-import SEO from '../SEO'
 import Layout from './Layout'
 
 type Props = {
@@ -15,7 +14,7 @@ type Props = {
 
 export const MDXLayout = ({meta,children}: Props) => {
   return (
-    <Layout>
+    <Layout> 
       <Paper p="md" shadow="sm" radius="md">
         <TypographyStylesProvider>
           {children}

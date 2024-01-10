@@ -6,11 +6,12 @@ import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
 import { useData } from "../../context/DataStateContext";
+import { Suspense } from "react";
 
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
-  data: Post[],
+  data?: Post[],
   user?: UserState,
 }
 
@@ -48,12 +49,15 @@ export function Feed({ data, user }:FeedProps) {
 
         {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
         {/* ts-ignore */}
-        <Masonry
+        {liveData && (
+          
+          
+          <Masonry
           breakpointCols={breakpointColumnsObj}
           className={mansory.grid}          
           columnClassName={mansory.column}>
       
-          {(liveData ?? data).map((post: any, index: number) => (
+          {(liveData).map((post: any, index: number) => (
             <PostCard
               imageData={post?.imageData }
               userUID={user?.uid}
@@ -62,11 +66,11 @@ export function Feed({ data, user }:FeedProps) {
                 post.anonimo
                   ? "anonimo"
                   : {
-                      name: post.useUserName ? post.userName : post.authorName ,
+                    name: post.useUserName ? post.userName : post.authorName ,
                       id: post.userName||post.authorName,
                       ...(post.authorImage && { image: post.authorImage }),
                     }
-              }
+                  }
               title={post.title}
               image={post.image}
               // asistants={post.asistants} // Añadir asistentes
@@ -78,6 +82,7 @@ export function Feed({ data, user }:FeedProps) {
           ))}
           
         </Masonry>
+        )}
         {/* </Stack> */}
       </Container>
       

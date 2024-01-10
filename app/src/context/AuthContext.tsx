@@ -177,7 +177,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           "No estas usando un correo universtario de una de nuestras universidades permitidas",
         color: "red",
         icon: <X/>,
-        // className: "my-notification-class",
       });
     }
     return () => unsubuscribe();

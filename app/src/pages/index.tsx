@@ -5,39 +5,13 @@ import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 
 
-export const getServerSideProps = async () => {
-  const { collection, getDocs, limit, orderBy, query } = await import("@firebase/firestore");
 
-  const q = query(
-    collection(db, PATH),
-    orderBy("createdAt", "desc"),
-    limit(5)
-  );
-
-  const querySnapshot = await getDocs(q);
-
-  const data = querySnapshot.docs.map((doc: any) => ({
-    id: doc.id,
-    ...doc.data(),
-    createdAt: doc?.data()?.createdAt?.toJSON(),
-    ...(doc.data().date && { date: doc?.data()?.date?.toJSON() }),
-    ...(doc.data().time && {
-      time: JSON.stringify(doc?.data()?.time),
-    }),
-  }));
-
-  return {
-    props: {
-      data,
-    },
-  };
-};
 
 interface HomeProps {
   data: Post[];
 }
 
-export default function HomePage({ data }: HomeProps) {
+export default function HomePage() {
   const { user } = useAuth();
 
   let baseStyles = [
@@ -50,7 +24,8 @@ export default function HomePage({ data }: HomeProps) {
 
   return (
     <Layout>
-      <Feed data={data} user={user || undefined} />
+
+      <Feed  user={user || undefined} />
     </Layout>
   );
 }

@@ -25,14 +25,10 @@ export function DataStateProvider({ children }: { children: React.ReactNode }) {
         // postsLoading,
         fetchData,
       } = useFirestore();
-       const [fetched, setFetched] = useState<number>(0)
 
       useEffect(() => {
         // setIsLoading("loading");
         fetchData()//.then(() => setIsLoading("loaded"));
-        let la = fetched +1
-        setFetched(la)
-        console.log("Fecheado a firestore", fetched);
         // return () => {
         // };
       }, []);

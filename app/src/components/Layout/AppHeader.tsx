@@ -55,18 +55,16 @@ export const AppHeader = ({
           <Group>
             {/* <div className="flex space-x-2"> */}
             <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
-              <Title className="hidden sm:block" order={3} >UX •</Title>
-              
-              <Title order={3}>{randomString}</Title>
-              
-            {/* </div> */}
+              <Title order={3} className="w-auto" >Social U<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
         <Group>
           {user?.displayName && (
               <Text  className="hidden md:block">{user?.displayName}</Text>
           )}
-          {user?.photoURL && <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
+          {user && (
+              <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />
+          )}
           {(user === null)&&(loginProvider) && (
               <Button
                 size={matches ? "md" : "xs"}
@@ -88,6 +86,8 @@ export const AppHeader = ({
               </Button>
 
           )}
+          
+          {user?.photoURL && <Avatar alt={`${user.displayName} image`} className="hidden sm:inline-block" radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
 
           {user && <ColorSchemeToggle />}
         </Group>
