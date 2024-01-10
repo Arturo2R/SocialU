@@ -1,4 +1,4 @@
-import { IconBellRinging, IconSend, IconSettings } from "@tabler/icons-react";
+import { IconBellRinging, IconSend, IconSettings, } from "tabler-icons-react";
 
 export default function () {
   return {
