@@ -22,7 +22,7 @@ export const useFirestore = () => {
   const [error, setError] = useState(null);
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
-  >();
+  >("loading");
   const [creating, setCreating] = useState<boolean>(false);
 
 
@@ -64,10 +64,10 @@ export const useFirestore = () => {
         }));
         // console.log(dataDB);
         setData(dataDB);
-        setPostsLoading("loaded");
       });
     } catch (thiserror: any) {
-   // console.log(thiserror);
+        console.log(thiserror);
+        setPostsLoading("error");
 
       //ts-ignore
       setError(thiserror.message);
