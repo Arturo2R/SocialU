@@ -1,17 +1,44 @@
 import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
-import { PATH } from "../constants";
+import { PATH, MAX_SERVER_SIDE_RESULTS } from "../constants";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase";
-
-
 
 
 interface HomeProps {
   data: Post[];
 }
 
-export default function HomePage() {
+export const getServerSideProps = async () => {
+  const { collection, getDocs, limit, orderBy, query } = await import("@firebase/firestore");
+
+  const q = query(
+    collection(db, PATH),
+    orderBy("createdAt", "desc"),
+    limit(MAX_SERVER_SIDE_RESULTS)
+  );
+
+  const querySnapshot = await getDocs(q);
+
+  const data = querySnapshot.docs.map((doc: any) => ({
+    id: doc.id,
+    ...doc.data(),
+    createdAt: doc?.data()?.createdAt?.toJSON(),
+    ...(doc.data().date && { date: doc?.data()?.date?.toJSON() }),
+    ...(doc.data().time && {
+      time: JSON.stringify(doc?.data()?.time),
+    }),
+  }));
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
+
+
+export default function HomePage({data}: HomeProps) {
   const { user } = useAuth();
 
   let baseStyles = [
@@ -24,8 +51,7 @@ export default function HomePage() {
 
   return (
     <Layout>
-
-      <Feed  user={user || undefined} />
+      <Feed data={data} user={user || undefined} />
     </Layout>
   );
 }
