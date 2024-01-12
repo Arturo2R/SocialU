@@ -9,7 +9,6 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { UserCredential } from "firebase/auth";
-import { random } from "nanoid";
 // import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -55,7 +54,7 @@ export const AppHeader = ({
           <Group>
             {/* <div className="flex space-x-2"> */}
             <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
-              <Title order={3} className="w-auto" >Social U<div className="hidden sm:inline"> • {randomString}</div></Title>
+              <Title order={3} className="w-auto" >Social UX<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
         <Group>
