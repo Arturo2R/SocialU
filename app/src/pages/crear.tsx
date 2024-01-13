@@ -4,7 +4,6 @@ import {
   Input,
   Modal,
   Textarea,
-  TypographyStylesProvider
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
@@ -146,7 +145,7 @@ const CrearPost = () => {
       >
        <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
       </Modal>
-        <Container className="h-full">
+        <Container p={0} className="h-full">
           <form
             onSubmit={handleSubmit(submitPost)}
             className="flex flex-col justify-between h-full"

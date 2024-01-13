@@ -6,6 +6,7 @@ import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
 import { useData } from "../../context/DataStateContext";
+import PostCardLoading from "../Post/PostCardLoading";
 
 // import InfiniteScroll from 'react-infinite-scroller';
 
@@ -79,7 +80,7 @@ export function Feed({ data, user }:FeedProps) {
               asistants={post?.suscriptions}
             />
           ))}
-          
+          {!liveData && <PostCardLoading/>}
         </Masonry>
         
         {/* </Stack> */}
