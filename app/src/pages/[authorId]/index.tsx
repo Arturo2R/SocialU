@@ -3,6 +3,9 @@ import { Avatar, Text, Paper } from '@mantine/core';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout/Layout';
 import { useFirestore } from '../../hooks/useFirestore';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
+import { GetStaticPaths } from 'next';
+import { db } from '../../firebase';
 
 // interface UserInfoActionProps {
 //   avatar: string;
@@ -11,24 +14,51 @@ import { useFirestore } from '../../hooks/useFirestore';
 //   job: string;
 // }
 
-// export const getStaticProps = () => { 
-//   return {}
-// }
-
-// export async function getStaticPaths () { 
+export const getStaticProps = async (ctx:any) => {
+  const { authorId } = ctx.params;
   
-// }
+  if (typeof authorId === 'string') {
+    try {
+      const userRef = query(collection(db, 'user'), where("userName", "==", authorId), limit(1))
+      const user = await getDocs(userRef)
+      
+      const data = user.docs[0].data()
+      
+      return {
+        revalidate: 2000,
+        props:{author: data, authorId}
+      }
+    } catch (error) {
+      return {
+        notFound: true,
+      }
+    }
+  } else {
+    return {
+      notFound: true,
+    }
+  }
+}
 
-export default function UserInfoAction() {
-  const router = useRouter();
-  const { authorId } = router.query;
+export const getStaticPaths = (async () => {
+  return {
+    paths: [
+      {
+        params: {
+          authorId: 'arosenstielhl',
+        },
+      }, // See the "paths" section below
+    ],
+    fallback: "blocking", // false or "blocking"
+  }
+}) satisfies GetStaticPaths
+
+export default function UserInfoAction({author, authorId}) {
   // console.log(authorId);
   // const [author, setAuthor] = useState<any| undefined>()
-  const {fetchUser, authorProfile:author} = useFirestore()
   
   
   useEffect(() => {
-    typeof authorId === 'string' && fetchUser(authorId)
     // console.log(author)
   }, [])
 
