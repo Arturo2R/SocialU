@@ -48,12 +48,11 @@ export async function getStaticProps(context: any) {
   const postSnap: anything = await getDoc(postRef);
   const data:Post = postSnap.data()
   console.log(data);
-  // if (!data) {
-    
-  //   return {
-  //     notFound: true,
-  //   }
-  // }  
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }  
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
