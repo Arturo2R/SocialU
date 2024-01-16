@@ -11,6 +11,7 @@ import Protected from "../Protected";
 import Config from "../../config"
 
   const data = Config().sidebar
+  const version = Config().version
 
 export function AppNavbar() {
   // const { classes, cx } = useStyles();
@@ -37,7 +38,7 @@ export function AppNavbar() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           {/* <MantineLogo size={28} /> */}
-          <Code fw={700}>v3.1.2</Code>
+          <Code fw={700}>{version}</Code>
         </Group>
         <Protected.Component>
           {links}

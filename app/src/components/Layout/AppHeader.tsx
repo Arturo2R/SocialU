@@ -14,6 +14,7 @@ import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import { DEFAULT_COLOR } from "../../constants";
+import config from "../../config";
 
 interface AppHeaderProps {
   opened: boolean;
@@ -37,8 +38,9 @@ export const AppHeader = ({
     return stringList[randomIndex];
   }
 
-  const stringList = ['Campus Gossip',"Chisme.app","Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions","UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect", ];
+  const stringList = config().appNames;
   const randomString = getRandomString(new Date(), stringList);
+  const officialAppName = config().siteName
 
   return (
       <Group px="md" h="100%" justify="space-between" >
@@ -54,7 +56,7 @@ export const AppHeader = ({
           <Group>
             {/* <div className="flex space-x-2"> */}
             <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
-              <Title order={3} className="w-auto" >Social UX<div className="hidden sm:inline"> • {randomString}</div></Title>
+              <Title order={3} className="w-auto" >{officialAppName}<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
         <Group>
