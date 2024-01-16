@@ -15,6 +15,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
 import {PATH} from "../constants"
+import posthog from "posthog-js";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
@@ -269,6 +270,7 @@ export const useFirestore = () => {
 
   const createOrFetchUser = async (user: any, setter: Function) => {
     // const {state} = useStore();
+    console.log("Buscando al Usuario", user.email)
 
     // const { currentUser: user } = authData;
     const userRef = doc(db, "user", user.uid);
@@ -284,10 +286,15 @@ export const useFirestore = () => {
       if (docExists) {
         userProfile = userSnap.data();
         setter(userProfile);
+
+        posthog.identify(user.uid, {
+          last_login: user.metadata.lastSignInTime,
+        })
+
       } else {
         if (user?.displayName && user?.uid && user?.email) {
           try {
-         // console.log("Creando Un Nuevo Usuario");
+            console.log("Creando Un Nuevo Usuario");
             setCreating(true);
 
             const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
@@ -308,11 +315,16 @@ export const useFirestore = () => {
               ...(user.photoURL && { photoURL: user.photoURL }),
             };
             setter(Payload);
-            await setDoc(userRef, Payload);
+            await setDoc(userRef, Payload)
           } catch (error) {
-              console.log(error);
+            console.log(error);
           } finally {
             setCreating(false);
+            posthog.identify(user.uid, {
+              university: "Universidad Del Norte",
+              created: user.metadata.creationTime,
+              last_login: user.metadata.lastSignInTime,
+            })
             // console.log(useStore.getState().user);
           }
         }
