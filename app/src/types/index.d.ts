@@ -50,6 +50,7 @@ declare global {
 
   interface ComputedPost extends FormPost {
     imageData?: imageData;
+    computedDate?: Date;
   }
   
   interface PostCardProps  {

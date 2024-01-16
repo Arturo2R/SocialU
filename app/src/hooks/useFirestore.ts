@@ -100,8 +100,8 @@ export const useFirestore = () => {
 
         const generatedPostId = await nanoid(7);
         console.log(PATH)
-        const postsRef = doc(db, "posts", generatedPostId);
-        const publicRef = doc(db, PATH, generatedPostId);
+        const allPostsRef = doc(db, "posts", generatedPostId);
+        const onlyPublicPostsRef = doc(db, PATH, generatedPostId);
         // const formatted = await markdownToHtml(formData.message)
         // console.log(formatted)
         let newPost: Post = {
@@ -129,17 +129,17 @@ export const useFirestore = () => {
 
 
         if (formData.anonimo) {
-          await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
+          await setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), });
         } else {
-          await setDoc(publicRef, newPost);
+          await setDoc(onlyPublicPostsRef, newPost);
         }
         // setData([...data, newPost]);
 
 
-        await setDoc(postsRef, newPost);
+        await setDoc(allPostsRef, newPost);
       } catch (thiserror: any) {
         setCreatingPost("error")
-        console.log(thiserror.message);
+        console.error(thiserror.message);
       } finally {
         setCreatingPost("loaded")
       }
@@ -220,7 +220,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
-        const publicRef = collection(db, PATH, data.postId, "comments");
+        const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -236,9 +236,9 @@ export const useFirestore = () => {
         };
 
         if (data.anonimo) {
-          await addDoc(publicRef, { ...Payload, author: "anonimo" });
+          await addDoc(onlyPublicPostsRef, { ...Payload, author: "anonimo" });
         } else {
-          await addDoc(publicRef, Payload);
+          await addDoc(onlyPublicPostsRef, Payload);
         }
 
         await addDoc(commentRef, Payload);

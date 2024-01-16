@@ -45,7 +45,7 @@ export function Feed({ data, user }:FeedProps) {
     <>
 
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
-      <Container className="p-0">
+      <Container className="p-0 mb-10 md:mb-0">
 
         {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
         {/* ts-ignore */}

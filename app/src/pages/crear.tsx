@@ -116,6 +116,10 @@ const CrearPost = () => {
       let payload: ComputedPost = postValues
       if(postValues.image && imageData) {
         payload = {...postValues, imageData: imageData}
+      } 
+      if (postValues.date && postValues.time) {
+        console.log("date: ", postValues.date, "time: ", postValues.time)
+        payload = {...payload, computedDate: new Date(postValues.date.toISOString().split('T')[0] + "T" + postValues.time + ":00")}
       }
       console.log("sip", payload)
       createPost(payload, user);

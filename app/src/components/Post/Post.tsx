@@ -96,7 +96,7 @@ export const PostCard: FC<PostCardProps> = ({
               </Card.Section>
             )}
             {/* <Badge>{category}</Badge> */}
-            <Title lineClamp={2} order={3} className="text-xl font-bold">{title}</Title>
+            <Title lineClamp={2} order={3} className="text-xl font-bold break-words text-pretty hyphens-auto"  lang="es">{title}</Title>
           </>
         </Link>
         {author !== "anonimo" ? (

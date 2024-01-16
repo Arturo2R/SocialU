@@ -58,6 +58,7 @@ export async function getStaticProps(context: any) {
     createdAt: data?.createdAt?.toMillis(),
     ...(data?.date && { date: data.date.toJSON() }),
     ...(data?.time && { time: JSON.stringify(data.time) }),
+    ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
   }
   return {
     revalidate: 90,
@@ -155,13 +156,13 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
               <ChevronLeft />
             </ActionIcon>
             <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
-            <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
+            <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
             <ActionIcon variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-          <Title order={2} mb="sm">{content?.title}</Title>
+          <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
         </div>)}
 
 
@@ -171,7 +172,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           </Text>
         )}
         {content?.message && (
-          <Text className="max-w-lg text-md">{content.message}</Text>
+          <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md hyphens-auto " lang="es">{content.message}</Text>
           //  <TypographyStylesProvider>
           //     <div className="max-w-lg text-md" dangerouslySetInnerHTML={{ __html: content.message}}></div>
           // </TypographyStylesProvider>

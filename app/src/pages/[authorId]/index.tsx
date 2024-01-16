@@ -81,8 +81,8 @@ export default function UserInfoAction({author, authorId}) {
         bg="var(--mantine-color-body)"
       >
         <Avatar src={avatar} size={120} radius={120} mx="auto" />
-        <Text ta="center" size="lg" w={500} mt="md">
-          {author?.userName}
+        <Text ta="center" size="lg" mx="auto" mt="md">
+          {author?.displayName}
         </Text>
         <Text ta="center" color="dimmed" size="sm">
           {email} • {job}
