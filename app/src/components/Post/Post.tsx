@@ -29,7 +29,8 @@ export const PostCard: FC<PostCardProps> = ({
   asistants,
   event,
   userUID,
-  imageData
+  imageData,
+  priority
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -77,8 +78,9 @@ export const PostCard: FC<PostCardProps> = ({
                   width={imageData?.width || 380}
                   height={imageData?.height || 240}
                   color={DEFAULT_COLOR}
-                  loading="lazy"
+                  loading={priority ? "eager" : "lazy"}
                   quality={70}
+                  priority={priority}
                   // style="margin: -10px -10px 10px -10px; display:block"
                   // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
                   // priority={key === 1||2||3||4 ? true:false }
@@ -87,7 +89,7 @@ export const PostCard: FC<PostCardProps> = ({
                   // placeholder={<Text align="center">This image contained the meaning of life</Text>}
                   // layout="fill"
                   className="w-full"
-                  sizes="50vw"
+                  sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
                 // style={{
                 //   width: "100%",
                 //   height: "auto"

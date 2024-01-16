@@ -57,6 +57,7 @@ declare global {
     author:
     | { image?: string | null; name: string; id: string }
     | "anonimo";
+    priority?: boolean;
     imageData?: imageData;
     image?: string;
     description: string;

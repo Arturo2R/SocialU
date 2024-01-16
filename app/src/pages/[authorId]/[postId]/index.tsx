@@ -155,7 +155,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <ActionIcon variant="light" color="gray" component={Link}  classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-            <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
+            <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
             <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">

@@ -62,6 +62,7 @@ export function Feed({ data, user }:FeedProps) {
               imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}
+              priority={index < 4}
               author={
                 post.anonimo
                   ? "anonimo"
