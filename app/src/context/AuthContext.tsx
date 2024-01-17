@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  const { createOrFetchUser } = useFirestore();
+  const { createOrFetchUser, suscribe } = useFirestore();
 
   // ! Dont delete this, it will be used later
   // const signup = (email: string, password: string) => {
@@ -106,6 +106,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 //     });
 //     return signInWithPopup(auth, googleProvider);
 //   };
+    const suscribetoPost = (postId: string, remove:boolean,) => {
+      if(user) suscribe(postId, remove, user);
+    }
 
 
   // ! Dont delete this, it will be used later
@@ -191,6 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // login,
         user,
         setUser,
+        suscribetoPost,
         logout,
         valid,
         loading,

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 
 interface DataStateContextInterface {
-    data: Post[];
+    data: Post[] | undefined;
     // error: any;
     // loading: boolean;
     // fetchData: () => void;

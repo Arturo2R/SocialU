@@ -66,16 +66,19 @@ declare global {
     event?: boolean;
     postId?: string;
     // relevantCommentary?: Object;
-    asistants?: {
-      user: {
-        image: string;
-        name: string;
-        ref: `user/${string}`;
-      };
-      suscribedAt?: Timestamp;
-    }[];
+    asistants?: suscription[];
     // key: number;
     userUID?: string;
+  }
+
+  type suscription = {
+    user: {
+      image: string;
+      name: string;
+      ref: `user/${string}`;
+      userName: string;
+    };
+    suscribedAt?: Timestamp;
   }
 
   interface Post extends ComputedPost {
@@ -86,10 +89,7 @@ declare global {
     userUID?: string;
     authorRef?: string;
     authorName?: string | null;
-    suscriptions?: {
-      user: { name: string; ref: `user/${string}`; image: string };
-      suscribedAt: Timestamp;
-    }[];
+    suscriptions?: suscription[];
     createdAt?: Timestamp;
     authorImage: string;
     userName?: string;
@@ -121,6 +121,7 @@ interface Login {
 interface AuthContextInterface {
   // signup(email: string, password: string): Promise<UserCredential>;
   // login(email: string, password: string): Promise<UserCredential>;
+  suscribeToPost(postId: string, remove: boolean): Promise<void>;
   user: UserState | null;
   setUser: Function
   logout(): void;

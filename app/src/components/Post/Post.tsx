@@ -3,7 +3,7 @@ import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, FC, useEffect } from "react";
-import { useFirestore } from "../../hooks/useFirestore";
+import { useAuth } from "../../context/AuthContext";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
 
@@ -61,7 +61,7 @@ export const PostCard: FC<PostCardProps> = ({
   //   await markdownToHtml(text)
   // }
 
-  const { suscribe } = useFirestore();
+  const { suscribetoPost } = useAuth();
   return (
     <article className="max-w-sm px" id={postId}>
       <Card withBorder p="xs" radius="md">
@@ -159,7 +159,8 @@ export const PostCard: FC<PostCardProps> = ({
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
                   setSuscribed(!suscribed);
-                  typeof postId === "string" && suscribe(postId, suscribed);
+                  
+                  typeof postId === "string" && suscribetoPost(postId, suscribed);
                 }}
                 rightSection={suscribed ? <Check /> : <Plus />}
               >
@@ -176,7 +177,7 @@ export const PostCard: FC<PostCardProps> = ({
                 {asistants?.map((i, index) => (
                   <SeeUser
                     key={index}
-                    id={i.user.ref || i.user.name}
+                    id={i.user.userName || i.user.ref}
                     name={i.user.name}
                     image={i.user.image}
                   />

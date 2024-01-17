@@ -11,7 +11,7 @@ import PostCardLoading from "../Post/PostCardLoading";
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
-  data?: Post[],
+  data: Post[],
   user?: UserState,
 }
 

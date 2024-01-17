@@ -201,7 +201,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
                 )}
                 {content?.suscriptions?.map((s, index) => (
                   <SeeUser
-                    id={s.user.ref}
+                    id={s.user.userName || s.user.ref}
                     image={s.user.image}
                     name={s.user.name}
                     key={index}

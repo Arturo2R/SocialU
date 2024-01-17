@@ -148,27 +148,26 @@ export const useFirestore = () => {
     }
   };
 
-  interface letSuscribe {
+  interface letSuscribe extends suscription {
     // suscribedAt: Timestamp | any;
     postId: string;
-    user: { name: string; image: string; ref: `user/${string}` };
   }
 
-  const suscribe = async (postId: string, remove: boolean) => {
-    if (auth.currentUser?.displayName) {
+  const suscribe = async (postId: string, remove: boolean, user: UserState) => {
+    if (user?.displayName) {
       try {
-        setLoading(true);
         // console.log("Tirado", auth.currentUser.displayName);
         const postRef = doc(db, PATH, postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),
           user: {
-            name: auth.currentUser?.displayName,
+            name: user?.displayName,
             image:
-              auth.currentUser?.photoURL ||
+              user?.photoURL ||
               "https://source.unsplash.com/random/30x45",
-            ref: `user/${auth.currentUser?.uid}`,
+            ref: `user/${user?.uid}`,
+            userName: user.userName || "",
           },
         };
 
@@ -183,9 +182,8 @@ export const useFirestore = () => {
           });
         }
       } catch (error) {
-        // console.log("errorsaso", error);
+        console.error("errorsaso", error);
       } finally {
-        setLoading(false);
       }
     } else {
       // console.log("Nada Papi");
