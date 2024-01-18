@@ -7,7 +7,6 @@ import AppFooter from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 // import { BellRinging, Send, Settings } from 'tabler-icons-react';
-import { useMediaQuery } from "@mantine/hooks";
 import { useDisclosure } from '@mantine/hooks';
 
 
@@ -25,7 +24,6 @@ function Layout({ children }: LayoutProps) {
   const theme = useMantineTheme();
 
   // const [opened, setOpened] = useState<boolean>(false);
-  const matches = useMediaQuery('(max-width: 900px)');
 
   return (
     <AppShell
@@ -43,7 +41,7 @@ function Layout({ children }: LayoutProps) {
             loginProvider={loginWithMicrosoft}
           />
       </AppShell.Header>
-      <AppShell.Footer hiddenFrom="sm"><AppFooter /></AppShell.Footer>
+      <AppShell.Footer hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
       <AppShell.Navbar p="md">
         <AppNavbar /> 
       </AppShell.Navbar>
