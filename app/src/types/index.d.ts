@@ -121,7 +121,7 @@ interface Login {
 interface AuthContextInterface {
   // signup(email: string, password: string): Promise<UserCredential>;
   // login(email: string, password: string): Promise<UserCredential>;
-  suscribeToPost(postId: string, remove: boolean): Promise<void>;
+  suscribetoPost(postId: string, remove: boolean): Promise<void>;
   user: UserState | null;
   setUser: Function
   logout(): void;

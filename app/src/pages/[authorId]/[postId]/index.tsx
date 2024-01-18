@@ -31,6 +31,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
 import { GetStaticPaths } from "next";
 // import "bigger-picture";
+import { Timestamp } from "@firebase/firestore";
 
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
@@ -53,6 +54,7 @@ export async function getStaticProps(context: any) {
       notFound: true,
     }
   }  
+  console.log(data.computedDate?.toJSON())
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
@@ -140,6 +142,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // if (error) return <Text>{error}</Text>;
   
   const fecha: Date = content.createdAt
+  const eventDate: Timestamp = content.isEvent ? content.computedDate || content.date : undefined
 
   return (
 
@@ -191,26 +194,27 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             Anonimo
           </Text>
         )}
+        
+        {content?.isEvent && (
         <div className="my-4">
-          {content?.isEvent && (
-            <>
-              <Title order={3} mb="sm">Asistentes</Title>
-              <Stack>
-                {(!content.suscriptions || content.suscriptions?.length == 0) && (
-                  <Text>    Por ahora no Hay Nadie</Text>
-                )}
-                {content?.suscriptions?.map((s, index) => (
-                  <SeeUser
-                    id={s.user.userName || s.user.ref}
-                    image={s.user.image}
-                    name={s.user.name}
-                    key={index}
-                  />
-                ))}
-              </Stack>
-            </>
-          )}
+            <Title order={3}>Fecha</Title>
+            <Text mb="sm">{dayjs(eventDate.seconds * 1000).format('D [de] MMMM [de] YYYY, [a las] h:mm a')}</Text>
+            <Title order={3} mb="xs">Asistentes</Title>
+            <Stack>
+              {(!content.suscriptions || content.suscriptions?.length == 0) && (
+                <Text>    Por ahora no Hay Nadie</Text>
+              )}
+              {content?.suscriptions?.map((s, index) => (
+                <SeeUser
+                  id={s.user.userName || s.user.ref}
+                  image={s.user.image}
+                  name={s.user.name}
+                  key={index}
+                />
+              ))}
+            </Stack>
         </div>
+        )}
 
         {/* {content?.date && (
         <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content?.date?.getSeconds()).format("MMM D, YYYY")}</Text>

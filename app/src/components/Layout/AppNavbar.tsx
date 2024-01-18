@@ -53,7 +53,7 @@ export function AppNavbar() {
         <Protected.Component>
           <a href="#" className={classes.link} onClick={() => logout()}>
             <IconLogout className={classes.linkIcon} stroke={1.5} />
-            <span>Logout</span>
+            <span>Cerrar Sesión</span>
           </a>
         </Protected.Component>
       </div>

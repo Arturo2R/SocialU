@@ -286,8 +286,9 @@ export const useFirestore = () => {
         setter(userProfile);
 
         posthog.identify(user.uid, {
+          email: user.email,
           last_login: user.metadata.lastSignInTime,
-        })
+        },)
 
       } else {
         if (user?.displayName && user?.uid && user?.email) {
@@ -321,6 +322,7 @@ export const useFirestore = () => {
             posthog.identify(user.uid, {
               university: "Universidad Del Norte",
               created: user.metadata.creationTime,
+              email: user.email,
               last_login: user.metadata.lastSignInTime,
             })
             // console.log(useStore.getState().user);
