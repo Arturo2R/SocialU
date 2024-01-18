@@ -12,11 +12,13 @@ export default function ImageDropzone({
   setImage,
   imageUrl,
   setImageUrl,
+  setImageLoading,
   setImageData,
 }: {
   image: File | null | string;
   setImage: (image: File | null) => void;
   imageUrl: string | null;
+  setImageLoading: (state: "loading" | "loaded" | null) => void;
   setImageUrl: (imageUrl: string | null) => void;
   setImageData: ({width, height}:{width: number, height: number}) => void;
 }) {
@@ -64,6 +66,7 @@ export default function ImageDropzone({
     <Dropzone
       onDrop={(files: File[]) => {
         // uploadBytes(storageRef, file);
+        setImageLoading("loading");
         addImage(files);
       // console.log("accepted files", files);
       }}

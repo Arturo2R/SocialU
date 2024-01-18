@@ -44,6 +44,8 @@ export const AppHeader = ({
 
   return (
       <Group px="md" h="100%" justify="space-between" >
+
+        
         <Burger
             opened={opened}
             onClick={() => setOpened((o) => !o)}
@@ -52,6 +54,8 @@ export const AppHeader = ({
             hiddenFrom="sm"
             title="Hamburger"
         />
+        
+        
         <Link href="/">
           <Group>
             {/* <div className="flex space-x-2"> */}
@@ -59,6 +63,8 @@ export const AppHeader = ({
               <Title order={3} className="w-auto" >{officialAppName}<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
+
+        
         <Group>
           {user?.displayName && (
               <Text  className="hidden md:block">{user?.displayName}</Text>
@@ -71,7 +77,6 @@ export const AppHeader = ({
                 size={matches ? "md" : "xs"}
                 color={DEFAULT_COLOR}
                 onClick={loginProvider}
-                
               >
                 Iniciar Sesión
               </Button>
@@ -92,6 +97,8 @@ export const AppHeader = ({
 
           {user && <ColorSchemeToggle />}
         </Group>
+
+        
       </Group>
   );
 };
