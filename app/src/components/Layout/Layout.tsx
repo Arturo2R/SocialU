@@ -29,7 +29,7 @@ function Layout({ children }: LayoutProps) {
 
   return (
     <AppShell
-
+      footer={{height: 50,}}
       header={{ height: 70 }}
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       padding="md"
@@ -43,7 +43,7 @@ function Layout({ children }: LayoutProps) {
             loginProvider={loginWithMicrosoft}
           />
       </AppShell.Header>
-      {router.pathname === "/" && matches && (<AppShell.Footer p="xs"><AppFooter /></AppShell.Footer>) }
+      <AppShell.Footer hiddenFrom="sm"><AppFooter /></AppShell.Footer>
       <AppShell.Navbar p="md">
         <AppNavbar /> 
       </AppShell.Navbar>

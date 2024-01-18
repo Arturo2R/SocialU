@@ -27,12 +27,11 @@ import Layout from "../../../components/Layout/Layout";
 import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
-import { useMediaQuery } from "@mantine/hooks";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
 import { GetStaticPaths } from "next";
 // import "bigger-picture";
 import { Timestamp } from "@firebase/firestore";
-
+import styles from "./PostPage.module.css"
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
 
@@ -82,19 +81,10 @@ export const getStaticPaths = (async () => {
   }
 }) satisfies GetStaticPaths
 
-const PageWrapper = ({ children }: any) => {
-  const matches = useMediaQuery('(min-width: 780px)', true, {
-    getInitialValueInEffect: false,
-  });
 
-  if (matches) {
-    return <Paper p="md" shadow="sm" radius="md" >{children}</Paper>
-  } else {
-    return <>{ children }</>
-  }
   
   
-}
+
 
 const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // const { postId, authorId } = router.query;
@@ -151,7 +141,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
       <span className="hidden bg-dark/50 dark:bg-white/50"></span>
       
-      <PageWrapper >
+      <Paper classNames={{root:styles.postPage}}>
 
         {content?.image ? (
           <>
@@ -226,7 +216,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <CommentWall postId={id} comments={comments}/>
         </div>
 
-      </PageWrapper>
+      </Paper>
     </Layout>
   );
 };
