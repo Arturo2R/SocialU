@@ -1,6 +1,6 @@
 import cx from 'clsx';
 import { ActionIcon, useMantineColorScheme, useComputedColorScheme, Group } from '@mantine/core';
-import { IconSun, IconMoon } from '@tabler/icons-react';
+import { Sun, Moon } from 'tabler-icons-react';
 import classes from './ColorSchemeToggle.module.css';
 
 export function ColorSchemeToggle() {
@@ -15,8 +15,8 @@ export function ColorSchemeToggle() {
         size="xl"
         aria-label="Toggle color scheme"
       >
-        <IconSun className={cx(classes.icon, classes.light)} stroke={1.5} />
-        <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} />
+        <Sun className={cx(classes.icon, classes.light)} stroke="1.5" />
+        <Moon className={cx(classes.icon, classes.dark)} stroke="1.5" />
       </ActionIcon>
     </Group>
   );

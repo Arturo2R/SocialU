@@ -24,6 +24,7 @@ export function DataStateProvider({ children }: { children: React.ReactNode }) {
         // error: dataError,
         // postsLoading,
         fetchData,
+        postsLoading
       } = useFirestore();
 
       useEffect(() => {
@@ -37,6 +38,7 @@ return (
     <dataStateContext.Provider
         value={{
         data,
+        postsLoading
         }}
     >
         {children}
