@@ -48,19 +48,19 @@ All the things that is left to finish the first version of the app
 
 - [x] Session auth persistance
 - [ ] Session state persistance
-- [ ] Rendering optimization
+- [x] Rendering optimization
 - [ ] SEO optimization
-- [ ] Post page Connection with API
-- [ ] Profile connection with API
-- [ ] Real anonimicity
-- [ ] Sidebar
+- [x] Post page Connection with API
+- [x] Profile connection with API
+- [x] Real anonimicity
+- [x] Sidebar
 - [ ] Sign In with email
 - [ ] Sign up with email
 - [ ] Complete the profile
 - [ ] Restart password
 - [ ] User app configuration
 - [ ] Meeting asistantts #Feature
-- [ ] Commentaries #Feature
-- [ ] Image Procesing #Feature
-- [ ] Adult content filtering
+- [x] Commentaries #Feature
+- [x] Image Procesing #Feature
+- [x] Adult content filtering
 - [ ] Ordering of the Posts
