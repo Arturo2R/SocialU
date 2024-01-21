@@ -1,4 +1,5 @@
-import {  Notifications } from "@mantine/notifications";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import type { AppProps } from "next/app";
 import { AuthProvider } from "../context/AuthContext";
@@ -11,11 +12,11 @@ import '@mantine/core/styles.css';
 import "../styles/globals.css";
 
 import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
+import {  Notifications } from "@mantine/notifications";
 import { DataStateProvider } from "../context/DataStateContext";
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { POSTHOG_HOST_URL } from "../constants";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -27,7 +28,7 @@ const theme = createTheme({
       // Your code here
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
         opt_in_site_apps: true,
-        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://app.posthog.com',
+        api_host: POSTHOG_HOST_URL,
         // Enable debug mode in development
         loaded: (posthog) => {
           if (process.env.NODE_ENV === 'development') posthog.debug()

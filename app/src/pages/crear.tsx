@@ -1,15 +1,15 @@
 import {
   Button,
+  Center,
   Container,
   Input,
   Modal,
   Textarea,
-  TypographyStylesProvider
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm as hform } from "react-hook-form";
+import { Controller, SubmitHandler, useForm as hform } from "react-hook-form";
 import { FileCheck } from "tabler-icons-react";
 import DatePick from "../components/Comment/DatePick";
 import Switc from "../components/Comment/Switc";
@@ -21,6 +21,8 @@ import { useFirestore } from "../hooks/useFirestore";
 import { DEFAULT_COLOR } from "../constants";
 // import { DatePicker, DatePickerInput } from "@mantine/dates";
 import '@mantine/dates/styles.css';
+import { DatePicker } from "@mantine/dates";
+import { useMediaQuery } from "@mantine/hooks";
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
 // import {Editor} from "novel"
@@ -69,7 +71,7 @@ const CrearPost = () => {
       message: "",
       isEvent: false,
       time: "", //
-      date: null,
+      date: null ,
       image: "",
       anonimo: user?.anonimoDefault || false,
     }
@@ -88,13 +90,17 @@ const CrearPost = () => {
   
   const [imageData, setImageData] = useState<{width: number, height: number} | null>(null);
 
+  const matches = useMediaQuery('(max-width: 768px)', true, {
+    getInitialValueInEffect: false,
+  });
+
+  // const [value, setValue] = useState<Date | null>(null);
 
   const router = useRouter();
   
 
   const [imageChecking, setImageChecking] = useState<null|"loading"|"loaded">(null)
   useEffect(() => {
-    setImageChecking("loading")
     if(imageUrl){
       checkImage(imageUrl)
         .then(porn =>{ 
@@ -108,7 +114,7 @@ const CrearPost = () => {
         }
         )
     }
-    setImageChecking("loading")
+    setImageChecking("loaded")
   }, [imageUrl]);
 
 
@@ -117,6 +123,10 @@ const CrearPost = () => {
       let payload: ComputedPost = postValues
       if(postValues.image && imageData) {
         payload = {...postValues, imageData: imageData}
+      } 
+      if (postValues.date && postValues.time) {
+        console.log("date: ", postValues.date, "time: ", postValues.time)
+        payload = {...payload, computedDate: new Date(postValues.date.toISOString().split('T')[0] + "T" + postValues.time + ":00")}
       }
       console.log("sip", payload)
       createPost(payload, user);
@@ -146,13 +156,14 @@ const CrearPost = () => {
       >
        <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
       </Modal>
-        <Container className="h-full">
+        <Container p={0} className="h-full">
           <form
             onSubmit={handleSubmit(submitPost)}
             className="flex flex-col justify-between h-full"
           >
             <div>
               <ImageDropzone
+                setImageLoading={setImageChecking}
                 imageUrl={imageUrl}
                 setImageUrl={setImageUrl}
                 image={image}
@@ -164,7 +175,6 @@ const CrearPost = () => {
                 placeholder="Titulo"
                 error={errors.title?.message}
                 size="xl"
-                required
                 minRows={1}
                 autosize
                 classNames={{
@@ -182,14 +192,13 @@ const CrearPost = () => {
                 variant="unstyled"
                 error={errors.message?.message}
                 size="md"
-                maxLength={1000}
+                maxLength={2000}
                 minRows={5}
-                required
                 autosize
                 {...register("message",{
                   required: "La descripcion es necesaria",
                   minLength: { value:20, message: "No menos de 20 caracteres" }, 
-                  maxLength: { value:1000, message: "No más de 1000 caracteres" } })}
+                  maxLength: { value:2000, message: "No más de 2000 caracteres" } })}
               />
                 {/* <TypographyStylesProvider pl="0">
                 <Editor />
@@ -210,17 +219,42 @@ const CrearPost = () => {
 
               {watch("isEvent") && (
                 <>
-                  <DatePick
-                    required={true}
-                    control={control}
-                    label="Día De Reunion"
-                    {...register("date",{ required: true })}
-                  />
+                  {matches ? (
+                    <Controller
+                     name="date"
+                     control={control}
+                     rules={{ required: "La fecha es necesaria", }}
+                     render={({ field }) => (
+                     <Input.Wrapper required={watch("isEvent")} label="Fecha" error={errors.date?.message}>
+                      <Center>
+                       <DatePicker 
+                        mx="auto"
+                        // required={true}
+                        // control={control}
+                        size="md"
+                        onChange={field.onChange}
+                        value={field.value}
+                        // label="Día De Reunion"
+                        // {...register("date",{ required: true })} 
+                        />
+                        </Center>
+                     </Input.Wrapper>
+ 
+                       )}
+                   />
+                  ):(
+                     <DatePick
+                      required={true}
+                      control={control}
+                      label="Día De Reunion"
+                      {...register("date")}
+                    />
+                  )}
               
                   
-                  <Input.Wrapper required={true} label="Hora">
+                  <Input.Wrapper  required={watch("isEvent")} label="Hora" error={errors.time?.message}>
                     <Input type="time" id="time-is-value"
-                    {...register("time",{ required: true })}
+                    {...register("time",{ required: "La hora es necesaria" })}
                       />
                   </Input.Wrapper>
                 </>
@@ -229,7 +263,7 @@ const CrearPost = () => {
             </div>
 
             <Button
-              loading={creatingPost == "loading"}
+              loading={creatingPost == "loading" || imageChecking == "loading"}
               type="submit"
               variant="filled"
               color={DEFAULT_COLOR}

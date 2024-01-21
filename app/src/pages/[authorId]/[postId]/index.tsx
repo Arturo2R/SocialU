@@ -27,11 +27,11 @@ import Layout from "../../../components/Layout/Layout";
 import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
-import { useMediaQuery } from "@mantine/hooks";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
 import { GetStaticPaths } from "next";
 // import "bigger-picture";
-
+import { Timestamp } from "@firebase/firestore";
+import styles from "./PostPage.module.css"
 // import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
 
 
@@ -48,17 +48,18 @@ export async function getStaticProps(context: any) {
   const postSnap: anything = await getDoc(postRef);
   const data:Post = postSnap.data()
   console.log(data);
-  // if (!data) {
-    
-  //   return {
-  //     notFound: true,
-  //   }
-  // }  
+  if (!data) {
+    return {
+      notFound: true,
+    }
+  }  
+  console.log(data.computedDate?.toJSON())
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
     ...(data?.date && { date: data.date.toJSON() }),
     ...(data?.time && { time: JSON.stringify(data.time) }),
+    ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
   }
   return {
     revalidate: 90,
@@ -80,19 +81,10 @@ export const getStaticPaths = (async () => {
   }
 }) satisfies GetStaticPaths
 
-const PageWrapper = ({ children }: any) => {
-  const matches = useMediaQuery('(min-width: 780px)', true, {
-    getInitialValueInEffect: false,
-  });
 
-  if (matches) {
-    return <Paper p="md" shadow="sm" radius="md" >{children}</Paper>
-  } else {
-    return <>{ children }</>
-  }
   
   
-}
+
 
 const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // const { postId, authorId } = router.query;
@@ -140,6 +132,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // if (error) return <Text>{error}</Text>;
   
   const fecha: Date = content.createdAt
+  const eventDate: Timestamp = content.isEvent ? content.computedDate || content.date : undefined
 
   return (
 
@@ -148,21 +141,21 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
       <span className="hidden bg-dark/50 dark:bg-white/50"></span>
       
-      <PageWrapper >
+      <Paper classNames={{root:styles.postPage}}>
 
         {content?.image ? (
           <>
             <ActionIcon variant="light" color="gray" component={Link}  classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-            <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" src={content.image} />
-            <Title order={2} className="mb-2 text-3xl">{content?.title}</Title>
+            <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
+            <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
             <ActionIcon variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
               <ChevronLeft />
             </ActionIcon>
-          <Title order={2} mb="sm">{content?.title}</Title>
+          <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
         </div>)}
 
 
@@ -172,7 +165,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           </Text>
         )}
         {content?.message && (
-          <Text className="max-w-lg text-md">{content.message}</Text>
+          <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md hyphens-auto " lang="es">{content.message}</Text>
           //  <TypographyStylesProvider>
           //     <div className="max-w-lg text-md" dangerouslySetInnerHTML={{ __html: content.message}}></div>
           // </TypographyStylesProvider>
@@ -191,26 +184,27 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             Anonimo
           </Text>
         )}
+        
+        {content?.isEvent && (
         <div className="my-4">
-          {content?.isEvent && (
-            <>
-              <Title order={3} mb="sm">Asistentes</Title>
-              <Stack>
-                {(!content.suscriptions || content.suscriptions?.length == 0) && (
-                  <Text>    Por ahora no Hay Nadie</Text>
-                )}
-                {content?.suscriptions?.map((s, index) => (
-                  <SeeUser
-                    id={s.user.ref}
-                    image={s.user.image}
-                    name={s.user.name}
-                    key={index}
-                  />
-                ))}
-              </Stack>
-            </>
-          )}
+            <Title order={3}>Fecha</Title>
+            <Text mb="sm">{dayjs(eventDate.seconds * 1000).format('D [de] MMMM [de] YYYY, [a las] h:mm a')}</Text>
+            <Title order={3} mb="xs">Asistentes</Title>
+            <Stack>
+              {(!content.suscriptions || content.suscriptions?.length == 0) && (
+                <Text>    Por ahora no Hay Nadie</Text>
+              )}
+              {content?.suscriptions?.map((s, index) => (
+                <SeeUser
+                  id={s.user.userName || s.user.ref}
+                  image={s.user.image}
+                  name={s.user.name}
+                  key={index}
+                />
+              ))}
+            </Stack>
         </div>
+        )}
 
         {/* {content?.date && (
         <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content?.date?.getSeconds()).format("MMM D, YYYY")}</Text>
@@ -222,7 +216,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <CommentWall postId={id} comments={comments}/>
         </div>
 
-      </PageWrapper>
+      </Paper>
     </Layout>
   );
 };

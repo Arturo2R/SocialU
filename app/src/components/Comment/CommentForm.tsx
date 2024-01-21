@@ -33,6 +33,8 @@ const CommentForm = (props: Props) => {
         createComment(values, user);
         form.reset();
       })}
+      name="comment-form"
+      id="CommentForm"
     >
       {/* <Group grow> */}
       <div className="flex-1">
@@ -41,6 +43,8 @@ const CommentForm = (props: Props) => {
           className="mb-1"
           // label="Tu Comentario"
           variant="filled"
+          name="Comentario"
+          form="CommentForm"
           radius="md"
           minRows={2}
           autosize
@@ -48,6 +52,7 @@ const CommentForm = (props: Props) => {
           {...form.getInputProps("content")}
         />
         <Switch
+          mt="xs"
           color={DEFAULT_COLOR}
           label="Enviar Anonimamente"
           checked={anonimo}
@@ -60,6 +65,8 @@ const CommentForm = (props: Props) => {
       {/* <div className=""> */}
       
       <ActionIcon
+        aria-label="Enviar Comentario"
+        component="button"
         className="flex-none"
         color={DEFAULT_COLOR}
         size="xl"

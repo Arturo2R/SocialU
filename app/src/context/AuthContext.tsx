@@ -17,6 +17,7 @@ import { X } from "tabler-icons-react";
 import { auth } from "../firebase";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
+import posthog from "posthog-js";
 
 
 export const authContext = createContext<AuthContextInterface | undefined>(
@@ -64,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  const { createOrFetchUser } = useFirestore();
+  const { createOrFetchUser, suscribe } = useFirestore();
 
   // ! Dont delete this, it will be used later
   // const signup = (email: string, password: string) => {
@@ -106,6 +107,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 //     });
 //     return signInWithPopup(auth, googleProvider);
 //   };
+    const suscribetoPost = async (postId: string, remove:boolean,) => {
+      if(user) await suscribe(postId, remove, user);
+    }
 
 
   // ! Dont delete this, it will be used later
@@ -126,6 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     setValid("unset");
     signOut(auth);
+    posthog.reset();
     notifications.show({
       id: "log-out",
       autoClose: 5000,
@@ -191,6 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // login,
         user,
         setUser,
+        suscribetoPost,
         logout,
         valid,
         loading,

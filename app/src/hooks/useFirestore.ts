@@ -15,6 +15,7 @@ import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
 import {PATH} from "../constants"
+import posthog from "posthog-js";
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
@@ -99,8 +100,8 @@ export const useFirestore = () => {
 
         const generatedPostId = await nanoid(7);
         console.log(PATH)
-        const postsRef = doc(db, "posts", generatedPostId);
-        const publicRef = doc(db, PATH, generatedPostId);
+        const allPostsRef = doc(db, "posts", generatedPostId);
+        const onlyPublicPostsRef = doc(db, PATH, generatedPostId);
         // const formatted = await markdownToHtml(formData.message)
         // console.log(formatted)
         let newPost: Post = {
@@ -128,17 +129,17 @@ export const useFirestore = () => {
 
 
         if (formData.anonimo) {
-          await setDoc(publicRef, { ...formData, createdAt: serverTimestamp(), });
+          await setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), });
         } else {
-          await setDoc(publicRef, newPost);
+          await setDoc(onlyPublicPostsRef, newPost);
         }
         // setData([...data, newPost]);
 
 
-        await setDoc(postsRef, newPost);
+        await setDoc(allPostsRef, newPost);
       } catch (thiserror: any) {
         setCreatingPost("error")
-        console.log(thiserror.message);
+        console.error(thiserror.message);
       } finally {
         setCreatingPost("loaded")
       }
@@ -147,27 +148,26 @@ export const useFirestore = () => {
     }
   };
 
-  interface letSuscribe {
+  interface letSuscribe extends suscription {
     // suscribedAt: Timestamp | any;
     postId: string;
-    user: { name: string; image: string; ref: `user/${string}` };
   }
 
-  const suscribe = async (postId: string, remove: boolean) => {
-    if (auth.currentUser?.displayName) {
+  const suscribe = async (postId: string, remove: boolean, user: UserState) => {
+    if (user?.displayName) {
       try {
-        setLoading(true);
         // console.log("Tirado", auth.currentUser.displayName);
         const postRef = doc(db, PATH, postId);
         const Payload: letSuscribe = {
           postId,
           // suscribedAt: serverTimestamp(),
           user: {
-            name: auth.currentUser?.displayName,
+            name: user?.displayName,
             image:
-              auth.currentUser?.photoURL ||
+              user?.photoURL ||
               "https://source.unsplash.com/random/30x45",
-            ref: `user/${auth.currentUser?.uid}`,
+            ref: `user/${user?.uid}`,
+            userName: user.userName || "",
           },
         };
 
@@ -182,9 +182,8 @@ export const useFirestore = () => {
           });
         }
       } catch (error) {
-        // console.log("errorsaso", error);
+        console.error("errorsaso", error);
       } finally {
-        setLoading(false);
       }
     } else {
       // console.log("Nada Papi");
@@ -219,7 +218,7 @@ export const useFirestore = () => {
         setCreating(true);
 
         const commentRef = collection(db, "posts", data.postId, "comments");
-        const publicRef = collection(db, PATH, data.postId, "comments");
+        const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -235,9 +234,9 @@ export const useFirestore = () => {
         };
 
         if (data.anonimo) {
-          await addDoc(publicRef, { ...Payload, author: "anonimo" });
+          await addDoc(onlyPublicPostsRef, { ...Payload, author: "anonimo" });
         } else {
-          await addDoc(publicRef, Payload);
+          await addDoc(onlyPublicPostsRef, Payload);
         }
 
         await addDoc(commentRef, Payload);
@@ -269,6 +268,7 @@ export const useFirestore = () => {
 
   const createOrFetchUser = async (user: any, setter: Function) => {
     // const {state} = useStore();
+    console.log("Buscando al Usuario", user.email)
 
     // const { currentUser: user } = authData;
     const userRef = doc(db, "user", user.uid);
@@ -284,10 +284,16 @@ export const useFirestore = () => {
       if (docExists) {
         userProfile = userSnap.data();
         setter(userProfile);
+
+        posthog.identify(user.uid, {
+          email: user.email,
+          last_login: user.metadata.lastSignInTime,
+        },)
+
       } else {
         if (user?.displayName && user?.uid && user?.email) {
           try {
-         // console.log("Creando Un Nuevo Usuario");
+            console.log("Creando Un Nuevo Usuario");
             setCreating(true);
 
             const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
@@ -308,11 +314,17 @@ export const useFirestore = () => {
               ...(user.photoURL && { photoURL: user.photoURL }),
             };
             setter(Payload);
-            await setDoc(userRef, Payload);
+            await setDoc(userRef, Payload)
           } catch (error) {
-              console.log(error);
+            console.log(error);
           } finally {
             setCreating(false);
+            posthog.identify(user.uid, {
+              university: "Universidad Del Norte",
+              created: user.metadata.creationTime,
+              email: user.email,
+              last_login: user.metadata.lastSignInTime,
+            })
             // console.log(useStore.getState().user);
           }
         }

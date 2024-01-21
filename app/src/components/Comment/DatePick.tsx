@@ -3,19 +3,18 @@ import { DatePickerInput } from "@mantine/dates";
 import { useController, useForm } from "react-hook-form";
 import { DEFAULT_COLOR } from "../../constants";
 
-interface Props { control:any, name:string, label:string, required:boolean }
+interface Props { control:any, name:string, label:string, required:boolean, }
 
 function DatePick({ control, name, label, required }:Props) {
   const {
     field,
-    fieldState: { invalid, isTouched, isDirty },
-    formState: { touchedFields, dirtyFields }
+    fieldState,
   } = useController({
     name,
     control,
-    rules: { required },
+    rules: { required:"La fecha es necesaria"  },
   });
-
+  
   return (
     <DatePickerInput
       required={required}//{watch("isEvent")}
@@ -23,6 +22,7 @@ function DatePick({ control, name, label, required }:Props) {
       placeholder="Escojer Dia De Reunion"
       // transition="pop-bottom-left"
       label={label}
+      error={fieldState.error?.message}
       color={DEFAULT_COLOR}
       onChange={field.onChange} // send value to hook form 
       onBlur={field.onBlur} // notify when input is touched/blur

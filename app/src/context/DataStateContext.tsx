@@ -3,7 +3,6 @@ import { useFirestore } from "../hooks/useFirestore";
 
 interface DataStateContextInterface {
     data: Post[] | undefined;
-    postsLoading: "loading" | "loaded" | "error";
     // error: any;
     // loading: boolean;
     // fetchData: () => void;

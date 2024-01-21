@@ -3,7 +3,7 @@ import { Check, Plus } from "tabler-icons-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, FC, useEffect } from "react";
-import { useFirestore } from "../../hooks/useFirestore";
+import { useAuth } from "../../context/AuthContext";
 import SeeUser from "./SeeUser";
 import styles from "./Post.module.css"
 
@@ -29,7 +29,8 @@ export const PostCard: FC<PostCardProps> = ({
   asistants,
   event,
   userUID,
-  imageData
+  imageData,
+  priority
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -60,7 +61,7 @@ export const PostCard: FC<PostCardProps> = ({
   //   await markdownToHtml(text)
   // }
 
-  const { suscribe } = useFirestore();
+  const { suscribetoPost } = useAuth();
   return (
     <article className="max-w-sm px" id={postId}>
       <Card withBorder p="xs" radius="md">
@@ -77,8 +78,9 @@ export const PostCard: FC<PostCardProps> = ({
                   width={imageData?.width || 380}
                   height={imageData?.height || 240}
                   color={DEFAULT_COLOR}
-                  loading="lazy"
+                  loading={priority ? "eager" : "lazy"}
                   quality={70}
+                  priority={priority}
                   // style="margin: -10px -10px 10px -10px; display:block"
                   // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
                   // priority={key === 1||2||3||4 ? true:false }
@@ -87,7 +89,7 @@ export const PostCard: FC<PostCardProps> = ({
                   // placeholder={<Text align="center">This image contained the meaning of life</Text>}
                   // layout="fill"
                   className="w-full"
-                  sizes="50vw"
+                  sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
                 // style={{
                 //   width: "100%",
                 //   height: "auto"
@@ -96,7 +98,7 @@ export const PostCard: FC<PostCardProps> = ({
               </Card.Section>
             )}
             {/* <Badge>{category}</Badge> */}
-            <Title lineClamp={2} order={3} className="text-xl font-bold">{title}</Title>
+            <Title lineClamp={2} py="5px" order={3} className="text-xl font-bold break-words text-pretty hyphens-auto"  lang="es">{title}</Title>
           </>
         </Link>
         {author !== "anonimo" ? (
@@ -157,7 +159,8 @@ export const PostCard: FC<PostCardProps> = ({
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
                   setSuscribed(!suscribed);
-                  typeof postId === "string" && suscribe(postId, suscribed);
+                  
+                  typeof postId === "string" && suscribetoPost(postId, suscribed);
                 }}
                 rightSection={suscribed ? <Check /> : <Plus />}
               >
@@ -174,7 +177,7 @@ export const PostCard: FC<PostCardProps> = ({
                 {asistants?.map((i, index) => (
                   <SeeUser
                     key={index}
-                    id={i.user.ref || i.user.name}
+                    id={i.user.userName || i.user.ref}
                     name={i.user.name}
                     image={i.user.image}
                   />

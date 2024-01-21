@@ -61,6 +61,15 @@ const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
     ignoreBuildErrors: true,
   },
 
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/:path*",
+        destination: "https://app.posthog.com/:path*",
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

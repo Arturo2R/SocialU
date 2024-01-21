@@ -9,12 +9,12 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { UserCredential } from "firebase/auth";
-import { random } from "nanoid";
 // import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
 import { DEFAULT_COLOR } from "../../constants";
+import config from "../../config";
 
 interface AppHeaderProps {
   opened: boolean;
@@ -38,11 +38,14 @@ export const AppHeader = ({
     return stringList[randomIndex];
   }
 
-  const stringList = ['Campus Gossip',"Chisme.app","Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions","UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect", ];
+  const stringList = config().appNames;
   const randomString = getRandomString(new Date(), stringList);
+  const officialAppName = config().siteName
 
   return (
       <Group px="md" h="100%" justify="space-between" >
+
+        
         <Burger
             opened={opened}
             onClick={() => setOpened((o) => !o)}
@@ -51,13 +54,17 @@ export const AppHeader = ({
             hiddenFrom="sm"
             title="Hamburger"
         />
+        
+        
         <Link href="/">
           <Group>
             {/* <div className="flex space-x-2"> */}
             <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
-              <Title order={3} className="w-auto" >Social U<div className="hidden sm:inline"> • {randomString}</div></Title>
+              <Title order={3} className="w-auto" >{officialAppName}<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
+
+        
         <Group>
           {user?.displayName && (
               <Text  className="hidden md:block">{user?.displayName}</Text>
@@ -70,7 +77,6 @@ export const AppHeader = ({
                 size={matches ? "md" : "xs"}
                 color={DEFAULT_COLOR}
                 onClick={loginProvider}
-                
               >
                 Iniciar Sesión
               </Button>
@@ -91,6 +97,8 @@ export const AppHeader = ({
 
           {user && <ColorSchemeToggle />}
         </Group>
+
+        
       </Group>
   );
 };

@@ -2,8 +2,8 @@ import Link from "next/link";
 import { useState } from 'react';
 import { Group, Code } from '@mantine/core';
 import {
-  Logout,
-} from 'tabler-icons-react';
+  IconLogout,
+} from '@tabler/icons-react';
 // import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './NavbarSimple.module.css';
 import { useAuth } from "../../context/AuthContext";
@@ -11,6 +11,7 @@ import Protected from "../Protected";
 import Config from "../../config"
 
   const data = Config().sidebar
+  const version = Config().version
 
 export function AppNavbar() {
   // const { classes, cx } = useStyles();
@@ -37,7 +38,7 @@ export function AppNavbar() {
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
           {/* <MantineLogo size={28} /> */}
-          <Code fw={700}>v3.1.2</Code>
+          <Code fw={700}>{version}</Code>
         </Group>
         <Protected.Component>
           {links}
@@ -51,8 +52,8 @@ export function AppNavbar() {
         </a> */}
         <Protected.Component>
           <a href="#" className={classes.link} onClick={() => logout()}>
-            <Logout className={classes.linkIcon} stroke="1.5" />
-            <span>Logout</span>
+            <IconLogout className={classes.linkIcon} stroke={1.5} />
+            <span>Cerrar Sesión</span>
           </a>
         </Protected.Component>
       </div>

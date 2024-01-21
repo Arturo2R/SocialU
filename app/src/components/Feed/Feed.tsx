@@ -6,12 +6,12 @@ import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
 import { useData } from "../../context/DataStateContext";
-import { Suspense } from "react";
+import PostCardLoading from "../Post/PostCardLoading";
 
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps { 
-  data?: Post[],
+  data: Post[],
   user?: UserState,
 }
 
@@ -45,11 +45,11 @@ export function Feed({ data, user }:FeedProps) {
     <>
 
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
-      <Container className="p-0">
+      <Container className="p-0 mb-10 md:mb-0">
 
         {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
         {/* ts-ignore */}
-        {liveData && (
+
           
           
           <Masonry
@@ -57,11 +57,12 @@ export function Feed({ data, user }:FeedProps) {
           className={mansory.grid}          
           columnClassName={mansory.column}>
       
-          {(liveData).map((post: any, index: number) => (
+          {(liveData ?? data).map((post: any, index: number) => (
             <PostCard
               imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}
+              priority={index < 4}
               author={
                 post.anonimo
                   ? "anonimo"
@@ -80,9 +81,9 @@ export function Feed({ data, user }:FeedProps) {
               asistants={post?.suscriptions}
             />
           ))}
-          
+          {!liveData && <PostCardLoading/>}
         </Masonry>
-        )}
+        
         {/* </Stack> */}
       </Container>
       
