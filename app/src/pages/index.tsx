@@ -2,6 +2,7 @@ import Feed from "../components/Feed";
 import Layout from "../components/Layout/Layout";
 import { PATH, MAX_SERVER_SIDE_RESULTS } from "../constants";
 import { useAuth } from "../context/AuthContext";
+import { db } from "../firebase";
 // import { db } from "../firebase";
 
 
