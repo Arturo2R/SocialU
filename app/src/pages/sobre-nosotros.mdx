@@ -1,1 +1,29 @@
+import { MDXLayout as Peo} from "../components/Layout/MDXLayout"
+export const meta = {
+    description: 'sobre-nosotros',
+    slug: 'sobre-nosotros',
+    title: "Bienvenidos a SocialU",
+}
 
+# Descripción general de la red social
+SocialU es una red social que va encaminada principalmente a los estudiantes de la universidad del norte para realizar publicaciones de acuerdo a sus necesidades (estas publicaciones pueden ser anónimas dentro de la comunidad si el estudiante así lo desea).
+La idea es que se use para alertas de objetos perdidos en el campus, visibilidad de tu negocio, chismes entre estudiantes, entre otros. Es hora de construir una comunidad universitaria más unida. ¡Bienvenidos a SocialU!.
+
+# Reglas de la comunidad
+* No está permitido publicar **contenido explícito**, ya sea sexual o sumamente violento.
+* Procurar siempre comunicarse respetuosamente.
+
+# Anotaciones
+* Para iniciar sesión se usará el protocolo de Microsoft y a través de la app "Authenticator" se comprobará la identidad, de esta forma se garantiza la seguridad y privacidad de cada estudiante. 
+* Lo único que deja registrado el protocolo de Microsoft es el nombre del usuario. Son solamente los administradores de la página web los que podrán ver las publicaciones siendo estas anónimas o no. Esto con el fin de bloquear a los usuarios que atenten contra las reglas de la comunidad.
+
+
+
+
+
+
+
+
+
+
+export default ({ children }) => <Peo meta={meta} >{children}</Peo>
