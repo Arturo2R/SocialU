@@ -24,6 +24,7 @@ export const PostCard: FC<PostCardProps> = ({
   author,
   title,
   image,
+  commentsQuantity,
   description,
   postId,
   asistants,
@@ -186,6 +187,9 @@ export const PostCard: FC<PostCardProps> = ({
               </Stack>
             </Collapse>
           </>
+        )}
+        {commentsQuantity && (
+          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentarios</Text>
         )}
       </Card>
 

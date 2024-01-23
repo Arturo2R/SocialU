@@ -59,8 +59,8 @@ export const AppHeader = ({
         <Link href="/">
           <Group>
             {/* <div className="flex space-x-2"> */}
-            <Image src="/logologo.svg" w={30} h={30} alt="Social U Logo" />
-              <Title order={3} className="w-auto" >{officialAppName}<div className="hidden sm:inline"> • {randomString}</div></Title>
+            <Image src="/logologo.svg" w={40} h={40} alt="Social U Logo" />
+            <Title order={3} className="w-auto" >{officialAppName}<div className="hidden sm:inline"> • {randomString}</div></Title>
           </Group>
         </Link>
 

@@ -4,7 +4,7 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDoc, getDocs, limit,
+  getDoc, getDocs, increment, limit,
   onSnapshot,
   orderBy,
   query,
@@ -216,6 +216,11 @@ export const useFirestore = () => {
     ) {
       try {
         setCreating(true);
+
+        // Incrementa el número de comentarios
+        await updateDoc(doc(db, PATH, data.postId as string), {
+          commentsQuantity: increment(1)
+        });
 
         const commentRef = collection(db, "posts", data.postId, "comments");
         const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");

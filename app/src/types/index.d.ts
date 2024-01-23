@@ -67,6 +67,7 @@ declare global {
     postId?: string;
     // relevantCommentary?: Object;
     asistants?: suscription[];
+    commentsQuantity?: number;
     // key: number;
     userUID?: string;
   }
@@ -93,6 +94,7 @@ declare global {
     createdAt?: Timestamp;
     authorImage: string;
     userName?: string;
+    commentsQuantity?: number;
   }
 
   

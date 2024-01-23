@@ -57,12 +57,13 @@ export function Feed({ data, user }:FeedProps) {
           className={mansory.grid}          
           columnClassName={mansory.column}>
       
-          {(liveData ?? data).map((post: any, index: number) => (
+          {(liveData ?? data).map((post: Post, index: number) => (
             <PostCard
               imageData={post?.imageData }
               userUID={user?.uid}
               description={post.message}
               priority={index < 4}
+              commentsQuantity={post?.commentsQuantity}
               author={
                 post.anonimo
                   ? "anonimo"
