@@ -189,7 +189,7 @@ export const PostCard: FC<PostCardProps> = ({
           </>
         )}
         {commentsQuantity && (
-          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentarios</Text>
+          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentario{commentsQuantity > 1  ? "s": ""}</Text>
         )}
       </Card>
 
