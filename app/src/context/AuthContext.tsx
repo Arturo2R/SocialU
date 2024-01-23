@@ -8,7 +8,8 @@ import {
   onAuthStateChanged,
   OAuthProvider, 
   signInWithPopup,
-  signOut, 
+  signOut,
+  signInWithRedirect, 
 } from "firebase/auth";
 import { notifications }  from '@mantine/notifications'
 // import jwt_decode from "jwt-decode";
@@ -90,7 +91,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
      domain_hint: "uninorte.edu.co",
     // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
     });
-    return signInWithPopup(auth, microsoftProvider);
+    if(navigator.userAgent.includes("Instagram")){
+      return signInWithRedirect(auth, microsoftProvider);
+    } else {
+      return signInWithPopup(auth, microsoftProvider);
+    }
+    
   };
 
   // ! Dont delete this, it will be used later
