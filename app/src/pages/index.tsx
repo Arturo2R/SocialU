@@ -34,6 +34,8 @@ export const getServerSideProps = async () => {
     }),
   }));
 
+  console.log("Server side on /")
+
   return {
     props: {
       data,

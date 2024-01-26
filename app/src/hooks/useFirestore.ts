@@ -127,19 +127,22 @@ export const useFirestore = () => {
         
 
 
-
         if (formData.anonimo) {
-          await setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), });
+          await Promise.all([
+            setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), }),
+            setDoc(allPostsRef, newPost),
+          ]);
         } else {
-          await setDoc(onlyPublicPostsRef, newPost);
+          await Promise.all([
+            setDoc(onlyPublicPostsRef, newPost),
+            setDoc(allPostsRef, newPost),
+          ]);
         }
-        // setData([...data, newPost]);
+        setCreatingPost("loaded")
 
-
-        await setDoc(allPostsRef, newPost);
       } catch (thiserror: any) {
         setCreatingPost("error")
-        console.error(thiserror.message);
+        console.error("Error creando la Publicación:", thiserror.message);
       } finally {
         setCreatingPost("loaded")
       }
@@ -217,11 +220,7 @@ export const useFirestore = () => {
       try {
         setCreating(true);
 
-        // Incrementa el número de comentarios
-        await updateDoc(doc(db, PATH, data.postId as string), {
-          commentsQuantity: increment(1)
-        });
-
+        
         const commentRef = collection(db, "posts", data.postId, "comments");
         const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
@@ -237,16 +236,33 @@ export const useFirestore = () => {
           parentId: "",
           postId: data.postId,
         };
-
+        
         if (data.anonimo) {
-          await addDoc(onlyPublicPostsRef, { ...Payload, author: "anonimo" });
+          // Si el comentarrio es anonimo
+          await Promise.all([
+            // Crea el comentario en la ruta de pública
+            addDoc(onlyPublicPostsRef, { ...Payload, author: "anonimo" }),
+            // Crea el comentario en la ruta de backup "posts"
+            addDoc(commentRef, Payload),
+            // Incrementa el número de comentarios
+            updateDoc(doc(db, PATH, data.postId as string), {
+              commentsQuantity: increment(1)
+            })
+          ]);
         } else {
-          await addDoc(onlyPublicPostsRef, Payload);
+          await Promise.all([
+            // Crea el comentario en la ruta de pública
+            addDoc(onlyPublicPostsRef, Payload),
+            // Crea el comentario en la ruta de backup "posts"
+            addDoc(commentRef, Payload),
+            // Incrementa el número de comentarios
+            updateDoc(doc(db, PATH, data.postId as string), {
+              commentsQuantity: increment(1)
+            })
+          ]);
         }
-
-        await addDoc(commentRef, Payload);
       } catch (error) {
-     // console.log(error);
+        console.error("Error creando el comentario :", error);
       } finally {
         setCreating(false);
       }

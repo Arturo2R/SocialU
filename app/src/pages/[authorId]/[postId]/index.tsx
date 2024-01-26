@@ -10,7 +10,6 @@ import {
   Text,
   Title,
   ActionIcon,
-  Loader,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -42,18 +41,19 @@ dayjs.locale(es);
 
 export async function getStaticProps(context: any) {
   const { postId, authorId } = context.params
-  console.log(PATH)
+  console.log("postID: ", postId, "authorId: ", authorId)
+  console.log("el path:",PATH)
   const postRef = doc(db, PATH, postId);
-
+  // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
   const postSnap: anything = await getDoc(postRef);
-  const data:Post = postSnap.data()
+  const data: Post = postSnap.data()
   console.log(data);
   if (!data) {
     return {
       notFound: true,
     }
-  }  
-  console.log(data.computedDate?.toJSON())
+  }
+  // console.log(data.computedDate?.toJSON())
   const Payload = {
     ...data,
     createdAt: data?.createdAt?.toMillis(),
@@ -62,7 +62,7 @@ export async function getStaticProps(context: any) {
     ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
   }
   return {
-    revalidate: 90,
+    revalidate: 10,
     props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
   }
 }
@@ -72,7 +72,7 @@ export const getStaticPaths = (async () => {
     paths: [
       {
         params: {
-          postId: 'yWzSVpu',
+          postId: '4T-5qC4',
           authorId: 'anonimo',
         },
       }, // See the "paths" section below
@@ -82,8 +82,8 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths
 
 
-  
-  
+
+
 
 
 const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
@@ -118,8 +118,8 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       unsuscribe()
     };
   }, []);
-  
-  
+
+
   // if (loading) {
   //   return (
   //     <Layout>
@@ -130,7 +130,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   //   );
   // }
   // if (error) return <Text>{error}</Text>;
-  
+
   const fecha: Date = content.createdAt
   const eventDate: Timestamp = content.isEvent ? content.computedDate || content.date : undefined
 
@@ -140,21 +140,33 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
       <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
       <span className="hidden bg-dark/50 dark:bg-white/50"></span>
-      
-      <Paper classNames={{root:styles.postPage}}>
+
+      <Paper classNames={{ root: styles.postPage }}>
 
         {content?.image ? (
           <>
-            <ActionIcon variant="light" color="gray" component={Link}  classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
+            <ActionIcon
+              scroll={false}
+              href={`/#${id}`} 
+              variant="light" 
+              color="gray" 
+              component={Link} 
+              classNames={{ 
+                root: "!flex justify-items-center" 
+                }} 
+              className="z-10" 
+              display="flow" 
+              mb="-44px" ml="10px" size="lg" radius="xl" 
+              >
               <ChevronLeft />
             </ActionIcon>
             <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
             <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
-            <ActionIcon variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }} href={`/`} scroll={false}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
-              <ChevronLeft />
-            </ActionIcon>
+          <ActionIcon scroll={false} href={`/#${id}`}  variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
+            <ChevronLeft />
+          </ActionIcon>
           <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
         </div>)}
 
@@ -184,9 +196,9 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             Anonimo
           </Text>
         )}
-        
+
         {content?.isEvent && (
-        <div className="my-4">
+          <div className="my-4">
             <Title order={3}>Fecha</Title>
             <Text mb="sm">{dayjs(eventDate.seconds * 1000).format('D [de] MMMM [de] YYYY, [a las] h:mm a')}</Text>
             <Title order={3} mb="xs">Asistentes</Title>
@@ -203,7 +215,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
                 />
               ))}
             </Stack>
-        </div>
+          </div>
         )}
 
         {/* {content?.date && (
@@ -211,9 +223,9 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       )} */}
 
         <div className="z-10 my-2">
-          
+
           <Title order={3} mb="sm" >Comentarios</Title>
-            <CommentWall postId={id} comments={comments}/>
+          <CommentWall postId={id} comments={comments} />
         </div>
 
       </Paper>
