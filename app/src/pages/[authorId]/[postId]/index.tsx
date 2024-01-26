@@ -39,50 +39,47 @@ dayjs.extend(relativeTime);
 dayjs.locale(es);
 // const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
-export async function getStaticProps(context: any) {
+export async function getServerSideProps(context: any) {
   const { postId, authorId } = context.params
   console.log("postID: ", postId, "authorId: ", authorId)
   console.log("el path:",PATH)
-  const postRef = doc(db, PATH, postId);
-  // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
-  const postSnap: anything = await getDoc(postRef);
-  const data: Post = postSnap.data()
-  console.log(data);
-  if (!data) {
-    return {
-      notFound: true,
+  try {
+    const postRef = doc(db, PATH, postId);
+    // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
+    const postSnap: anything = await getDoc(postRef);
+    const data: Post = postSnap.data()
+    console.log(data);
+  
+    // console.log(data.computedDate?.toJSON())
+    const Payload = {
+      ...data,
+      createdAt: data?.createdAt?.toMillis(),
+      ...(data?.date && { date: data.date.toJSON() }),
+      ...(data?.time && { time: JSON.stringify(data.time) }),
+      ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
     }
-  }
-  // console.log(data.computedDate?.toJSON())
-  const Payload = {
-    ...data,
-    createdAt: data?.createdAt?.toMillis(),
-    ...(data?.date && { date: data.date.toJSON() }),
-    ...(data?.time && { time: JSON.stringify(data.time) }),
-    ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
-  }
-  return {
-    revalidate: 10,
-    props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
+    return {
+      // revalidate: 10,
+      props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
+    }
+  } catch (error:any) {
+    console.error("Error en en ISR del post ",error.message)
   }
 }
 
-export const getStaticPaths = (async () => {
-  return {
-    paths: [
-      {
-        params: {
-          postId: '4T-5qC4',
-          authorId: 'anonimo',
-        },
-      }, // See the "paths" section below
-    ],
-    fallback: "blocking", // false or "blocking"
-  }
-}) satisfies GetStaticPaths
-
-
-
+// export const getStaticPaths = async () => {
+//   return {
+//     paths: [
+//       {
+//         params: {
+//           postId: '4T-5qC4',
+//           authorId: 'anonimo',
+//         },
+//       }, // See the "paths" section below
+//     ],
+//     fallback: "blocking", // false or "blocking"
+//   }
+// } 
 
 
 
