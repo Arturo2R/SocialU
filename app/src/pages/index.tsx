@@ -10,10 +10,20 @@ interface HomeProps {
   data: Post[];
 }
 
-export const getServerSideProps = async () => {
-  const { collection, getDocs, limit, orderBy, query } = await import("@firebase/firestore");
+export const getServerSideProps = async (context:{query:{nrf:boolean}}) => {
+  // nrf: not refetch, for not refetching the data, because it's already fetched in the client side
+  const { nrf } = context.query;
+  console.log("nrf:    ",nrf)
+  if (nrf) {
+    return {
+      props: {
+        data: [],
+      },
+    };
+  }
+  const { collection, getDocs, limit, orderBy, query:fsquery } = await import("@firebase/firestore");
 
-  const q = query(
+  const q = fsquery(
     collection(db, PATH),
     orderBy("createdAt", "desc"),
     limit(MAX_SERVER_SIDE_RESULTS)

@@ -9,17 +9,13 @@ import {
   Stack,
   Text,
   Title,
-  ActionIcon,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 import NextImage from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { ChevronLeft } from "tabler-icons-react";
 import { AuthorInfo } from "../../../components/AuthorInfo";
-// import { useFirestore } from "../../../hooks/useFirestore";
 import { CommentProps } from "../../../components/Comment/Comment";
 import CommentWall from "../../../components/Comment/CommentWall";
 import Layout from "../../../components/Layout/Layout";
@@ -27,11 +23,9 @@ import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
-import { GetStaticPaths } from "next";
-// import "bigger-picture";
 import { Timestamp } from "@firebase/firestore";
 import styles from "./PostPage.module.css"
-// import "https://cdn.jsdelivr.net/npm/bigger-picture@1.0.4/dist/bigger-picture.umd.min.js";
+import BackButton from "../../../components/BackButton";
 
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
@@ -48,7 +42,11 @@ export async function getServerSideProps(context: any) {
     // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
     const postSnap: anything = await getDoc(postRef);
     const data: Post = postSnap.data()
-    console.log(data);
+    if (!data) {
+      return {
+        notFound: true,
+      }
+    }
   
     // console.log(data.computedDate?.toJSON())
     const Payload = {
@@ -69,14 +67,7 @@ export async function getServerSideProps(context: any) {
 
 // export const getStaticPaths = async () => {
 //   return {
-//     paths: [
-//       {
-//         params: {
-//           postId: '4T-5qC4',
-//           authorId: 'anonimo',
-//         },
-//       }, // See the "paths" section below
-//     ],
+//     paths: [],
 //     fallback: "blocking", // false or "blocking"
 //   }
 // } 
@@ -91,6 +82,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // const [respondTo, setRespondTo] = useState("")
   console.log(id)
   const [comments, setComments] = useState<CommentProps[] | undefined>();
+  const [numberOfComments, setNumberOfComments] = useState(content.commentsQuantity || 0)
 
   useEffect(() => {
     let q = query(
@@ -110,6 +102,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
         }));
       // console.log("raw", commentsDB);
       setComments(commentsDB);
+      setNumberOfComments(commentsDB.length)
     });
     return () => {
       unsuscribe()
@@ -142,30 +135,15 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
         {content?.image ? (
           <>
-            <ActionIcon
-              scroll={false}
-              href={`/#${id}`} 
-              variant="light" 
-              color="gray" 
-              component={Link} 
-              classNames={{ 
-                root: "!flex justify-items-center" 
-                }} 
-              className="z-10" 
-              display="flow" 
-              mb="-44px" ml="10px" size="lg" radius="xl" 
-              >
-              <ChevronLeft />
-            </ActionIcon>
+            <BackButton id={id} />
             <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
             <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
           </>
         ) : (<div className="flex space-x-4">
-          <ActionIcon scroll={false} href={`/#${id}`}  variant="light" component={Link} color="gray" classNames={{ root: "!flex justify-items-center" }}  className="z-10" display="flow" mb="-44px" ml="10px" size="lg" radius="xl" >
-            <ChevronLeft />
-          </ActionIcon>
+            <BackButton id={id} />
           <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
-        </div>)}
+        </div>
+        )}
 
 
         {fecha && (
@@ -221,7 +199,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
         <div className="z-10 my-2">
 
-          <Title order={3} mb="sm" >Comentarios</Title>
+          <Title order={3} mb="sm" >Comentarios  • {numberOfComments}</Title>
           <CommentWall postId={id} comments={comments} />
         </div>
 

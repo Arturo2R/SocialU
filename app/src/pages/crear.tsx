@@ -130,19 +130,19 @@ const CrearPost = () => {
       }
       console.log("sip", payload)
       createPost(payload, user);
+      router.push({pathname:"/", query:{nrf:true}}, {pathname:"/",}, {shallow:true});
+      notifications.show({
+        id: "created-post",
+        autoClose: 3000,
+        title: "Post creado",
+        message: "Se Publicó 😀",
+        color: DEFAULT_COLOR,
+        className: "my-notification-class",
+        icon: <FileCheck />,
+      });
     } else {
       throw new Error("No hay usuario");
     }
-    notifications.show({
-      id: "created-post",
-      autoClose: 3000,
-      title: "Post creado",
-      message: "Se Publicó 😀",
-      color: DEFAULT_COLOR,
-      className: "my-notification-class",
-      icon: <FileCheck />,
-    });
-    router.push("/");
   };
 
   return (
