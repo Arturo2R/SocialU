@@ -84,8 +84,13 @@ export const useFirestore = () => {
       const postRef = doc(db, PATH, id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
-    } catch (error) {
-   // console.log(error);
+    } catch (error:any) {
+      console.error(error);
+      posthog?.capture('$exception', {
+        message: error.message,
+        error: "Error buscando el post",
+        function: "fetchPost",
+      })
     } finally {
       setLoading(false);
     }
@@ -131,11 +136,23 @@ export const useFirestore = () => {
           await Promise.all([
             setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), }),
             setDoc(allPostsRef, newPost),
+            posthog.capture('post_created',{
+              postId: generatedPostId,
+              anonimo: true,
+              event: formData.isEvent ? true : false,
+              image: formData.image ? true : false,
+            })
           ]);
         } else {
           await Promise.all([
             setDoc(onlyPublicPostsRef, newPost),
             setDoc(allPostsRef, newPost),
+            posthog.capture('post_created',{
+              postId: generatedPostId,
+              anonimo: false,
+              event: formData.isEvent ? true : false,
+              image: formData.image ? true : false,
+            })
           ]);
         }
         setCreatingPost("loaded")
@@ -184,8 +201,13 @@ export const useFirestore = () => {
             suscriptions: arrayRemove(Payload),
           });
         }
-      } catch (error) {
+      } catch (error:any) {
         console.error("errorsaso", error);
+        posthog?.capture('$exception', {
+          message: error.message,
+          error: "Error suscribiendose",
+          function: "suscribe",
+        })
       } finally {
       }
     } else {
@@ -247,6 +269,10 @@ export const useFirestore = () => {
             // Incrementa el número de comentarios
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)
+            }),
+            posthog.capture('comment_created',{
+              postId: data.postId,
+              anonimo: true,
             })
           ]);
         } else {
@@ -258,11 +284,20 @@ export const useFirestore = () => {
             // Incrementa el número de comentarios
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)
+            }),
+            posthog.capture('comment_created',{
+              postId: data.postId,
+              anonimo: false,
             })
           ]);
         }
-      } catch (error) {
+      } catch (error:any) {
         console.error("Error creando el comentario :", error);
+        posthog?.capture('$exception', {
+          message: error.message,
+          error: "Error creando el comentario",
+          function: "createComment",
+        })
       } finally {
         setCreating(false);
       }
@@ -336,8 +371,13 @@ export const useFirestore = () => {
             };
             setter(Payload);
             await setDoc(userRef, Payload)
-          } catch (error) {
+          } catch (error:any) {
             console.log(error);
+            posthog?.capture('$exception', {
+              message: error.message,
+              error: "Error creando el usuario",
+              function: "createOrFetchUser",
+            })
           } finally {
             setCreating(false);
             posthog.identify(user.uid, {
@@ -350,8 +390,13 @@ export const useFirestore = () => {
           }
         }
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error:any) {
+      console.error(error.message);
+      posthog?.capture('$exception', {
+        message: error.message,
+        error: "Error buscando el usuario",
+        function: "createOrFetchUser",
+      })
     }
   };
 
@@ -385,10 +430,21 @@ export const useFirestore = () => {
         ...data
       }))
 
-      await updateDoc(userRef, data)
-    } catch (error) {
+      await Promise.all([
+        updateDoc(userRef, data),
+        posthog.capture('profile_updated',{
+          anonimoDefault: Payload.anonimoDefault,
+          useUserName: Payload.useUserName,
+        })
+      ]) 
+    } catch (error:any) {
       console.error(error)
       setUpdatingProfile("error")
+      posthog.capture('$exception', {
+        message: error.message,
+        error: "Error actualizando el perfil",
+        function: "updateProfile",
+      })
     } finally {
       setUpdatingProfile("loaded")
     }
@@ -399,8 +455,13 @@ export const useFirestore = () => {
       const q = query(collection(db, "user"))
       const ids = await getDocs(q)
       return q
-    } catch (error) {
+    } catch (error:any) {
       console.error(error)
+      posthog?.capture('$exception', {
+        message: error.message,
+        error: "Error buscando el usuario",
+        function: "UserPaths",
+      })
     }
   }
 
@@ -412,8 +473,13 @@ export const useFirestore = () => {
       const user = await getDocs(userRef)
       const data = user.docs[0].data()
       serAuthorProfile(data)
-    } catch (error) {
+    } catch (error:any) {
       console.error(error)
+      posthog?.capture('$exception', {
+        message: error.message,
+        error: "Error buscando el usuario",
+        function: "fetchUser",
+      })
       return undefined
     }
   }

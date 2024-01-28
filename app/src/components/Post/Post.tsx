@@ -160,7 +160,6 @@ export const PostCard: FC<PostCardProps> = ({
                 onClick={(e: { stopPropagation: () => void }) => {
                   e.stopPropagation();
                   setSuscribed(!suscribed);
-                  
                   typeof postId === "string" && suscribetoPost(postId, suscribed);
                 }}
                 rightSection={suscribed ? <Check /> : <Plus />}

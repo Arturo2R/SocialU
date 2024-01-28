@@ -17,24 +17,25 @@ import { DataStateProvider } from "../context/DataStateContext";
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
 import { POSTHOG_HOST_URL } from "../constants";
+import { useReportWebVitals } from "next/web-vitals";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
 
-  // Check that PostHog is client-side (used to handle Next.js SSR)
-  if (typeof window !== 'undefined') {
-    setTimeout(() => {
-      // Your code here
-      posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
-        opt_in_site_apps: true,
-        api_host: POSTHOG_HOST_URL,
-        // Enable debug mode in development
-        loaded: (posthog) => {
-          if (process.env.NODE_ENV === 'development') posthog.debug()
-        }
-    })
-  }, 0);
+// Check that PostHog is client-side (used to handle Next.js SSR)
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    // Your code here
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY || "", {
+      opt_in_site_apps: true,
+      api_host: POSTHOG_HOST_URL,
+      // Enable debug mode in development
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === 'development') posthog.debug()
+      }
+  })
+}, 0);
 }
 
 export default function App(props: AppProps & { colorScheme: MantineColorScheme }) {
@@ -51,6 +52,11 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
     }
   }, [])
 
+  // const posthog = usePostHog()
+  useReportWebVitals((metric) => {
+    posthog.capture(metric.name, metric)
+    console.log(metric)
+  })
 
   
 
