@@ -23,6 +23,7 @@ import { DEFAULT_COLOR } from "../constants";
 import '@mantine/dates/styles.css';
 import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
+import posthog from "posthog-js";
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
 // import {Editor} from "novel"
@@ -105,6 +106,10 @@ const CrearPost = () => {
       checkImage(imageUrl)
         .then(porn =>{ 
           if(porn){
+            posthog.capture("obscene_image",{
+              email: user?.email,
+              image_url: imageUrl,
+            })
             setOpened(true); 
             setImage(null); 
             setImageUrl(null)

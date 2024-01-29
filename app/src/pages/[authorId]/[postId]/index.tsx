@@ -33,7 +33,7 @@ dayjs.extend(relativeTime);
 dayjs.locale(es);
 // const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
-export async function getServerSideProps(context: any) {
+export async function getStaticProps(context: any) {
   const { postId, authorId } = context.params
   console.log("postID: ", postId, "authorId: ", authorId)
   console.log("el path:",PATH)
@@ -57,7 +57,7 @@ export async function getServerSideProps(context: any) {
       ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
     }
     return {
-      // revalidate: 10,
+      revalidate: 20,
       props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
     }
   } catch (error:any) {
@@ -65,12 +65,12 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-// export const getStaticPaths = async () => {
-//   return {
-//     paths: [],
-//     fallback: "blocking", // false or "blocking"
-//   }
-// } 
+export const getStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: "blocking", // false or "blocking"
+  }
+} 
 
 
 

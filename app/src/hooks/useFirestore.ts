@@ -142,7 +142,9 @@ export const useFirestore = () => {
               event: formData.isEvent ? true : false,
               image: formData.image ? true : false,
             })
-          ]);
+          ]).then(() =>
+            fetch(`/api/revalidate?secret=calandriel&id=${generatedPostId}&author=anonimo`)
+          )
         } else {
           await Promise.all([
             setDoc(onlyPublicPostsRef, newPost),
@@ -153,13 +155,20 @@ export const useFirestore = () => {
               event: formData.isEvent ? true : false,
               image: formData.image ? true : false,
             })
-          ]);
+          ]).then( () =>
+            fetch(`/api/revalidate?secret=calandriel&id=${generatedPostId}&author=${newPost.userName}`)
+          )
         }
         setCreatingPost("loaded")
 
       } catch (thiserror: any) {
         setCreatingPost("error")
         console.error("Error creando la Publicación:", thiserror.message);
+        posthog?.capture('$exception', {
+          message: thiserror.message,
+          error: "Error creando el post",
+          function: "suscribe",
+        })
       } finally {
         setCreatingPost("loaded")
       }
