@@ -51,7 +51,8 @@ const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
     ],
   },
   experimental: {
-    scrollRestoration: true
+    scrollRestoration: true,
+    instrumentationHook: true
   },
   typescript: {
     // !! WARN !!
