@@ -7,9 +7,7 @@ import {
   Title,
   Image,
 } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
 import { UserCredential } from "firebase/auth";
-// import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
@@ -31,7 +29,6 @@ export const AppHeader = ({
   user,
   loginProvider
 }: AppHeaderProps) => {
-  const matches = useMediaQuery("(max-width: 400px)");
 
   function getRandomString(date:Date, stringList:string[]):string {
     const randomIndex = Math.floor(date.getDate() % stringList.length);
@@ -44,7 +41,6 @@ export const AppHeader = ({
 
   return (
       <Group px="md" h="100%" justify="space-between" >
-
         
         <Burger
             opened={opened}
@@ -74,7 +70,7 @@ export const AppHeader = ({
           )}
           {(user === null)&&(loginProvider) && (
               <Button
-                size={matches ? "md" : "xs"}
+                size="xs"
                 color={DEFAULT_COLOR}
                 onClick={loginProvider}
               >
@@ -85,7 +81,7 @@ export const AppHeader = ({
               <Button
                 component={Link}
                 href="/welcome"
-                size={matches ? "md" : "xs"}
+                size="xs"
                 color={DEFAULT_COLOR}
               >
                 Iniciar Sesión
