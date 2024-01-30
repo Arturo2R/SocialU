@@ -1,3 +1,5 @@
+/** @type {import('next').NextConfig} */
+
 const million = require('million/compiler')
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -29,6 +31,19 @@ const millionConfig = {
   // auto: { rsc: true },
 }
 
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    block-all-mixed-content;
+    upgrade-insecure-requests;
+`
 
 const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
   reactStrictMode: true,
@@ -79,7 +94,18 @@ const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
         headers: [{
           key: 'Referrer-Policy',
           value: 'strict-origin-when-cross-origin'
-        }],
+        },
+        {
+          key: 'Strict-Transport-Security',
+          value: 'max-age=63072000; includeSubDomains; preload'
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff'
+        },{
+          key: 'Content-Security-Policy',
+          value: cspHeader.replace(/\n/g, ''),
+        },],
       },
     ]
   },
