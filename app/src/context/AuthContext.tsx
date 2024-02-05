@@ -6,12 +6,12 @@ import {
   // signInWithEmailAndPassword,
   // UserCredential
   onAuthStateChanged,
-  OAuthProvider, 
+  OAuthProvider,
   signInWithPopup,
   signOut,
-  signInWithRedirect, 
+  signInWithRedirect,
 } from "firebase/auth";
-import { notifications }  from '@mantine/notifications'
+import { notifications } from '@mantine/notifications'
 // import jwt_decode from "jwt-decode";
 import { X } from "tabler-icons-react";
 // import { useStore } from "../store";
@@ -19,6 +19,7 @@ import { auth } from "../firebase";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 import posthog from "posthog-js";
+import { useRouter } from "next/router";
 
 
 export const authContext = createContext<AuthContextInterface | undefined>(
@@ -60,9 +61,10 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user,  setUser] = useState<UserState | null>(null);
+  const [user, setUser] = useState<UserState | null>(null);
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [valid, setValid] = useState<boolean | "unset">("unset");
+  // const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
@@ -77,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // const login = (email: string, password: string) => {
   //   return signInWithEmailAndPassword(auth, email, password);
   // };
-  const loginWithMicrosoft = () => { 
+  const loginWithMicrosoft = () => {
     const microsoftProvider = new OAuthProvider('microsoft.com');
     microsoftProvider.setCustomParameters({
       // Force re-consent.
@@ -86,55 +88,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Target specific email with login hint.
       login_hint: "usuario@uninorte.edu.co",
       login_type: "popup",
-     // select_account: "true",
-     // use_account: "true",
-     domain_hint: "uninorte.edu.co",
-    // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
+      // select_account: "true",
+      // use_account: "true",
+      domain_hint: "uninorte.edu.co",
+      // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
     });
-    if(navigator.userAgent.includes("Instagram")){
+    if (navigator.userAgent.includes("Instagram")) {
       return signInWithRedirect(auth, microsoftProvider);
     } else {
       return signInWithPopup(auth, microsoftProvider);
     }
-    
+
   };
 
   // ! Dont delete this, it will be used later
-//   const loginWithGoogle = () => {
-//  // console.log("google provider");
-//     const googleProvider = new GoogleAuthProvider();
-//     googleProvider.setCustomParameters({
-//       login_hint: "usuario@uninorte.edu.co",
-//       login_type: "popup",
-//       prompt: "select_account",
-//       select_account: "true",
-//       use_account: "true",
-//       hd: "uninorte.edu.co",
-//     });
-//     return signInWithPopup(auth, googleProvider);
-//   };
-    const suscribetoPost = async (postId: string, remove:boolean,) => {
-      if(user) await suscribe(postId, remove, user);
-    }
+  //   const loginWithGoogle = () => {
+  //  // console.log("google provider");
+  //     const googleProvider = new GoogleAuthProvider();
+  //     googleProvider.setCustomParameters({
+  //       login_hint: "usuario@uninorte.edu.co",
+  //       login_type: "popup",
+  //       prompt: "select_account",
+  //       select_account: "true",
+  //       use_account: "true",
+  //       hd: "uninorte.edu.co",
+  //     });
+  //     return signInWithPopup(auth, googleProvider);
+  //   };
+  const suscribetoPost = async (postId: string, remove: boolean,) => {
+    if (user) await suscribe(postId, remove, user);
+  }
 
 
   // ! Dont delete this, it will be used later
-//   const loginWithGoogleOneTap = (
-//     response: googleResponse
-//   ): Promise<UserCredential> => {
-//  // console.log("google one tap");
-//     const data: googleDecodedResponse = jwt_decode(response.credential);
-//  // console.log(data);
-//     const cred = GoogleAuthProvider.credential(response.credential);
-//     // Sign in with credential from the Google user.
-//     // console.log(user)
-//     return signInWithCredential(auth, cred);
-//   };
+  //   const loginWithGoogleOneTap = (
+  //     response: googleResponse
+  //   ): Promise<UserCredential> => {
+  //  // console.log("google one tap");
+  //     const data: googleDecodedResponse = jwt_decode(response.credential);
+  //  // console.log(data);
+  //     const cred = GoogleAuthProvider.credential(response.credential);
+  //     // Sign in with credential from the Google user.
+  //     // console.log(user)
+  //     return signInWithCredential(auth, cred);
+  //   };
 
   const logout = () => {
- // console.log("Se fue");
+    // console.log("Se fue");
     setUser(null);
-    setValid("unset");
+    // setValid("unset");
     signOut(auth);
     posthog.reset();
     notifications.show({
@@ -151,47 +153,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // const resetPassword = async (email: string): Promise<void> =>
   //   sendPasswordResetEmail(auth, email);
 
-    // const updateUser =(configurationData:any)=>{
-    //   auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
-    //   auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
-    // }).catch((error) => {
-    //// console.log(error)
-    // });
-    // }
+  // const updateUser =(configurationData:any)=>{
+  //   auth?.currentUser && updateProfile(auth.currentUser, configurationData).then(() => {
+  //   auth?.currentUser?.uid && updateFirestoreProfile(auth.currentUser.uid, configurationData)
+  // }).catch((error) => {
+  //// console.log(error)
+  // });
+  // }
 
 
   useEffect(() => {
- // console.log("unsubuscribe effect", valid);
+    // console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
         setUser(currentUser);
         // console.log({ currentUser });
         createOrFetchUser(currentUser, setUser);
         setLoading(false);
-     // console.log("elusuario", user);
+        // console.log("elusuario", user);
+        const valid = StudentValidation(currentUser.email);
+        console.log("la validacion es ", valid);
+        // setValid(quees);
+        if (valid === false) {
+          logout();
+          notifications.show({
+            id: "get-out",
+            autoClose: false,
+            title: "No Estas Permitido",
+            message:
+              "No estas usando un correo universtario de una de nuestras universidades permitidas",
+            color: "red",
+            icon: <X />,
+          });
+        }
+        if (valid === true) {
+          router.push("/")
+          notifications.show({
+            id: "welcome",
+            autoClose: 5000,
+            title: "Bienvenido a SocialU!",
+            message: "Estas usando un correo universitario permitido",
+            color: "green",
+          });
+    
+        }
       } else {
         console.log("No hay usuario");
       }
     });
-    if (user?.email) {
-      const quees = StudentValidation(user.email);
-    // console.log("la validacion es", quees);
-      setValid(quees);
-    }
-    if (valid === false) {
-      logout();
-      notifications.show({
-        id: "get-out",
-        autoClose: false,
-        title: "No Estas Permitido",
-        message:
-          "No estas usando un correo universtario de una de nuestras universidades permitidas",
-        color: "red",
-        icon: <X/>,
-      });
-    }
+
+
     return () => unsubuscribe();
   }, [auth]);
+
+
 
 
 
@@ -204,7 +219,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser,
         suscribetoPost,
         logout,
-        valid,
+        // valid,
         loading,
         // loginWithGoogle,
         loginWithMicrosoft,

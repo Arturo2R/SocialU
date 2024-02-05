@@ -16,7 +16,7 @@ import Config from "../../config"
 export function AppNavbar() {
   // const { classes, cx } = useStyles();
   const { logout } = useAuth();
-  const [active, setActive] = useState('Billing');
+  const [active, setActive] = useState('d');
 
   const links = data.map((item) => (
     <Link
@@ -36,15 +36,15 @@ export function AppNavbar() {
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
-        <Group className={classes.header} justify="space-between">
+        {/* <Group className={classes.header} justify="space-between"> */}
           {/* <MantineLogo size={28} /> */}
-          <Code fw={700}>{version}</Code>
-        </Group>
-        <Protected.Component>
+        {/* </Group> */}
+        {/* <Protected.Component> */}
           {links}
-        </Protected.Component>
+        {/* </Protected.Component> */}
       </div>
 
+      {/* <Code fw={700}>{version}</Code> */}
       <div className={classes.footer}>
         {/* <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
           <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />

@@ -1,0 +1,5 @@
+@media (min-width: 768px) {
+    .nav {
+        --app-shell-footer-offset: initial;
+    }
+}

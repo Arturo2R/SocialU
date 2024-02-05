@@ -371,10 +371,8 @@ export const useFirestore = () => {
               uid: user.uid,
               email,
               userName,
-              configuration: { 
-                anonimoDefault: false,
-                useUserName: false,
-              },
+              useUserName: true,
+              anonimoDefault: false,
               ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
               ...(user.photoURL && { photoURL: user.photoURL }),
             };

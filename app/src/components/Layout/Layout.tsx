@@ -8,7 +8,7 @@ import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
 // import { BellRinging, Send, Settings } from 'tabler-icons-react';
 import { useDisclosure } from '@mantine/hooks';
-
+import styles from "./Layout.module.css"
 
 // const Google1Tap= lazy(() => import('../Google1Tap.client'));
 
@@ -38,11 +38,11 @@ function Layout({ children }: LayoutProps) {
             setOpened={toggle}
             color={theme.colors.gray[6]}
             user={user}
-            loginProvider={loginWithMicrosoft}
+            // loginProvider={loginWithMicrosoft}
           />
       </AppShell.Header>
-      <AppShell.Footer hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
-      <AppShell.Navbar p="md">
+      <AppShell.Footer  hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
+      <AppShell.Navbar className={styles.nav} p="md">
         <AppNavbar /> 
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

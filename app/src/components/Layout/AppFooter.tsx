@@ -19,7 +19,6 @@ const AppFooter = () => {
     // </Footer>
     // <Protected.Component>
     // <MediaQuery largerThan="sm" styles={{ display: "none" }}>
-      <footer >
         <Group grow>
             <Button 
               component={Link}
@@ -34,7 +33,6 @@ const AppFooter = () => {
               Crear Post
             </Button>
         </Group>
-      </footer>
     // </MediaQuery>
     // </Protected.Component>
   );

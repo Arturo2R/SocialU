@@ -19,7 +19,7 @@ interface AppHeaderProps {
   setOpened: React.Dispatch<React.SetStateAction<boolean>>;
   color: any;
   user: User | null;
-  loginProvider: () => Promise<UserCredential>;
+  loginProvider?: () => Promise<UserCredential>;
 }
 
 export const AppHeader = ({
@@ -80,7 +80,7 @@ export const AppHeader = ({
           {(user === null)&&(!loginProvider) && (
               <Button
                 component={Link}
-                href="/welcome"
+                href="/bienvenido"
                 size="xs"
                 color={DEFAULT_COLOR}
               >
