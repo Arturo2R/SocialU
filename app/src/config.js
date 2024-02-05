@@ -2,7 +2,7 @@ import { IconBellRinging, IconSend, IconSettings } from "@tabler/icons-react";
 import pk from "../package.json";
 export default function () {
   return {
-    domain: "socia-u.vercel.app",
+    domain: "redsocialu.com",
     siteName: "SocialU",
     logo: "/logo.png",
     bussiness: {
