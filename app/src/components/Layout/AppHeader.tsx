@@ -36,7 +36,7 @@ export const AppHeader = ({
   }
 
   const stringList = config().appNames;
-  const randomString = process.env.VERCEL_ENV ? "βeta" : getRandomString(new Date(), stringList);
+  const randomString = process.env.VERCEL_ENV==="preview" ? "βeta" : getRandomString(new Date(), stringList);
   const officialAppName = config().siteName
 
   return (
