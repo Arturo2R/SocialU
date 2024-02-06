@@ -1,7 +1,7 @@
 import App from "../pages/_app";
 import { Timestamp } from "@firebase/firestore";
 
-export {};
+export { };
 
 declare global {
   interface Window {
@@ -22,16 +22,16 @@ declare global {
     career: string;
   }
 
-  interface AppConfiguration { 
+  interface AppConfiguration {
     anonimoDefault: boolean;
     useUserName: boolean;
   }
 
   type UserState = User & AppConfiguration
-  
+
 
   interface FormPost {
-    title: string;
+    title?: string;
     message: string; // !TODO: Change property name to content
     image?: string;
     isEvent?: boolean;
@@ -52,8 +52,8 @@ declare global {
     imageData?: imageData;
     computedDate?: Date;
   }
-  
-  interface PostCardProps  {
+
+  interface PostCardProps {
     author:
     | { image?: string | null; name: string; id: string }
     | "anonimo";
@@ -61,7 +61,7 @@ declare global {
     imageData?: imageData;
     image?: string;
     description: string;
-    title: string;
+    title?: string;
     date?: Date;
     event?: boolean;
     postId?: string;
@@ -84,7 +84,7 @@ declare global {
 
   interface Post extends ComputedPost {
     useUserName: boolean;
-    authorEmail: string; 
+    authorEmail: string;
     id?: string;
     createdAt: any; // !TODO: Change string to Date type
     userUID?: string;
@@ -97,61 +97,61 @@ declare global {
     commentsQuantity?: number;
   }
 
-  
-interface googleResponse {
-  credential: string;
-  clientId: string;
-  select_by: string;
-}
 
-interface googleDecodedResponse {
-  email: string;
-  email_verified: boolean;
-  name: string;
-  picture: string;
-  sub: string;
-  given_name: string;
-  family_name: string;
-  locale: string;
-}
+  interface googleResponse {
+    credential: string;
+    clientId: string;
+    select_by: string;
+  }
 
-interface Login {
-  email: string;
-  password: string;
-}
+  interface googleDecodedResponse {
+    email: string;
+    email_verified: boolean;
+    name: string;
+    picture: string;
+    sub: string;
+    given_name: string;
+    family_name: string;
+    locale: string;
+  }
 
-interface AuthContextInterface {
-  // signup(email: string, password: string): Promise<UserCredential>;
-  // login(email: string, password: string): Promise<UserCredential>;
-  suscribetoPost(postId: string, remove: boolean): Promise<void>;
-  user: UserState | null;
-  setUser: Function
-  logout(): void;
-  valid: boolean|string;
-  loading: boolean;
-  // loginWithGoogle():? Promise<UserCredential>;
-  loginWithMicrosoft(): Promise<UserCredential>;
-  // resetPassword(email: string): Promise<void>;
-  // loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
-}
+  interface Login {
+    email: string;
+    password: string;
+  }
+
+  interface AuthContextInterface {
+    // signup(email: string, password: string): Promise<UserCredential>;
+    // login(email: string, password: string): Promise<UserCredential>;
+    suscribetoPost(postId: string, remove: boolean): Promise<void>;
+    user: UserState | null;
+    setUser: Function
+    logout(): void;
+    // valid: boolean|string;
+    loading: boolean;
+    // loginWithGoogle():? Promise<UserCredential>;
+    loginWithMicrosoft(): Promise<UserCredential>;
+    // resetPassword(email: string): Promise<void>;
+    // loginWithGoogleOneTap(response: googleResponse): Promise<UserCredential>;
+  }
 
 
 
-interface University {
-  name: string;
-  domain: string;
-}
-interface superUser {
-  email: string;
-  uid: string;
-  displayName?: string;
-  photoURL?: string;
-  username?: string;
-  phoneNumber?: number;
-  university: University;
-  description?: string;
-  carrer?: string;
-}
+  interface University {
+    name: string;
+    domain: string;
+  }
+  interface superUser {
+    email: string;
+    uid: string;
+    displayName?: string;
+    photoURL?: string;
+    username?: string;
+    phoneNumber?: number;
+    university: University;
+    description?: string;
+    carrer?: string;
+  }
 
   interface anything {
     [field: string]: any | [];

@@ -40,14 +40,14 @@ interface FormInputs {
   MyCheckbox: boolean
 }
 
-export const checkImage = async (url:string, cacheImage?:boolean): Promise<boolean> => {
+export const checkImage = async (url: string, cacheImage?: boolean): Promise<boolean> => {
   let data = {
-    "DataRepresentation":"URL",
+    "DataRepresentation": "URL",
     "Value": url
   };
-  let isPorn : boolean = false
+  let isPorn: boolean = false
   try {
-    let response = await fetch(process.env.NEXT_PUBLIC_AZURE_NAP_URL + `/contentmoderator/moderate/v1.0/ProcessImage/Evaluate${cacheImage ?"?CacheImage=true" : ""}`  , {
+    let response = await fetch(process.env.NEXT_PUBLIC_AZURE_NAP_URL + `/contentmoderator/moderate/v1.0/ProcessImage/Evaluate${cacheImage ? "?CacheImage=true" : ""}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -65,20 +65,20 @@ export const checkImage = async (url:string, cacheImage?:boolean): Promise<boole
 }
 
 const CrearPost = () => {
-  const {user} = useAuth()
-  const { register,setValue, handleSubmit, watch, control, formState: { errors } } =  hform({
+  const { user } = useAuth()
+  const { register, setValue, handleSubmit, watch, control, formState: { errors } } = hform({
     defaultValues: {
       title: "",
       message: "",
       isEvent: false,
       time: "", //
-      date: null ,
+      date: null,
       image: "",
       anonimo: user?.anonimoDefault || false,
     }
   });
   console.log(errors);
-  
+
   console.log(user?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false) // #MOdal
@@ -88,8 +88,8 @@ const CrearPost = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const { createPost, creatingPost } = useFirestore();
-  
-  const [imageData, setImageData] = useState<{width: number, height: number} | null>(null);
+
+  const [imageData, setImageData] = useState<{ width: number, height: number } | null>(null);
 
   const matches = useMediaQuery('(max-width: 768px)', true, {
     getInitialValueInEffect: false,
@@ -98,22 +98,22 @@ const CrearPost = () => {
   // const [value, setValue] = useState<Date | null>(null);
 
   const router = useRouter();
-  
 
-  const [imageChecking, setImageChecking] = useState<null|"loading"|"loaded">(null)
+
+  const [imageChecking, setImageChecking] = useState<null | "loading" | "loaded">(null)
   useEffect(() => {
-    if(imageUrl){
+    if (imageUrl) {
       checkImage(imageUrl)
-        .then(porn =>{ 
-          if(porn){
-            posthog.capture("obscene_image",{
+        .then(porn => {
+          if (porn) {
+            posthog.capture("obscene_image", {
               email: user?.email,
               image_url: imageUrl,
             })
-            setOpened(true); 
-            setImage(null); 
+            setOpened(true);
+            setImage(null);
             setImageUrl(null)
-          }else{
+          } else {
             setValue("image", imageUrl)
           }
         }
@@ -123,19 +123,19 @@ const CrearPost = () => {
   }, [imageUrl]);
 
 
-  const submitPost:SubmitHandler<FormPost> = postValues => {
-    if(user){
+  const submitPost: SubmitHandler<FormPost> = postValues => {
+    if (user) {
       let payload: ComputedPost = postValues
-      if(postValues.image && imageData) {
-        payload = {...postValues, imageData: imageData}
-      } 
+      if (postValues.image && imageData) {
+        payload = { ...postValues, imageData: imageData }
+      }
       if (postValues.date && postValues.time) {
         console.log("date: ", postValues.date, "time: ", postValues.time)
-        payload = {...payload, computedDate: new Date(postValues.date.toISOString().split('T')[0] + "T" + postValues.time + ":00")}
+        payload = { ...payload, computedDate: new Date(postValues.date.toISOString().split('T')[0] + "T" + postValues.time + ":00") }
       }
       console.log("sip", payload)
       createPost(payload, user);
-      router.push({pathname:"/", query:{nrf:true}}, {pathname:"/",}, {shallow:true});
+      router.push({ pathname: "/", query: { nrf: true } }, { pathname: "/", }, { shallow: true });
       notifications.show({
         id: "created-post",
         autoClose: 3000,
@@ -153,14 +153,14 @@ const CrearPost = () => {
   return (
     <Layout>
       <Protected.Route>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        withCloseButton={false}
-        title="Que Pensabas!"
-      >
-       <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
-      </Modal>
+        <Modal
+          opened={opened}
+          onClose={() => setOpened(false)}
+          withCloseButton={false}
+          title="Que Pensabas!"
+        >
+          <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
+        </Modal>
         <Container p={0} className="h-full">
           <form
             onSubmit={handleSubmit(submitPost)}
@@ -177,7 +177,7 @@ const CrearPost = () => {
               />
               <Textarea
                 variant="unstyled"
-                placeholder="Titulo"
+                placeholder="Titulo (Opcional)"
                 error={errors.title?.message}
                 size="xl"
                 minRows={1}
@@ -185,10 +185,9 @@ const CrearPost = () => {
                 classNames={{
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
-                {...register("title",{ 
-                  required: "El titulo es necesario", 
-                  minLength: { value:5, message: "No menos de 5 caracteres" },
-                  maxLength: { value:80, message: "No más de 80 caracteres" } 
+                {...register("title", {
+                  minLength: { value: 5, message: "No menos de 5 caracteres" },
+                  maxLength: { value: 80, message: "No más de 80 caracteres" }
                 })}
               />
               <div className="hidden !p-0"></div>
@@ -200,12 +199,13 @@ const CrearPost = () => {
                 maxLength={2000}
                 minRows={5}
                 autosize
-                {...register("message",{
+                {...register("message", {
                   required: "La descripcion es necesaria",
-                  minLength: { value:20, message: "No menos de 20 caracteres" }, 
-                  maxLength: { value:2000, message: "No más de 2000 caracteres" } })}
+                  minLength: { value: 20, message: "No menos de 20 caracteres" },
+                  maxLength: { value: 2000, message: "No más de 2000 caracteres" }
+                })}
               />
-                {/* <TypographyStylesProvider pl="0">
+              {/* <TypographyStylesProvider pl="0">
                 <Editor />
               </TypographyStylesProvider>  */}
               <Switc
@@ -215,52 +215,49 @@ const CrearPost = () => {
                 name="anonimo"
               />
               <Switc
-                  label="Reunion / Solicitar Ayuda"
-                   control={control}
-                   name="isEvent"
+                label="Reunion / Solicitar Ayuda"
+                control={control}
+                name="isEvent"
               />
-
-              
-
               {watch("isEvent") && (
                 <>
                   {matches ? (
                     <Controller
-                     name="date"
-                     control={control}
-                     rules={{ required: "La fecha es necesaria", }}
-                     render={({ field }) => (
-                     <Input.Wrapper required={watch("isEvent")} label="Fecha" error={errors.date?.message}>
-                      <Center>
-                       <DatePicker 
-                        mx="auto"
-                        // required={true}
-                        // control={control}
-                        size="md"
-                        onChange={field.onChange}
-                        value={field.value}
-                        // label="Día De Reunion"
-                        // {...register("date",{ required: true })} 
-                        />
-                        </Center>
-                     </Input.Wrapper>
- 
-                       )}
-                   />
-                  ):(
-                     <DatePick
+                      name="date"
+                      control={control}
+                      rules={{ required: "La fecha es necesaria", }}
+                      render={({ field }) => (
+                        <Input.Wrapper required={watch("isEvent")} label="Fecha" error={errors.date?.message}>
+                          <Center>
+                            <DatePicker
+                              mx="auto"
+                              // required={true}
+                              // control={control}
+                              size="md"
+                              onChange={field.onChange}
+                              value={field.value}
+                            // label="Día De Reunion"
+                            // {...register("date",{ required: true })} 
+                            />
+                          </Center>
+                        </Input.Wrapper>
+
+                      )}
+                    />
+                  ) : (
+                    <DatePick
                       required={true}
                       control={control}
                       label="Día De Reunion"
                       {...register("date")}
                     />
                   )}
-              
-                  
-                  <Input.Wrapper  required={watch("isEvent")} label="Hora" error={errors.time?.message}>
+
+
+                  <Input.Wrapper required={watch("isEvent")} label="Hora" error={errors.time?.message}>
                     <Input type="time" id="time-is-value"
-                    {...register("time",{ required: "La hora es necesaria" })}
-                      />
+                      {...register("time", { required: "La hora es necesaria" })}
+                    />
                   </Input.Wrapper>
                 </>
               )}
@@ -279,7 +276,7 @@ const CrearPost = () => {
             </Button>
           </form>
         </Container>
-     </Protected.Route>
+      </Protected.Route>
     </Layout>
   );
 };

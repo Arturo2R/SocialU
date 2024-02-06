@@ -162,41 +162,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // }
 
 
+
   useEffect(() => {
     // console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
         setUser(currentUser);
         // console.log({ currentUser });
-        createOrFetchUser(currentUser, setUser);
-        setLoading(false);
-        // console.log("elusuario", user);
-        const valid = StudentValidation(currentUser.email);
-        console.log("la validacion es ", valid);
-        // setValid(quees);
-        if (valid === false) {
-          logout();
-          notifications.show({
-            id: "get-out",
-            autoClose: false,
-            title: "No Estas Permitido",
-            message:
-              "No estas usando un correo universtario de una de nuestras universidades permitidas",
-            color: "red",
-            icon: <X />,
-          });
+        const fectchUser = async () => {
+          const newUser = await createOrFetchUser(currentUser, setUser);
+          setLoading(false);
+          // console.log("elusuario", user);
+          const valid = StudentValidation(currentUser.email);
+          console.log("la validacion es ", valid);
+          // setValid(quees);
+          if (valid === true) {
+            if (newUser) {
+              notifications.show({
+                id: "welcome",
+                autoClose: 5000,
+                title: "Bienvenido a SocialU!",
+                message: "Estas usando un correo universitario permitido",
+                color: "green",
+              });
+            }
+            router.push("/")
+          }
+          if (valid === false) {
+            logout();
+            notifications.show({
+              id: "get-out",
+              autoClose: false,
+              title: "No Estas Permitido",
+              message:
+                "No estas usando un correo universtario de una de nuestras universidades permitidas",
+              color: "red",
+              icon: <X />,
+            });
+          }
         }
-        if (valid === true) {
-          router.push("/")
-          notifications.show({
-            id: "welcome",
-            autoClose: 5000,
-            title: "Bienvenido a SocialU!",
-            message: "Estas usando un correo universitario permitido",
-            color: "green",
-          });
-    
-        }
+        fectchUser()
+        router.push("/")
       } else {
         console.log("No hay usuario");
       }

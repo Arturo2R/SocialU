@@ -65,44 +65,44 @@ export const PostCard: FC<PostCardProps> = ({
   const { suscribetoPost } = useAuth();
   return (
     <article className="max-w-sm px" id={postId}>
-      <Card withBorder p="xs" radius="md">
-        <Link
-          href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
-          className="X"
-        >
-          <>
-            {image && (
-              <Card.Section className={styles.mainImage}>
-                <Image
-                  src={image}
-                  alt={title}
-                  width={imageData?.width || 380}
-                  height={imageData?.height || 240}
-                  color={DEFAULT_COLOR}
-                  loading={priority ? "eager" : "lazy"}
-                  quality={70}
-                  priority={priority}
-                  // style="margin: -10px -10px 10px -10px; display:block"
-                  // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
-                  // priority={key === 1||2||3||4 ? true:false }
-                  // width={380}
-                  // withPlaceholder
-                  // placeholder={<Text align="center">This image contained the meaning of life</Text>}
-                  // layout="fill"
-                  className="w-full"
-                  sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
-                // style={{
-                //   width: "100%",
-                //   height: "auto"
-                // }} 
-                />
-              </Card.Section>
-            )}
-            {/* <Badge>{category}</Badge> */}
-            <Title lineClamp={2} py="5px" order={3} className="text-xl font-bold break-words text-pretty hyphens-auto"  lang="es">{title}</Title>
-          </>
-        </Link>
-        {author !== "anonimo" ? (
+      <Card component={Link}
+        href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
+        className="X"
+        withBorder p="xs" radius="md">
+        <>
+          {image && (
+            <Card.Section className={styles.mainImage}>
+              <Image
+                src={image}
+                alt={title || "No hay titulo"}
+                width={imageData?.width || 380}
+                height={imageData?.height || 240}
+                color={DEFAULT_COLOR}
+                loading={priority ? "eager" : "lazy"}
+                quality={70}
+                priority={priority}
+                // style="margin: -10px -10px 10px -10px; display:block"
+                // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
+                // priority={key === 1||2||3||4 ? true:false }
+                // width={380}
+                // withPlaceholder
+                // placeholder={<Text align="center">This image contained the meaning of life</Text>}
+                // layout="fill"
+                className="w-full"
+                sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
+              // style={{
+              //   width: "100%",
+              //   height: "auto"
+              // }} 
+              />
+            </Card.Section>
+          )}
+          {/* <Badge>{category}</Badge> */}
+          {title && (
+            <Title lineClamp={2} py="5px" order={3} className="text-xl font-bold break-words text-pretty hyphens-auto" lang="es">{title}</Title>
+          )}
+        </>
+        {author !== "anonimo" && (
           <Link href={`/${author.id}`} >
             <Group className="mt-1" gap="xs">
               {author?.image && <Image
@@ -116,18 +116,17 @@ export const PostCard: FC<PostCardProps> = ({
                   maxWidth: "100%",
                   height: "auto"
                 }} />}
-              <p className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</p>
+              <Text color={DEFAULT_COLOR} className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</Text>
             </Group>
           </Link>
-        ) : (
-          <Text color={DEFAULT_COLOR}>Anónimo</Text>
         )}
         <Spoiler
           className="mt-1"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
           maxHeight={110}
           showLabel="Ver Más"
           hideLabel="Menos"
+          transitionDuration={120}
         >
           <Text>{description}</Text>
           {/* <TypographyStylesProvider>
@@ -137,18 +136,24 @@ export const PostCard: FC<PostCardProps> = ({
         </Spoiler>
         {event && (
           <>
-            <Group grow mt="sm" >
+            <Group grow mt="sm" onClick={(e)=>{
+              e.preventDefault();  
+              e.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation() ;
+            }}>
               <Button
                 className="text-sm sm:text-base"
                 size="compact-lg"
-                onClick={(e: { stopPropagation: () => void }) => {
+                onClick={(e) => {
+                  e.preventDefault();  
                   e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation() ;
                   setExpanded(!expanded);
                 }}
                 variant="light"
                 gradient={DEFAULT_GRADIENT}
                 disabled={show0IfThereisNoSuscribers()}
-                // rightIcon={<ChevronsRight />}
+              // rightIcon={<ChevronsRight />}
               >
                 {asistants?.length} Asistentes
               </Button>
@@ -157,8 +162,10 @@ export const PostCard: FC<PostCardProps> = ({
                 gradient={DEFAULT_GRADIENT}
                 className="text-sm sm:text-base"
                 size="compact-lg"
-                onClick={(e: { stopPropagation: () => void }) => {
+                onClick={(e) => {
+                  e.preventDefault();  
                   e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation() ;
                   setSuscribed(!suscribed);
                   typeof postId === "string" && suscribetoPost(postId, suscribed);
                 }}
@@ -188,10 +195,9 @@ export const PostCard: FC<PostCardProps> = ({
           </>
         )}
         {commentsQuantity && (
-          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentario{commentsQuantity > 1  ? "s": ""}</Text>
+          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>
         )}
       </Card>
-
     </article>
   );
 };

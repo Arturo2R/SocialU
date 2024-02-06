@@ -36,7 +36,7 @@ dayjs.locale(es);
 export async function getStaticProps(context: any) {
   const { postId, authorId } = context.params
   console.log("postID: ", postId, "authorId: ", authorId)
-  console.log("el path:",PATH)
+  console.log("el path:", PATH)
   try {
     const postRef = doc(db, PATH, postId);
     // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
@@ -47,7 +47,7 @@ export async function getStaticProps(context: any) {
         notFound: true,
       }
     }
-  
+
     // console.log(data.computedDate?.toJSON())
     const Payload = {
       ...data,
@@ -60,8 +60,8 @@ export async function getStaticProps(context: any) {
       revalidate: 20,
       props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
     }
-  } catch (error:any) {
-    console.error("Error en en ISR del post ",error.message)
+  } catch (error: any) {
+    console.error("Error en en ISR del post ", error.message)
   }
 }
 
@@ -70,7 +70,7 @@ export const getStaticPaths = async () => {
     paths: [],
     fallback: "blocking", // false or "blocking"
   }
-} 
+}
 
 
 
@@ -128,7 +128,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
     <Layout>
 
-      <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title} />
+      <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title || `Post ${id}`} />
       <span className="hidden bg-dark/50 dark:bg-white/50"></span>
 
       <Paper classNames={{ root: styles.postPage }}>
@@ -137,11 +137,15 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           <>
             <BackButton id={id} />
             <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
-            <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
+            {content.title && (
+              <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
+            )}
           </>
         ) : (<div className="flex space-x-4">
-            <BackButton id={id} />
-          <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
+          <BackButton id={id} />
+          {content.title && (
+            <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content.title}</Title>
+          )}
         </div>
         )}
 

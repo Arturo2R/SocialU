@@ -331,7 +331,7 @@ export const useFirestore = () => {
 
   }
 
-  const createOrFetchUser = async (user: any, setter: Function) => {
+  const createOrFetchUser = async (user: any, setter: Function):Promise<boolean> => {
     // const {state} = useStore();
     console.log("Buscando al Usuario", user.email)
 
@@ -354,8 +354,8 @@ export const useFirestore = () => {
           email: user.email,
           last_login: user.metadata.lastSignInTime,
         },)
-
       } else {
+        
         if (user?.displayName && user?.uid && user?.email) {
           try {
             console.log("Creando Un Nuevo Usuario");
@@ -393,6 +393,7 @@ export const useFirestore = () => {
               email: user.email,
               last_login: user.metadata.lastSignInTime,
             })
+            return true
             // console.log(useStore.getState().user);
           }
         }
@@ -405,6 +406,7 @@ export const useFirestore = () => {
         function: "createOrFetchUser",
       })
     }
+    return false
   };
 
   interface userConfiguration extends userSchema {
