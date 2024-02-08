@@ -58,9 +58,6 @@ export const PostCard: FC<PostCardProps> = ({
     }
     return false;
   };
-  // const generateText = async (text: string) => {
-  //   await markdownToHtml(text)
-  // }
 
   const { suscribetoPost } = useAuth();
   return (
@@ -122,7 +119,11 @@ export const PostCard: FC<PostCardProps> = ({
         )}
         <Spoiler
           className="mt-1"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation() }}
+          onClick={(e) => {
+            if (description.length > 200) {
+              e.preventDefault(); e.stopPropagation()
+            }
+          }}
           maxHeight={110}
           showLabel="Ver Más"
           hideLabel="Menos"
@@ -136,18 +137,18 @@ export const PostCard: FC<PostCardProps> = ({
         </Spoiler>
         {event && (
           <>
-            <Group grow mt="sm" onClick={(e)=>{
-              e.preventDefault();  
+            <Group grow mt="sm" onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
-              e.nativeEvent.stopImmediatePropagation() ;
+              e.nativeEvent.stopImmediatePropagation();
             }}>
               <Button
                 className="text-sm sm:text-base"
                 size="compact-lg"
                 onClick={(e) => {
-                  e.preventDefault();  
+                  e.preventDefault();
                   e.stopPropagation();
-                  e.nativeEvent.stopImmediatePropagation() ;
+                  e.nativeEvent.stopImmediatePropagation();
                   setExpanded(!expanded);
                 }}
                 variant="light"
@@ -163,9 +164,9 @@ export const PostCard: FC<PostCardProps> = ({
                 className="text-sm sm:text-base"
                 size="compact-lg"
                 onClick={(e) => {
-                  e.preventDefault();  
+                  e.preventDefault();
                   e.stopPropagation();
-                  e.nativeEvent.stopImmediatePropagation() ;
+                  e.nativeEvent.stopImmediatePropagation();
                   setSuscribed(!suscribed);
                   typeof postId === "string" && suscribetoPost(postId, suscribed);
                 }}
