@@ -141,12 +141,13 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
               <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
             )}
           </>
-        ) : (<div className="flex space-x-4">
-          <BackButton id={id} />
-          {content.title && (
-            <Title order={2} mb="sm" className="min-w-0 break-words hyphens-auto text-pretty" lang="es">{content.title}</Title>
-          )}
-        </div>
+        ) : (
+          <div className="flex space-x-4">
+            <BackButton id={id} />
+            <Title order={2} mb="sm" className="min-w-0 break-words whitespace-pre-wrap hyphens-auto text-pretty" lang="es">
+              {content?.title || "     "}
+            </Title>
+          </div>
         )}
 
 

@@ -18,7 +18,7 @@ import Layout from "../components/Layout/Layout";
 import Protected from "../components/Protected";
 import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
-import { DEFAULT_COLOR } from "../constants";
+import { DEFAULT_COLOR, MAXIMUM_MESSAGE_LENGTH, MAXIMUM_TITLE_LENGTH, MINIMUM_MESSAGE_LENGTH, MINIMUM_TITLE_LENGTH } from "../constants";
 // import { DatePicker, DatePickerInput } from "@mantine/dates";
 import '@mantine/dates/styles.css';
 import { DatePicker } from "@mantine/dates";
@@ -175,7 +175,7 @@ const CrearPost = () => {
                 setImage={setImage}
                 setImageData={setImageData}
               />
-              <Textarea
+              <Textarea  // Titulo
                 variant="unstyled"
                 placeholder="Titulo (Opcional)"
                 error={errors.title?.message}
@@ -186,8 +186,8 @@ const CrearPost = () => {
                   input: "!text-3xl !font-bold dark:text-white-200 ",
                 }}
                 {...register("title", {
-                  minLength: { value: 5, message: "No menos de 5 caracteres" },
-                  maxLength: { value: 80, message: "No más de 80 caracteres" }
+                  minLength: { value: MINIMUM_TITLE_LENGTH, message: `No menos de ${MINIMUM_TITLE_LENGTH} caracteres` },
+                  maxLength: { value: MAXIMUM_TITLE_LENGTH, message: `No más de ${MAXIMUM_TITLE_LENGTH} caracteres` }
                 })}
               />
               <div className="hidden !p-0"></div>
@@ -201,8 +201,8 @@ const CrearPost = () => {
                 autosize
                 {...register("message", {
                   required: "La descripcion es necesaria",
-                  minLength: { value: 20, message: "No menos de 20 caracteres" },
-                  maxLength: { value: 2000, message: "No más de 2000 caracteres" }
+                  minLength: { value: MINIMUM_MESSAGE_LENGTH, message: `No menos de ${MINIMUM_MESSAGE_LENGTH} caracteres` },
+                  maxLength: { value: MAXIMUM_MESSAGE_LENGTH, message: `No más de ${MAXIMUM_MESSAGE_LENGTH} caracteres` }
                 })}
               />
               {/* <TypographyStylesProvider pl="0">

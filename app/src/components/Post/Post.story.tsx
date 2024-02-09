@@ -41,6 +41,7 @@ export const SimpleConImagenVerticalLarga: Story = {
     description: "description",
     postId: "postId",
     userUID: "userUID",
+    commentsQuantity: 3,
     },
 };
 
@@ -55,6 +56,7 @@ export const conAutor: Story = {
         description: "Esta es una descripción mock de un post",
         postId: "postId",
         userUID: "userUID",
+        commentsQuantity: 3,
         },
     };
 
@@ -72,6 +74,7 @@ export const conAutor: Story = {
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae metus euismod, aliquet nunc id, aliquam nunc.",
             postId: "postId",
             userUID: "userUID",
+            commentsQuantity: 3,
         },
     };
 
@@ -86,6 +89,7 @@ export const conAutor: Story = {
             description: "Nulla facilisi. Sed euismod, urna a aliquet tincidunt, nunc nunc tincidunt urna, nec tincidunt urna nunc ac tellus.",
             postId: "postId",
             userUID: "userUID",
+            commentsQuantity: 3,
         },
     };
 
@@ -100,6 +104,7 @@ export const conAutor: Story = {
             description: "This is a description of an event post",
             postId: "postId",
             userUID: "userUID",
+            commentsQuantity: 3,
             event: true,
         },
     };
