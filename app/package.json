@@ -1,6 +1,6 @@
 {
   "name": "social-u",
-  "version": "0.8.",
+  "version": "0.8.2",
   "private": true,
   "scripts": {
     "dev": "NODE_ENV='development' && next dev",
