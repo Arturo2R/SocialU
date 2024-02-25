@@ -30,19 +30,37 @@ function MobileFilterByTags({ category, categorySetter }: { category: CategorySt
     const [opened, { toggle }] = useDisclosure(false)
 
     return <>
-        <Button radius="md" color={category?.color || 'gray'} size='md' variant={category?.variant || (opened ? 'filled' : 'outline')} onClick={toggle} fullWidth> Categoria{category?.name?": "+category.name:"s "}</Button>
+        <Button
+            radius="md"
+            color={category?.color || 'gray.5'} size='md' variant={category?.variant || (opened ? 'filled' : 'outline')}
+            onClick={toggle} fullWidth
+        >
+            Categoria{category?.name ? ": " + category.name : "s "}
+        </Button>
         <Collapse in={opened}>
             <Stack gap={0} mt="xs" className="max-w-sm mx-auto">
                 <Text size="sm" c="dimmed" className="text-center">
                     Filtrar por Categorias
                 </Text>
                 <Stack gap="xs">
-                    {conf.categories.map((c, index) => category?.value !== c.value && (
-                        <Button key={index} radius="md" size='md' onClick={() => { categorySetter({ ...c, variant: "light" }); toggle() }} variant='light' color={c.color}>{c.name}</Button>
-                    ))}
                     {category !== null && (
-                        <Button radius="md" size='md' onClick={() => { categorySetter(null); toggle() }} variant='light' color="gray">Todas</Button>
+                        <Button
+                            radius="md" size='md'
+                            onClick={() => { categorySetter(null); toggle() }}
+                            variant='light' color="gray"
+                        >
+                            Todas
+                        </Button>
                     )}
+                    {conf.categories.map((c, index) => category?.value !== c.value && (
+                        <Button
+                            key={index} radius="md" size='md'
+                            onClick={() => { categorySetter({ ...c, variant: "light" }); toggle() }}
+                            variant='light' color={c.color}
+                        >
+                            {c.name}
+                        </Button>
+                    ))}
                 </Stack>
             </Stack>
         </Collapse>
