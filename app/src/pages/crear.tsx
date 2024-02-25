@@ -4,6 +4,7 @@ import {
   Container,
   Input,
   Modal,
+  MultiSelect,
   Textarea,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
@@ -24,6 +25,7 @@ import '@mantine/dates/styles.css';
 import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
+import config from "../config";
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
 // import {Editor} from "novel"
@@ -32,6 +34,7 @@ import posthog from "posthog-js";
 // import dynamic from 'next/dynamic';
 // const Editor = dynamic(() => import('novel').then((module) => module.Editor));
 
+const conf = config()
 
 
 // type Props = {};
@@ -74,6 +77,7 @@ const CrearPost = () => {
       time: "", //
       date: null,
       image: "",
+      tags: [],
       anonimo: user?.anonimoDefault || false,
     }
   });
@@ -190,7 +194,24 @@ const CrearPost = () => {
                   maxLength: { value: MAXIMUM_TITLE_LENGTH, message: `No más de ${MAXIMUM_TITLE_LENGTH} caracteres` }
                 })}
               />
-              <div className="hidden !p-0"></div>
+              <Controller
+                name="tags"
+                control={control}
+                render={({ field }) => (
+                  <MultiSelect
+                    maxValues={2} // maximo de etiquetas TODO: tranfeer to constants file
+                    onChange={field.onChange}
+                    value={field.value}
+                    // label="Etiquetas"
+                    variant="unstyled"
+                    placeholder="Categorias"
+                    data={conf.categories.map(c => { return { label: c.name, value: c.value } })}
+                    clearable
+                    hidePickedOptions
+                  />
+                )}
+              />
+
               <Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
@@ -277,6 +298,7 @@ const CrearPost = () => {
           </form>
         </Container>
       </Protected.Route>
+
     </Layout>
   );
 };

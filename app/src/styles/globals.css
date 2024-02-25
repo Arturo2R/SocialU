@@ -14,10 +14,14 @@
 *,
 ::before,
 ::after {
-  box-sizing: border-box; /* 1 */
-  border-width: 0; /* 2 */
-  border-style: solid; /* 2 */
-  border-color: theme("borderColor.DEFAULT", currentColor); /* 2 */
+  box-sizing: border-box;
+  /* 1 */
+  border-width: 0;
+  /* 2 */
+  border-style: solid;
+  /* 2 */
+  border-color: theme("borderColor.DEFAULT", currentColor);
+  /* 2 */
 }
 
 ::before,
@@ -33,28 +37,32 @@
 */
 
 html {
-  line-height: 1.5; /* 1 */
-  -webkit-text-size-adjust: 100%; /* 2 */
-  -moz-tab-size: 4; /* 3 */
-  tab-size: 4; /* 3 */
-  font-family: theme(
-    "inter",
-    "fontFamily.sans",
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    /* Roboto, */
-    "Helvetica Neue",
-    Arial,
-    "Noto Sans",
-    sans-serif,
-    "Apple Color Emoji",
-    "Segoe UI Emoji",
-    "Segoe UI Symbol",
-    "Noto Color Emoji"
-  ); /* 4 */
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
+  tab-size: 4;
+  /* 3 */
+  font-family: theme("inter",
+      "fontFamily.sans",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      /* Roboto, */
+      "Helvetica Neue",
+      Arial,
+      "Noto Sans",
+      sans-serif,
+      "Apple Color Emoji",
+      "Segoe UI Emoji",
+      "Segoe UI Symbol",
+      "Noto Color Emoji"
+    );
+  /* 4 */
 }
 
 /*
@@ -63,8 +71,10 @@ html {
 */
 
 body {
-  margin: 0; /* 1 */
-  line-height: inherit; /* 2 */
+  margin: 0;
+  /* 1 */
+  line-height: inherit;
+  /* 2 */
 }
 
 /*
@@ -74,9 +84,12 @@ body {
 */
 
 hr {
-  height: 0; /* 1 */
-  color: inherit; /* 2 */
-  border-top-width: 1px; /* 3 */
+  height: 0;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  border-top-width: 1px;
+  /* 3 */
 }
 
 /*
@@ -128,18 +141,18 @@ code,
 kbd,
 samp,
 pre {
-  font-family: theme(
-    "fontFamily.mono",
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    "Liberation Mono",
-    "Courier New",
-    monospace
-  ); /* 1 */
-  font-size: 1em; /* 2 */
+  font-family: theme("fontFamily.mono",
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      "Liberation Mono",
+      "Courier New",
+      monospace);
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
 }
 
 /*
@@ -177,9 +190,12 @@ sup {
 */
 
 table {
-  text-indent: 0; /* 1 */
-  border-color: inherit; /* 2 */
-  border-collapse: collapse; /* 3 */
+  text-indent: 0;
+  /* 1 */
+  border-color: inherit;
+  /* 2 */
+  border-collapse: collapse;
+  /* 3 */
 }
 
 /*
@@ -193,12 +209,18 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  line-height: inherit; /* 1 */
-  color: inherit; /* 1 */
-  margin: 0; /* 2 */
-  padding: 0; /* 3 */
+  font-family: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  line-height: inherit;
+  /* 1 */
+  color: inherit;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+  padding: 0;
+  /* 3 */
 }
 
 /*
@@ -263,8 +285,10 @@ Correct the cursor style of increment and decrement buttons in Safari.
 */
 
 [type="search"] {
-  -webkit-appearance: textfield; /* 1 */
-  outline-offset: -2px; /* 2 */
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
 }
 
 /*
@@ -281,8 +305,10 @@ Remove the inner padding in Chrome and Safari on macOS.
 */
 
 ::-webkit-file-upload-button {
-  -webkit-appearance: button; /* 1 */
-  font: inherit; /* 2 */
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
 }
 
 /*
@@ -345,8 +371,10 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-  opacity: 1; /* 1 */
-  color: theme("colors.gray.400", #9ca3af); /* 2 */
+  opacity: 1;
+  /* 1 */
+  color: theme("colors.gray.400", #9ca3af);
+  /* 2 */
 }
 
 /*
@@ -379,8 +407,10 @@ audio,
 iframe,
 embed,
 object {
-  display: block; /* 1 */
-  vertical-align: middle; /* 2 */
+  display: block;
+  /* 1 */
+  vertical-align: middle;
+  /* 2 */
 }
 
 /*
@@ -405,26 +435,32 @@ Ensure the default browser behavior of the `hidden` attribute.
   from {
     opacity: 0.01;
   }
+
   to {
     opacity: 1;
   }
 }
+
 @keyframes bp-bar {
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
 }
+
 @keyframes bp-o {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
+
 .bp-wrap {
   top: 0;
   left: 0;
@@ -432,14 +468,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 100%;
   position: fixed;
   z-index: 999;
-   /* If you're mounting on a portion of the screen and need visible
+  /* If you're mounting on a portion of the screen and need visible
   overflow on .bp-wrap, change contain to "layout" on that instance  */
   contain: strict;
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.bp-wrap > div:first-child {
+.bp-wrap>div:first-child {
   position: absolute;
   top: 0;
   left: 0;
@@ -469,7 +505,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bp-html {
   display: contents;
 }
-.bp-html > :first-child {
+
+.bp-html> :first-child {
   margin: auto;
 }
 
@@ -481,6 +518,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   position: absolute;
   contain: strict;
 }
+
 .bp-img-wrap.bp-drag .bp-img {
   cursor: grabbing;
 }
@@ -497,6 +535,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   cursor: zoom-in;
   background-size: 100% 100%;
 }
+
 .bp-img img,
 .bp-img div {
   position: absolute;
@@ -505,6 +544,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 100%;
   height: 100%;
 }
+
 .bp-img .bp-o {
   display: none;
 }
@@ -512,6 +552,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .zoomed .bp-img {
   cursor: grab;
 }
+
 .zoomed .bp-cap {
   opacity: 0;
   animation: none !important;
@@ -527,6 +568,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   text-align: left;
   animation: bp-fadein 0.3s;
 }
+
 .bp-controls button {
   pointer-events: auto;
   cursor: pointer;
@@ -537,10 +579,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   transition: all 0.1s;
   contain: content;
 }
+
 .bp-controls button:hover {
   background-color: rgba(0, 0, 0, 0.2);
   opacity: 1;
 }
+
 .bp-controls svg {
   fill: #fff;
 }
@@ -563,10 +607,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 58px;
   border-radius: 3px 0 0 3px;
 }
+
 .bp-prev:hover:before,
 .bp-next:hover:before {
   transform: translateX(-2px);
 }
+
 .bp-prev:before,
 .bp-next:before {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z'/%3E%3C/svg%3E");
@@ -590,6 +636,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   width: 58px;
   border-radius: 0 0 0 3px;
 }
+
 .bp-x:before {
   content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='%23fff'%3E%3Cpath d='M24 10l-2-2-6 6-6-6-2 2 6 6-6 6 2 2 6-6 6 6 2-2-6-6z'/%3E%3C/svg%3E");
   position: absolute;
@@ -605,6 +652,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   background: #000;
   background-size: 100% 100%;
 }
+
 .bp-if iframe,
 .bp-if video,
 .bp-if div,
@@ -669,6 +717,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   transition: opacity 0.3s;
   animation: bp-fadein 0.2s;
 }
+
 .bp-cap a {
   color: inherit;
 }
@@ -680,6 +729,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bp-lock {
   overflow-y: hidden;
 }
+
 .bp-lock body {
   overflow: scroll;
 }
@@ -687,9 +737,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bp-noclose .bp-x {
   display: none;
 }
+
 .bp-noclose:not(.zoomed) {
   touch-action: pan-y;
 }
+
 .bp-noclose:not(.zoomed) .bp-img-wrap {
   cursor: zoom-in;
 }
@@ -699,11 +751,13 @@ Ensure the default browser behavior of the `hidden` attribute.
     animation-duration: 0s !important;
   }
 }
+
 @media (max-width: 500px) {
   .bp-x {
     height: 47px;
     width: 47px;
   }
+
   .bp-x:before {
     width: 34px;
     top: 6px;
@@ -716,6 +770,7 @@ Ensure the default browser behavior of the `hidden` attribute.
     height: 54px;
     width: 45px;
   }
+
   .bp-prev:before,
   .bp-next:before {
     top: 7px;
@@ -742,11 +797,26 @@ Ensure the default browser behavior of the `hidden` attribute.
 /* @tailwind variants; */
 
 body {
-  font-family: "inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  --mantine-font-size-xs: 0.875rem;
+  --mantine-font-size-sm: 1rem;
+  --mantine-font-size-md: 1.125rem;
+  --mantine-font-size-lg: 1.25rem;
+  --mantine-font-size-xl: 1.75rem;
 }
 
+@media (min-width: 640px) {
+  body {
+    --mantine-font-size-xs: 0.75rem;
+    --mantine-font-size-sm: 0.875rem;
+    --mantine-font-size-md: 1rem;
+    --mantine-font-size-lg: 1.125rem;
+    --mantine-font-size-xl: 1.5rem;
+  }
+}
+
+
 .ProseMirror {
-  @apply !p-0 ;
+  @apply !p-0;
 }
 
 .fdasdflask {
@@ -758,6 +828,7 @@ body {
   color: var(--button-color) !important;
 
 }
+
 .mantine-Button-root:disabled {
   background-color: var(--_disabled-bg) !important;
   color: var(--_disabled-color) !important;
@@ -766,7 +837,7 @@ body {
 }
 
 .mantine-Button-root:disabled:hover {
-  background-color:  var(--_disabled-bg) !important;
+  background-color: var(--_disabled-bg) !important;
 }
 
 .mantine-Button-root:hover {
@@ -777,6 +848,8 @@ body {
   background-color: var(--ai-bg) !important;
   color: var(--ai-color) !important;
 }
+
+
 
 .mantine-ActionIcon-root:hover {
   background-color: var(--ai-hover) !important;

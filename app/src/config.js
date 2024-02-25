@@ -19,7 +19,15 @@ export default function () {
       { link: "/configuracion", label: "Configuración", icon: IconSettings },
       // { link: "/about", label: "Sobre Nosotros", icon: TwoFA },
     ],
-    appNames: ['Campus Gossip',"Chisme.app","Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions","UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect", ]
+    categories: [
+      { color: "#F6D55C", name: "Erasmus", value: "erasmus" },
+      { color: "#FF0000", name: "Monitorias", value: "monitorias" },
+      { color: "#2F4B7C", name: "Imagen", value: "imagen" },
+      { color: "#ED553B", name: "Eventos", value: "eventos" },
+      { color: "#3CAEA3", name: "Clases", value: "clases" },
+      { color: "#20639B", name: "Deportes", value: "deportes" },
+    ],
+    appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
 
 
   }

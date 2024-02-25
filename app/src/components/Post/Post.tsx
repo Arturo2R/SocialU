@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { Check, Plus } from "tabler-icons-react";
-import Link from "next/link";
 import Image from "next/image";
-import { useState, FC, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+import Link from "next/link";
+import { FC, useEffect, useState } from "react";
+import { Check, Plus } from "tabler-icons-react";
+import styles from "./Post.module.css";
 import SeeUser from "./SeeUser";
-import styles from "./Post.module.css"
 
 import {
+  Button,
   Card,
   Collapse,
   Group,
@@ -15,9 +15,17 @@ import {
   Stack,
   Text,
   Title,
-  Button,
 } from "@mantine/core";
+
 import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
+import { Tag } from "./Tag";
+
+// import dayjs from "dayjs";
+// import es from "dayjs/locale/es";
+// import relativeTime from "dayjs/plugin/relativeTime";
+
+// dayjs.extend(relativeTime);
+// dayjs.locale(es);
 
 
 export const PostCard: FC<PostCardProps> = ({
@@ -31,7 +39,10 @@ export const PostCard: FC<PostCardProps> = ({
   event,
   userUID,
   imageData,
-  priority
+  priority,
+  tags,
+  // createdAt,
+  subscribeToPost,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -59,7 +70,7 @@ export const PostCard: FC<PostCardProps> = ({
     return false;
   };
 
-  const { suscribetoPost } = useAuth();
+
   return (
     <article className="max-w-sm px" id={postId}>
       <Card component={Link}
@@ -96,7 +107,7 @@ export const PostCard: FC<PostCardProps> = ({
           )}
           {/* <Badge>{category}</Badge> */}
           {title && (
-            <Title lineClamp={2} py="5px" order={3} className="text-xl font-bold break-words text-pretty hyphens-auto" lang="es">{title}</Title>
+            <Title lineClamp={2} order={3} className="text-xl font-bold break-words text-pretty hyphens-auto" lang="es">{title}</Title>
           )}
         </>
         {author !== "anonimo" && (
@@ -117,8 +128,11 @@ export const PostCard: FC<PostCardProps> = ({
             </Group>
           </Link>
         )}
+
+
+
         <Spoiler
-          className="mt-1"
+          className=""
           onClick={(e) => {
             if (description.length > 200) {
               e.preventDefault(); e.stopPropagation()
@@ -168,7 +182,7 @@ export const PostCard: FC<PostCardProps> = ({
                   e.stopPropagation();
                   e.nativeEvent.stopImmediatePropagation();
                   setSuscribed(!suscribed);
-                  typeof postId === "string" && suscribetoPost(postId, suscribed);
+                  typeof postId === "string" && subscribeToPost(postId, suscribed);
                 }}
                 rightSection={suscribed ? <Check /> : <Plus />}
               >
@@ -195,10 +209,25 @@ export const PostCard: FC<PostCardProps> = ({
             </Collapse>
           </>
         )}
-        {commentsQuantity && (
-          <Text size="xs" c="dimmed" mt="xs" >{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>
-        )}
+        <Group mt="xs" justify="space-between">
+          <Group>
+            {tags?.map((tag, index) => (
+              <Tag key={index} label={tag} />
+            ))}
+          </Group>
+          {/* <Group className="justify-self-end" justify="end"> */}
+          {commentsQuantity && (
+            <Text size="xs" c="dimmed"  >{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>
+          )}
+
+          {/* {createdAt && (
+              <Text size="xs" c="dimmed"  >• {dayjs(createdAt).fromNow()}</Text>
+            )} */}
+        </Group>
+        {/* </Group> */}
       </Card>
     </article>
   );
 };
+
+
