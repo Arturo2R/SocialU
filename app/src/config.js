@@ -25,7 +25,7 @@ export default function () {
        // { color: "#2F4B7C", name: "Imagen", value: "imagen" },
        { color: "#3CAEA3", name: "Eventos", value: "eventos" },
       //{ color: "#ED553B", name: "Clases", value: "clases" },
-      { color: "#20639B", name: "Anunciones", value: "anuncios" },
+      { color: "#20639B", name: "Anuncios", value: "anuncios" },
     ],
     appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
 
