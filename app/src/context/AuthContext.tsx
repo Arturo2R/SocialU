@@ -10,6 +10,7 @@ import {
   signInWithPopup,
   signOut,
   signInWithRedirect,
+  
 } from "firebase/auth";
 import { notifications } from '@mantine/notifications'
 // import jwt_decode from "jwt-decode";
@@ -202,7 +203,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
         fectchUser()
-        router.push("/")
       } else {
         console.log("No hay usuario");
       }

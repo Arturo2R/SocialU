@@ -36,6 +36,7 @@ declare global {
     image?: string;
     isEvent?: boolean;
     date?: Date | null;
+    tags?: string[];
     time?: string;
     anonimo: boolean;
     // author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
@@ -58,6 +59,7 @@ declare global {
     | { image?: string | null; name: string; id: string }
     | "anonimo";
     priority?: boolean;
+    tags?: string[];
     imageData?: imageData;
     image?: string;
     description: string;
@@ -65,11 +67,13 @@ declare global {
     date?: Date;
     event?: boolean;
     postId?: string;
+    createdAt?: Timestamp;
     // relevantCommentary?: Object;
     asistants?: suscription[];
     commentsQuantity?: number;
     // key: number;
     userUID?: string;
+    subscribeToPost: (postId: string, remove: boolean) => void;
   }
 
   type suscription = {
@@ -152,6 +156,8 @@ declare global {
     description?: string;
     carrer?: string;
   }
+
+  type CategoryState = { color: string, name: string, value: string, variant: string }
 
   interface anything {
     [field: string]: any | [];

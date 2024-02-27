@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (password !== PASSWORD) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
-
+    
     try {
         if (ids && Array.isArray(ids)) {
             // Delete multiple documents from the "publicPosts" collection

@@ -9,6 +9,7 @@ import {
   Container,
   Group,
   Button,
+  List,
 } from '@mantine/core';
 import '@mantine/core/styles/Button.css';
 import styles from './bievenido.module.css'
@@ -25,22 +26,20 @@ export default function Bienvenido() {
           Bievenido a SocialU!
         </Title>
 
-        <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-          <p className='space-y-3'>
-            <p>
-              Somos una red social exclusiva para estudiantes de la Universidad del Norte, diseñada para fomentar la colaboración estudiantil de una manera única y dinámica.
-            </p>
-            <p>
-              Tenemos <Link href="/sobre-nosotros" className="text-orange-400 underline">reglas de la comunidad</Link> que debes seguir.
-              Para proteger tu privacidad, hemos establecido un <Link href="/privacidad" className='text-orange-400 underline'>estatuto de privacidad</Link> y <Link href="/terminos-y-condiciones" className='text-orange-400 underline'>términos y condiciones</Link> que te invitamos a revisar.
-            </p>
-            <p>
-              Requerimos que inicies sesión con tu cuenta universitaria a través del proveedor de Microsoft para garantizar la autenticidad y seguridad de nuestros usuarios.
-            </p>
-            <p>
-              Al continuar, aceptas nuestras políticas y condiciones
-            </p>
-          </p>
+        <Paper withBorder shadow="md" p={30} mt={30} radius="md" >
+          <Text fw="700">
+            ¡Únete a nuestra red social exclusiva para estudiantes de la Universidad del Norte!
+          </Text>
+
+
+          <List spacing="xs" mt="xs">
+            {/* <List.Item>Colabora con tus compañeros de una forma única y dinámica</List.Item> */}
+            <List.Item>Para mantener la seguridad inicia sesión con tu cuenta universitaria de Microsoft.</List.Item>
+            <List.Item>Sigue las <Link href="/sobre-nosotros" className="text-orange-400 underline">reglas de la comunidad</Link> para mantener un ambiente social seguro.</List.Item>
+            <List.Item>Revisa nuestros <Link href="/privacidad" className='text-orange-400 underline'>políticas</Link> para proteger tu privacidad.</List.Item>
+            <List.Item>Al continuar, estás aceptando nuestros <Link href="/terminos-y-condiciones" className='text-orange-400 underline'>términos y condiciones</Link>.</List.Item>
+          </List>
+
           <Button fullWidth onClick={loginWithMicrosoft} mt="xl" color='orange'>
             Iniciar Sesión
           </Button>

@@ -4,6 +4,7 @@ import {
   getDoc, onSnapshot, orderBy, query
 } from "@firebase/firestore";
 import {
+  Group,
   Image,
   Paper,
   Stack,
@@ -26,6 +27,7 @@ import { DEFAULT_COLOR, PATH } from "../../../constants";
 import { Timestamp } from "@firebase/firestore";
 import styles from "./PostPage.module.css"
 import BackButton from "../../../components/BackButton";
+import { Tag } from "../../../components/Post/Tag";
 
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
@@ -150,12 +152,18 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           </div>
         )}
 
-
+        <Group mb="xs">
+          {content?.tags && content.tags.map((tag, index) => (
+            <Tag key={index} label={tag} />
+          ))
+          }
         {fecha && (
-          <Text className="mb-2 italic text-stone-400">
+          <Text className="italic text-stone-400">
             {dayjs(fecha).fromNow()}
           </Text>
         )}
+        </Group>
+
         {content?.message && (
           <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md hyphens-auto " lang="es">{content.message}</Text>
           //  <TypographyStylesProvider>

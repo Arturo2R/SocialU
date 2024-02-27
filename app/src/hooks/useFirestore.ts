@@ -14,7 +14,7 @@ import {
 import { nanoid } from "nanoid";
 import { useState } from "react";
 import { auth, db } from "../firebase";
-import {PATH} from "../constants"
+import { PATH } from "../constants"
 import posthog from "posthog-js";
 
 export const useFirestore = () => {
@@ -43,10 +43,14 @@ export const useFirestore = () => {
 
 
   //   } catch (error) {
-      
+
   //   }
+
+
+
   // }
 
+  
   const fetchData = async () => {
     setPostsLoading("loading");
     try {
@@ -67,8 +71,8 @@ export const useFirestore = () => {
         setData(dataDB);
       });
     } catch (thiserror: any) {
-        console.log(thiserror);
-        setPostsLoading("error");
+      console.log(thiserror);
+      setPostsLoading("error");
 
       //ts-ignore
       setError(thiserror.message);
@@ -84,7 +88,7 @@ export const useFirestore = () => {
       const postRef = doc(db, PATH, id);
       postSnap = await getDoc(postRef);
       // console.log(postSnap);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error);
       posthog?.capture('$exception', {
         message: error.message,
@@ -99,7 +103,7 @@ export const useFirestore = () => {
 
   const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | "error" | false>(false)
   const createPost = async (formData: ComputedPost, user: UserState) => {
-    if (auth.currentUser  && auth.currentUser.email) {
+    if (auth.currentUser && auth.currentUser.email) {
       try {
         setCreatingPost("loading");
 
@@ -116,27 +120,28 @@ export const useFirestore = () => {
           // isEvent: formData.isEvent,
           // date: formData.date,
           // anonimo: formData.anonimo,
+          // tags: formData.tags,
           ...formData,
-          message: formData.message,       
+          message: formData.message,
           // ...(user.photoURL ? {
-          authorImage : user?.photoURL || "",
+          authorImage: user?.photoURL || "",
           // } : {authorImage : "st",}),
           useUserName: user?.useUserName || false,
-          userName:  user?.userName,
+          userName: user?.userName,
           authorEmail: user?.email || auth.currentUser.email,
           createdAt: serverTimestamp(),
           userUID: auth.currentUser.uid,
           authorRef: `user/${auth?.currentUser?.uid}`,
           authorName: auth.currentUser.displayName,
         };
-        
+
 
 
         if (formData.anonimo) {
           await Promise.all([
             setDoc(onlyPublicPostsRef, { ...formData, createdAt: serverTimestamp(), }),
             setDoc(allPostsRef, newPost),
-            posthog.capture('post_created',{
+            posthog.capture('post_created', {
               postId: generatedPostId,
               anonimo: true,
               event: formData.isEvent ? true : false,
@@ -149,13 +154,13 @@ export const useFirestore = () => {
           await Promise.all([
             setDoc(onlyPublicPostsRef, newPost),
             setDoc(allPostsRef, newPost),
-            posthog.capture('post_created',{
+            posthog.capture('post_created', {
               postId: generatedPostId,
               anonimo: false,
               event: formData.isEvent ? true : false,
               image: formData.image ? true : false,
             })
-          ]).then( () =>
+          ]).then(() =>
             fetch(`/api/revalidate?secret=calandriel&id=${generatedPostId}&author=${newPost.userName}`)
           )
         }
@@ -173,7 +178,7 @@ export const useFirestore = () => {
         setCreatingPost("loaded")
       }
     } else {
-   // console.log("Inautorizado");
+      // console.log("Inautorizado");
     }
   };
 
@@ -210,7 +215,7 @@ export const useFirestore = () => {
             suscriptions: arrayRemove(Payload),
           });
         }
-      } catch (error:any) {
+      } catch (error: any) {
         console.error("errorsaso", error);
         posthog?.capture('$exception', {
           message: error.message,
@@ -251,15 +256,15 @@ export const useFirestore = () => {
       try {
         setCreating(true);
 
-        
+
         const commentRef = collection(db, "posts", data.postId, "comments");
         const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
           author: {
-            image: user?.photoURL  || "" ,
-            name: user?.configuration?.useUserName ? user?.userName: user?.displayName,
+            image: user?.photoURL || "",
+            name: user?.configuration?.useUserName ? user?.userName : user?.displayName,
             ref: `user/${user.uid}`,
             userName: user.userName || "",
           },
@@ -267,7 +272,7 @@ export const useFirestore = () => {
           parentId: "",
           postId: data.postId,
         };
-        
+
         if (data.anonimo) {
           // Si el comentarrio es anonimo
           await Promise.all([
@@ -279,7 +284,7 @@ export const useFirestore = () => {
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)
             }),
-            posthog.capture('comment_created',{
+            posthog.capture('comment_created', {
               postId: data.postId,
               anonimo: true,
             })
@@ -294,13 +299,13 @@ export const useFirestore = () => {
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)
             }),
-            posthog.capture('comment_created',{
+            posthog.capture('comment_created', {
               postId: data.postId,
               anonimo: false,
             })
           ]);
         }
-      } catch (error:any) {
+      } catch (error: any) {
         console.error("Error creando el comentario :", error);
         posthog?.capture('$exception', {
           message: error.message,
@@ -331,7 +336,7 @@ export const useFirestore = () => {
 
   }
 
-  const createOrFetchUser = async (user: any, setter: Function):Promise<boolean> => {
+  const createOrFetchUser = async (user: any, setter: Function): Promise<boolean> => {
     // const {state} = useStore();
     console.log("Buscando al Usuario", user.email)
 
@@ -355,7 +360,7 @@ export const useFirestore = () => {
           last_login: user.metadata.lastSignInTime,
         },)
       } else {
-        
+
         if (user?.displayName && user?.uid && user?.email) {
           try {
             console.log("Creando Un Nuevo Usuario");
@@ -378,7 +383,7 @@ export const useFirestore = () => {
             };
             setter(Payload);
             await setDoc(userRef, Payload)
-          } catch (error:any) {
+          } catch (error: any) {
             console.log(error);
             posthog?.capture('$exception', {
               message: error.message,
@@ -398,7 +403,7 @@ export const useFirestore = () => {
           }
         }
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error.message);
       posthog?.capture('$exception', {
         message: error.message,
@@ -421,18 +426,18 @@ export const useFirestore = () => {
     try {
       setUpdatingProfile("loading")
       const userRef = doc(db, "user", id);
-      
+
       const data = {
         ...user,
         ...Payload,
       }
       console.log("data la data despues de update profile", data);
-        
-        // ...(Payload. && { photoURL: Payload.photoURL }),
-        // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
-      
 
-   // console.log(data)
+      // ...(Payload. && { photoURL: Payload.photoURL }),
+      // ...(Payload.photoURL && { photoURL: Payload.photoURL }),
+
+
+      // console.log(data)
 
       setter((user: any) => ({
         ...user,
@@ -441,12 +446,12 @@ export const useFirestore = () => {
 
       await Promise.all([
         updateDoc(userRef, data),
-        posthog.capture('profile_updated',{
+        posthog.capture('profile_updated', {
           anonimoDefault: Payload.anonimoDefault,
           useUserName: Payload.useUserName,
         })
-      ]) 
-    } catch (error:any) {
+      ])
+    } catch (error: any) {
       console.error(error)
       setUpdatingProfile("error")
       posthog.capture('$exception', {
@@ -464,7 +469,7 @@ export const useFirestore = () => {
       const q = query(collection(db, "user"))
       const ids = await getDocs(q)
       return q
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error)
       posthog?.capture('$exception', {
         message: error.message,
@@ -482,7 +487,7 @@ export const useFirestore = () => {
       const user = await getDocs(userRef)
       const data = user.docs[0].data()
       serAuthorProfile(data)
-    } catch (error:any) {
+    } catch (error: any) {
       console.error(error)
       posthog?.capture('$exception', {
         message: error.message,

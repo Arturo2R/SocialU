@@ -11,8 +11,8 @@ import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css';
 import "../styles/globals.css";
 
-import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
-import {  Notifications } from "@mantine/notifications";
+import { MantineProvider, createTheme, MantineColorScheme, rem } from '@mantine/core';
+import { Notifications } from "@mantine/notifications";
 import { DataStateProvider } from "../context/DataStateContext";
 import posthog from 'posthog-js'
 import { PostHogProvider } from 'posthog-js/react'
@@ -20,6 +20,16 @@ import { POSTHOG_HOST_URL } from "../constants";
 import { useReportWebVitals } from "next/web-vitals";
 
 const theme = createTheme({
+  white: "#F2F5FF",
+  // fontSizes: {
+  //   xs: rem(14),
+  //   sm: rem(16),
+  //   md: rem(18),
+  //   lg: rem(20),
+  //   xl: rem(22),
+  // },
+
+  fontSizes: {}
   /** Put your mantine theme override here */
 });
 
@@ -34,8 +44,8 @@ if (typeof window !== 'undefined') {
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug()
       }
-  })
-}, 0);
+    })
+  }, 0);
 }
 
 export default function App(props: AppProps & { colorScheme: MantineColorScheme }) {
@@ -58,7 +68,7 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
     console.log(metric)
   })
 
-  
+
 
   return (
     <>
@@ -67,12 +77,12 @@ export default function App(props: AppProps & { colorScheme: MantineColorScheme 
       </Head>
       <PostHogProvider client={posthog}>
         <MantineProvider theme={theme}>
-          <Notifications/>
-            <AuthProvider>
-              <DataStateProvider>
-                <Component {...pageProps} />
-              </DataStateProvider>
-            </AuthProvider>
+          <Notifications />
+          <AuthProvider>
+            <DataStateProvider>
+              <Component {...pageProps} />
+            </DataStateProvider>
+          </AuthProvider>
         </MantineProvider>
       </PostHogProvider>
     </>

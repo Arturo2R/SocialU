@@ -27,23 +27,27 @@ function Layout({ children }: LayoutProps) {
 
   return (
     <AppShell
-      footer={{height: 50,}}
+      footer={{ height: 50, }}
       header={{ height: 70 }}
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      // aside={{ breakpoint: 'sm', width: 250, collapsed: { mobile: true } }}
       padding="md"
     >
       <AppShell.Header>
         <AppHeader
-            opened={opened}
-            setOpened={toggle}
-            color={theme.colors.gray[6]}
-            user={user}
-            // loginProvider={loginWithMicrosoft}
-          />
+          opened={opened}
+          setOpened={toggle}
+          color={theme.colors.gray[6]}
+          user={user}
+        // loginProvider={loginWithMicrosoft}
+        />
       </AppShell.Header>
-      <AppShell.Footer  hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
+      {/* <AppShell.Aside hidden={router.pathname != "/"} >
+        <FilterByTags />
+      </AppShell.Aside> */}
+      <AppShell.Footer hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
       <AppShell.Navbar className={styles.nav} p="md">
-        <AppNavbar /> 
+        <AppNavbar />
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
