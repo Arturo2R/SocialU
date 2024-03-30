@@ -10,15 +10,22 @@ import {
   Group,
   Button,
   List,
+  LoadingOverlay,
 } from '@mantine/core';
 import '@mantine/core/styles/Button.css';
 import styles from './bievenido.module.css'
 import '@mantine/core/styles/Button.css';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import { useEffect } from 'react';
 
 export default function Bienvenido() {
-  const { loginWithMicrosoft } = useAuth();
+  const { loginWithMicrosoft, loading } = useAuth();
+  useEffect(() => {
+    console.log("is loading: ", loading)
+
+  }, [loading])
+
   return (
     <div className={styles.gradient}>
       <Container size="xs" py={40} >
@@ -27,6 +34,7 @@ export default function Bienvenido() {
         </Title>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md" >
+          <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "md", blur: 2 }} loaderProps={{ color: 'orange', type: 'bars' }} />
           <Text fw="700">
             ¡Únete a nuestra red social exclusiva para estudiantes de la Universidad del Norte!
           </Text>
@@ -39,8 +47,8 @@ export default function Bienvenido() {
             <List.Item>Revisa nuestros <Link href="/privacidad" className='text-orange-400 underline'>políticas</Link> para proteger tu privacidad.</List.Item>
             <List.Item>Al continuar, estás aceptando nuestros <Link href="/terminos-y-condiciones" className='text-orange-400 underline'>términos y condiciones</Link>.</List.Item>
           </List>
-
-          <Button fullWidth onClick={loginWithMicrosoft} mt="xl" color='orange'>
+          {loading}
+          <Button fullWidth onClick={loginWithMicrosoft} mt="xl" color='orange' loading={loading}>
             Iniciar Sesión
           </Button>
         </Paper>

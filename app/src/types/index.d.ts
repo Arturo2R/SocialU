@@ -133,6 +133,7 @@ declare global {
     logout(): void;
     // valid: boolean|string;
     loading: boolean;
+    singInLoading: boolean;
     // loginWithGoogle():? Promise<UserCredential>;
     loginWithMicrosoft(): Promise<UserCredential>;
     // resetPassword(email: string): Promise<void>;

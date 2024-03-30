@@ -10,7 +10,8 @@ import {
   signInWithPopup,
   signOut,
   signInWithRedirect,
-  
+  Unsubscribe,
+
 } from "firebase/auth";
 import { notifications } from '@mantine/notifications'
 // import jwt_decode from "jwt-decode";
@@ -64,7 +65,7 @@ export const useAuth = () => {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserState | null>(null);
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   // const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
@@ -81,23 +82,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   //   return signInWithEmailAndPassword(auth, email, password);
   // };
   const loginWithMicrosoft = () => {
-    const microsoftProvider = new OAuthProvider('microsoft.com');
-    microsoftProvider.setCustomParameters({
-      // Force re-consent.
-      prompt: 'select_account',
+    setLoading(true)
+    try {
+      const microsoftProvider = new OAuthProvider('microsoft.com');
+      microsoftProvider.setCustomParameters({
+        // Force re-consent.
+        prompt: 'select_account',
 
-      // Target specific email with login hint.
-      login_hint: "usuario@uninorte.edu.co",
-      login_type: "popup",
-      // select_account: "true",
-      // use_account: "true",
-      domain_hint: "uninorte.edu.co",
-      // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
-    });
-    if (navigator.userAgent.includes("Instagram")) {
-      return signInWithRedirect(auth, microsoftProvider);
-    } else {
-      return signInWithPopup(auth, microsoftProvider);
+        // Target specific email with login hint.
+        // login_hint: "usuario@uninorte.edu.co",
+        login_type: "popup",
+        // select_account: "true",
+        // use_account: "true",
+        domain_hint: "uninorte.edu.co",
+        // redirect_uri: "https://socialu-c62e6.firebaseapp.com/__/auth/handler",
+      });
+      if (navigator.userAgent.includes("Instagram")) {
+        return signInWithRedirect(auth, microsoftProvider);
+      } else {
+        return signInWithPopup(auth, microsoftProvider);
+      }
+    } catch (error) {
+      setLoading(false)
+      posthog.capture("login_error", { error: error.message })
     }
 
   };
@@ -166,48 +173,61 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // console.log("unsubuscribe effect", valid);
-    const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
-      if (currentUser) {
-        setUser(currentUser);
-        // console.log({ currentUser });
-        const fectchUser = async () => {
-          const newUser = await createOrFetchUser(currentUser, setUser);
-          setLoading(false);
-          // console.log("elusuario", user);
-          const valid = StudentValidation(currentUser.email);
-          console.log("la validacion es ", valid);
-          // setValid(quees);
-          if (valid === true) {
-            if (newUser) {
+    let unsubuscribe: Unsubscribe;
+    try {
+
+      unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
+        if (currentUser) {
+          setUser(currentUser);
+          // console.log({ currentUser });
+          const fectchUser = async () => {
+            const newUser = await createOrFetchUser(currentUser, setUser);
+            // console.log("elusuario", user);
+            const valid = StudentValidation(currentUser.email);
+            console.log("la validacion es ", valid);
+            // setValid(quees);
+            if (valid === true) {
+              if (newUser) {
+                notifications.show({
+                  id: "welcome",
+                  autoClose: 5000,
+                  title: "Bienvenido a SocialU!",
+                  message: "Estas usando un correo universitario permitido",
+                  color: "green",
+                });
+              }
+              router.push("/")
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
+              // setLoading(false);
+            }
+            if (valid === false) {
+              logout();
+              setLoading(false)
               notifications.show({
-                id: "welcome",
-                autoClose: 5000,
-                title: "Bienvenido a SocialU!",
-                message: "Estas usando un correo universitario permitido",
-                color: "green",
+                id: "get-out",
+                autoClose: false,
+                title: "No Estas Permitido",
+                message:
+                  "No estas usando un correo universtario de una de nuestras universidades permitidas",
+                color: "red",
+                icon: <X />,
               });
             }
-            router.push("/")
           }
-          if (valid === false) {
-            logout();
-            notifications.show({
-              id: "get-out",
-              autoClose: false,
-              title: "No Estas Permitido",
-              message:
-                "No estas usando un correo universtario de una de nuestras universidades permitidas",
-              color: "red",
-              icon: <X />,
-            });
-          }
+          fectchUser()
+        } else {
+          console.log("No hay usuario");
+          setLoading(false)
         }
-        fectchUser()
-      } else {
-        console.log("No hay usuario");
-      }
-    });
+      });
 
+    } catch (error) {
+      console.log("error en el useeffect", error);
+      setLoading(false)
+      posthog.capture("login_error", { error: error.message })
+    }
 
     return () => unsubuscribe();
   }, [auth]);
