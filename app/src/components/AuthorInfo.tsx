@@ -8,7 +8,8 @@ interface AuthorInfoProps {
   name: string;
   email: string;
   icon?: React.ReactNode;
-  link?:string,
+  link?: string,
+  isBussiness?: boolean,
 }
 
 export function AuthorInfo({
@@ -17,29 +18,47 @@ export function AuthorInfo({
   email,
   icon,
   link,
+  isBussiness
 }: AuthorInfoProps) {
   return (
     <UnstyledButton className={classes.user}>
-      <Link href={`/${link||name}`}>
-      <Group>
-        <Avatar
-          src={image}
-          radius="xl"
-        />
+      {isBussiness ? (
+        <a href={link}>
+          <Group>
+            <Avatar src={image} radius="xl" />
 
-        <div style={{ flex: 1 }}>
-          <Text size="sm" fw={500}>
-            {name}
-          </Text>
+            <div style={{ flex: 1 }}>
+              <Text size="sm" fw={500}>
+                {name}
+              </Text>
 
-          <Text c="dimmed" size="xs">
-            {email}
-          </Text>
-        </div>
+              <Text c="dimmed" size="xs">
+                {email}
+              </Text>
+            </div>
 
-        {icon || <ChevronRight style={{ width: rem(14), height: rem(14) }} stroke="1.5" />}
-      </Group>
-      </Link>
+            {icon || <ChevronRight style={{ width: rem(14), height: rem(14) }} stroke="1.5" />}
+          </Group>
+        </a>
+      ) : (
+        <Link href={`/${link || name}`}>
+          <Group>
+            <Avatar src={image} radius="xl" />
+
+            <div style={{ flex: 1 }}>
+              <Text size="sm" fw={500}>
+                {name}
+              </Text>
+
+              <Text c="dimmed" size="xs">
+                {email}
+              </Text>
+            </div>
+
+            {icon || <ChevronRight style={{ width: rem(14), height: rem(14) }} stroke="1.5" />}
+          </Group>
+        </Link>
+      )}
     </UnstyledButton>
   );
 }

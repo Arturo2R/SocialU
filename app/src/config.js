@@ -28,7 +28,7 @@ export default function () {
       { color: "#20639B", name: "Anuncios", value: "anuncios" },
     ],
     appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
-
+    
 
   }
 }

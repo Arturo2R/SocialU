@@ -157,11 +157,11 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <Tag key={index} label={tag} />
           ))
           }
-        {fecha && (
-          <Text className="italic text-stone-400">
-            {dayjs(fecha).fromNow()}
-          </Text>
-        )}
+          {fecha && (
+            <Text className="italic text-stone-400">
+              {dayjs(fecha).fromNow()}
+            </Text>
+          )}
         </Group>
 
         {content?.message && (
@@ -171,12 +171,13 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           // </TypographyStylesProvider>
 
         )}
-        {content?.anonimo === false && content.authorName ? (
+        {(content?.anonimo === false && content.authorName) || (content.asBussiness && content.bussiness) ? (
           <AuthorInfo
-            link={content?.userName}
-            name={content?.authorName}
-            email={content?.authorEmail || `${content?.userName}@uninorte.edu.co`}
-            image={content.authorImage ? content.authorImage : "/profile.jpg"}
+            isBussiness={content.asBussiness}
+            link={content.bussiness?.bussinessUrl || content?.userName}
+            name={content.bussiness?.bussinessName || content?.authorName}
+            email={content.bussiness?.bussinessUrl || content?.authorEmail || `${content?.userName}@uninorte.edu.co`}
+            image={content.bussiness?.bussinessLogo || content.authorImage || "/profile.jpg"}
             icon
           />
         ) : (

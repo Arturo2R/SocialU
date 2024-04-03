@@ -26,6 +26,8 @@ import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
 import config from "../config";
+import businessAccounts from "../bussiness_accounts.json"
+import { useWatch } from 'react-hook-form';
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
 // import {Editor} from "novel"
@@ -35,7 +37,6 @@ import config from "../config";
 // const Editor = dynamic(() => import('novel').then((module) => module.Editor));
 
 const conf = config()
-
 
 // type Props = {};
 interface FormInputs {
@@ -69,7 +70,7 @@ export const checkImage = async (url: string, cacheImage?: boolean): Promise<boo
 
 const CrearPost = () => {
   const { user } = useAuth()
-  const { register, setValue, handleSubmit, watch, control, formState: { errors } } = hform({
+  const { register, setValue, handleSubmit, watch, control, formState: { errors }, getValues } = hform({
     defaultValues: {
       title: "",
       message: "",
@@ -79,9 +80,18 @@ const CrearPost = () => {
       image: "",
       tags: [],
       anonimo: user?.anonimoDefault || false,
+      asBussiness: false,
     }
   });
+
+  const asBussiness = useWatch({
+    control,
+    name: 'asBussiness',
+    defaultValue: false, // provide a default value if necessary
+  });
+
   console.log(errors);
+
 
   console.log(user?.anonimoDefault)
   // Event state
@@ -98,6 +108,30 @@ const CrearPost = () => {
   const matches = useMediaQuery('(max-width: 768px)', true, {
     getInitialValueInEffect: false,
   });
+
+  const [bussinessAccount, setBussinessAccount] = useState<bussiness>()
+  const [hasBussinessAccount, setHasBussinessAccount] = useState(false)
+
+  useEffect(() => {
+    let foundBussiness
+
+    if (user) {
+      console.log("aja", user.email)
+      foundBussiness = businessAccounts.bussiness.find(bussines =>
+        bussines.members.some(member => member.email === user.email)
+      )
+    }
+
+    if (!foundBussiness) {
+      setHasBussinessAccount(false)
+    } else {
+      setHasBussinessAccount(true)
+    }
+
+    setBussinessAccount(foundBussiness);
+
+  }, [user])
+
 
   // const [value, setValue] = useState<Date | null>(null);
 
@@ -126,6 +160,13 @@ const CrearPost = () => {
     setImageChecking("loaded")
   }, [imageUrl]);
 
+  useEffect(() => {
+    setValue("anonimo", asBussiness)
+    console.log("asBussiness", asBussiness)
+    console.log("anonimo", getValues("anonimo"))
+  }, [asBussiness, setValue])
+
+
 
   const submitPost: SubmitHandler<FormPost> = postValues => {
     if (user) {
@@ -136,6 +177,18 @@ const CrearPost = () => {
       if (postValues.date && postValues.time) {
         console.log("date: ", postValues.date, "time: ", postValues.time)
         payload = { ...payload, computedDate: new Date(postValues.date.toISOString().split('T')[0] + "T" + postValues.time + ":00") }
+      }
+      if (hasBussinessAccount && bussinessAccount) {
+        payload = {
+          ...payload,
+          bussiness: {
+            bussinessColor: bussinessAccount.color,
+            bussinessLogo: bussinessAccount.logo,
+            bussinessName: bussinessAccount.name,
+            bussinessUrl: bussinessAccount.url,
+            bussinessDescription: bussinessAccount.description,
+          }
+        }
       }
       console.log("sip", payload)
       createPost(payload, user);
@@ -149,6 +202,8 @@ const CrearPost = () => {
         className: "my-notification-class",
         icon: <FileCheck />,
       });
+      setHasBussinessAccount(false);
+      setBussinessAccount(null);
     } else {
       throw new Error("No hay usuario");
     }
@@ -194,6 +249,7 @@ const CrearPost = () => {
                   maxLength: { value: MAXIMUM_TITLE_LENGTH, message: `No más de ${MAXIMUM_TITLE_LENGTH} caracteres` }
                 })}
               />
+
               <Controller
                 name="tags"
                 control={control}
@@ -226,20 +282,35 @@ const CrearPost = () => {
                   maxLength: { value: MAXIMUM_MESSAGE_LENGTH, message: `No más de ${MAXIMUM_MESSAGE_LENGTH} caracteres` }
                 })}
               />
+
               {/* <TypographyStylesProvider pl="0">
                 <Editor />
               </TypographyStylesProvider>  */}
+
+              {(hasBussinessAccount && bussinessAccount) && (
+                <Switc
+                  label={`Publicar como ${bussinessAccount.name}`}
+                  color={bussinessAccount.color}
+                  control={control}
+                  def={false}
+                  name="asBussiness"
+                  size="md"
+                />
+              )}
+
               <Switc
                 label="Anonimo"
                 control={control}
                 def={user?.anonimoDefault || false}
                 name="anonimo"
               />
+
               <Switc
                 label="Reunion / Solicitar Ayuda"
                 control={control}
                 name="isEvent"
               />
+
               {watch("isEvent") && (
                 <>
                   {matches ? (
@@ -289,6 +360,7 @@ const CrearPost = () => {
               loading={creatingPost == "loading" || imageChecking == "loading"}
               type="submit"
               variant="filled"
+              fullWidth
               color={DEFAULT_COLOR}
               size="md"
               className="self-end w-full mt-4"

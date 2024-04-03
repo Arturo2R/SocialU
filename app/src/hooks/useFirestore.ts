@@ -50,7 +50,7 @@ export const useFirestore = () => {
 
   // }
 
-  
+
   const fetchData = async () => {
     setPostsLoading("loading");
     try {
@@ -357,6 +357,7 @@ export const useFirestore = () => {
 
         posthog.identify(user.uid, {
           email: user.email,
+          firebase_id: user.uid,
           last_login: user.metadata.lastSignInTime,
         },)
       } else {

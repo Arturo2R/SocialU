@@ -74,15 +74,26 @@ export function Feed({ data, user }: FeedProps) {
               description={post.message}
               priority={index < 4}
               commentsQuantity={post?.commentsQuantity}
-              author={
-                post.anonimo
-                  ? "anonimo"
-                  : {
+              author={(() => {
+                if (post.anonimo) {
+                  if (post.asBussiness && post.bussiness) {
+                    return {
+                      name: post.bussiness.bussinessName,
+                      id: post.bussiness.bussinessName,
+                      image: post.bussiness.bussinessLogo,
+                      color: post.bussiness.bussinessColor
+                    }
+                  } else {
+                    return "anonimo"
+                  }
+                } else {
+                  return {
                     name: post.useUserName ? post.userName : post.authorName,
                     id: post.userName || post.authorName,
                     ...(post.authorImage && { image: post.authorImage }),
                   }
-              }
+                }
+              })()}
               title={post.title}
               tags={post.tags}
               image={post.image}

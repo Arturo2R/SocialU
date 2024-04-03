@@ -39,6 +39,7 @@ declare global {
     tags?: string[];
     time?: string;
     anonimo: boolean;
+    asBussiness?: boolean;
     // author: string | "anonimo"; // !TODO: Change to { image?: string; name: string; id: string } | "anonimo"
     // comments: string[]; ////Comments are not implemented yet
     // suscribed: string[];
@@ -52,11 +53,19 @@ declare global {
   interface ComputedPost extends FormPost {
     imageData?: imageData;
     computedDate?: Date;
+    bussiness?: {
+      bussinessName: string;
+      bussinessColor: string;
+      bussinessLogo: string;
+      bussinessUrl: string;
+      bussinessDescription: string;
+    };
+
   }
 
   interface PostCardProps {
     author:
-    | { image?: string | null; name: string; id: string }
+    | { image?: string | null; name: string; id: string, color?: string}
     | "anonimo";
     priority?: boolean;
     tags?: string[];
@@ -155,6 +164,15 @@ declare global {
     university: University;
     description?: string;
     carrer?: string;
+  }
+
+  type bussiness = {
+    name: string;
+    color: string;
+    description: string;
+    logo: string;
+    url: string;
+    members: {email: string, firebaseuid}[];
   }
 
   type CategoryState = { color: string, name: string, value: string, variant: string }

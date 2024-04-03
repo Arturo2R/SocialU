@@ -1,26 +1,29 @@
 import { Switch } from "@mantine/core";
-import { useController } from "react-hook-form";
+import { useController, useWatch } from "react-hook-form";
 import { DEFAULT_COLOR } from "../../constants";
 
-interface Props { control:any, name:string, label:string, def?:boolean }
+interface Props { control: any, name: string, label: string, def?: boolean, color?: string, size?: 'md' | 'sm' | 'lg' | 'xs' | 'xl' }
 
-function Switc({ control, name, label,def }:Props) {
+function Switc({ control, name, label, def, color, size }: Props) {
   const {
     field,
     fieldState: { invalid, isTouched, isDirty },
-    formState: { touchedFields, dirtyFields }
+    formState: { touchedFields, dirtyFields },
   } = useController({
     name,
     control,
   });
 
+
   return (
-    <Switch 
+    <Switch
+      checked={field.value}
       mt="sm"
       mb="md"
-      defaultChecked={def||false}
+      defaultChecked={def || false}
       label={label}
-      color={DEFAULT_COLOR}
+      size={size || "sm"}
+      color={color || DEFAULT_COLOR}
       onChange={field.onChange} // send value to hook form 
       onBlur={field.onBlur} // notify when input is touched/blur
       value={field.value} // input value

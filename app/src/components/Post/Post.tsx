@@ -7,9 +7,11 @@ import styles from "./Post.module.css";
 import SeeUser from "./SeeUser";
 
 import {
+  Avatar,
   Button,
   Card,
   Collapse,
+  Image as M_Img,
   Group,
   Spoiler,
   Stack,
@@ -72,59 +74,60 @@ export const PostCard: FC<PostCardProps> = ({
 
 
   return (
-    <article className="max-w-sm px" id={postId}>
+    <article className="max-w-lg" id={postId}>
       <Card component={Link}
         href={`/${author !== "anonimo" ? author.id : "anonimo"}/${postId}`}
         className="X"
         withBorder p="xs" radius="md">
-        <>
-          {image && (
-            <Card.Section className={styles.mainImage}>
-              <Image
-                src={image}
-                alt={title || "No hay titulo"}
-                width={imageData?.width || 380}
-                height={imageData?.height || 240}
-                color={DEFAULT_COLOR}
-                loading={priority ? "eager" : "lazy"}
-                quality={70}
-                priority={priority}
-                // style="margin: -10px -10px 10px -10px; display:block"
-                // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
-                // priority={key === 1||2||3||4 ? true:false }
-                // width={380}
-                // withPlaceholder
-                // placeholder={<Text align="center">This image contained the meaning of life</Text>}
-                // layout="fill"
-                className="w-full"
-                sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
-              // style={{
-              //   width: "100%",
-              //   height: "auto"
-              // }} 
-              />
-            </Card.Section>
-          )}
-          {/* <Badge>{category}</Badge> */}
-          {title && (
-            <Title lineClamp={2} order={3} className="text-xl font-bold break-words text-pretty hyphens-auto" lang="es">{title}</Title>
-          )}
-        </>
+
+        {image && (
+          <Card.Section className={styles.mainImage}>
+            <Image
+              src={image}
+              alt={title || "No hay titulo"}
+              width={imageData?.width || 380}
+              height={imageData?.height || 240}
+              color={DEFAULT_COLOR}
+              loading={priority ? "eager" : "lazy"}
+              quality={70}
+              priority={priority}
+              // style="margin: -10px -10px 10px -10px; display:block"
+              // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
+              // priority={key === 1||2||3||4 ? true:false }
+              // width={380}
+              // withPlaceholder
+              // placeholder={<Text align="center">This image contained the meaning of life</Text>}
+              // layout="fill"
+              className="w-full"
+              sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
+            // style={{
+            //   width: "100%",
+            //   height: "auto"
+            // }} 
+            />
+          </Card.Section>
+        )}
+        {/* <Badge>{category}</Badge> */}
+        {title && (
+          <Title lineClamp={2} order={3} className="text-xl font-bold break-words text-pretty hyphens-auto" lang="es">{title}</Title>
+        )}
+
+
         {author !== "anonimo" && (
           <Link href={`/${author.id}`} >
-            <Group className="mt-1" gap="xs">
-              {author?.image && <Image
-                alt={`${author.name} avatar image`}
-                width="30"
-                height="30"
-                quality={30}
-                src={author?.image}
-                className="rounded-full"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto"
-                }} />}
-              <Text color={DEFAULT_COLOR} className="hover:decoration-orange-600 hover:decoration-dotted hover:decoration-2">{author?.name}</Text>
+            <Group gap="xs">
+
+              {author?.image && (
+                <Avatar
+                  src={author?.image}
+                  mt={1}
+                  // w={25}
+                  size="sm"
+                  radius="xl"
+                />
+              )}
+
+              <Text c={author?.color || DEFAULT_COLOR} fw={author.color ? 700 : 400}>{author?.name}</Text>
             </Group>
           </Link>
         )}
