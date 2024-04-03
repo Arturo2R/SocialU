@@ -10,7 +10,7 @@ import {
   signInWithPopup,
   signOut,
   signInWithRedirect,
-  
+
 } from "firebase/auth";
 import { notifications } from '@mantine/notifications'
 // import jwt_decode from "jwt-decode";
@@ -83,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   //   return signInWithEmailAndPassword(auth, email, password);
   // };
   const loginWithMicrosoft = () => {
+    setLoading(true)
     const microsoftProvider = new OAuthProvider('microsoft.com');
     microsoftProvider.setCustomParameters({
       // Force re-consent.
@@ -174,7 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // console.log({ currentUser });
         const fectchUser = async () => {
           const newUser = await createOrFetchUser(currentUser, setUser);
-          setLoading(false);
+          // setLoading(false);
           // console.log("elusuario", user);
           const valid = StudentValidation(currentUser.email);
           console.log("la validacion es ", valid);
@@ -189,7 +190,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 color: "green",
               });
             }
-            if (router.pathname === "/bienvenido") router.push("/")
+            if (router.pathname === "/bienvenido") { router.push("/").finally(() => setLoading(false)) }
           }
           if (valid === false) {
             logout();
@@ -202,11 +203,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               color: "red",
               icon: <X />,
             });
+            setLoading(false)
           }
         }
         fectchUser()
       } else {
         console.log("No hay usuario");
+        setLoading(false)
       }
     });
 

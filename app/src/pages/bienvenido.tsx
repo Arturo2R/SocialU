@@ -10,6 +10,7 @@ import {
   Group,
   Button,
   List,
+  LoadingOverlay,
 } from '@mantine/core';
 import '@mantine/core/styles/Button.css';
 import styles from './bievenido.module.css'
@@ -18,7 +19,7 @@ import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
 
 export default function Bienvenido() {
-  const { loginWithMicrosoft } = useAuth();
+  const { loginWithMicrosoft, loading } = useAuth();
   return (
     <div className={styles.gradient}>
       <Container size="xs" py={40} >
@@ -27,6 +28,7 @@ export default function Bienvenido() {
         </Title>
 
         <Paper withBorder shadow="md" p={30} mt={30} radius="md" >
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "md", blur: 2 }} loaderProps={{ color: 'orange', type: 'bars' }} />
           <Text fw="700">
             ¡Únete a nuestra red social exclusiva para estudiantes de la Universidad del Norte!
           </Text>
