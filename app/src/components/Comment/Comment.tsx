@@ -18,7 +18,7 @@ export interface CommentProps {
   parentId?: string;
   postedAt: Timestamp;
   content: string;
-  author: { name: string; image: string } | "anonimo";
+  author: { name: string; image: string, color?:string, } | "anonimo";
   subComments?: CommentProps[];
   //setRespondTo?: Dispatch<SetStateAction<string>>;
 }
@@ -40,15 +40,15 @@ export function Comment({
   return (
     <div className="mt-5">
       <Group>
-        {author === "anonimo" ? (
-          <Avatar size="sm" alt="Anónimo" radius="xl" />
-        ) : (
+        {author !== "anonimo" ? (
           <Avatar size="sm" src={author.image} alt={author.name} radius="xl" />
+          ) : (
+          <Avatar size="sm" alt="Anónimo" radius="xl" />
         )}
         
         <div>
           <Text size="sm">
-            {author === "anonimo" ? "Anónimo" : author.name}
+            {author !== "anonimo" ?  author.name : "Anónimo"}
           </Text>
           {postedAt && postedAt.toDate() && (
             <Text size="xs" color="dimmed">

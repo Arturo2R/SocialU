@@ -15,7 +15,6 @@ type CommentWallProps = {
 
 
 const CommentWall = ({ comments, postId, setRespondTo }: CommentWallProps) => {
-  // if (comments.map) {
   return (
     <>
       {auth.currentUser ? <CommentForm postId={postId} /> : (

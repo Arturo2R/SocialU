@@ -21,7 +21,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useFirestore } from "../hooks/useFirestore";
 import posthog from "posthog-js";
 import { useRouter } from "next/router";
-
+import businessAccounts from "../bussiness_accounts.json"
 
 export const authContext = createContext<AuthContextInterface | undefined>(
   undefined
@@ -63,6 +63,8 @@ export const useAuth = () => {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserState | null>(null);
+  const [bussinessAccount, setBussinessAccount] = useState<bussiness>()
+  const [hasBussinessAccount, setHasBussinessAccount] = useState(false)
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   // const [valid, setValid] = useState<boolean | "unset">("unset");
@@ -187,7 +189,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 color: "green",
               });
             }
-            router.push("/")
+            if (router.pathname === "/bienvenido") router.push("/")
           }
           if (valid === false) {
             logout();
@@ -212,6 +214,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubuscribe();
   }, [auth]);
 
+  useEffect(() => {
+    let foundBussiness
+
+    if (user) {
+      console.log("aja", user.email)
+      foundBussiness = businessAccounts.bussiness.find(bussines =>
+        bussines.members.some(member => member.email === user.email)
+      )
+    }
+
+    if (!foundBussiness) {
+      setHasBussinessAccount(false)
+    } else {
+      setHasBussinessAccount(true)
+    }
+
+    setBussinessAccount(foundBussiness);
+
+  }, [user])
+
 
 
 
@@ -227,6 +249,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         // valid,
         loading,
+        bussinessAccount,
+        hasBussinessAccount,
         // loginWithGoogle,
         loginWithMicrosoft,
         // resetPassword,

@@ -100,7 +100,6 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
         }))
         .map((comment: any) => ({
           ...comment,
-          author: comment.anonimo === true ? "anonimo" : comment.author,
         }));
       // console.log("raw", commentsDB);
       setComments(commentsDB);

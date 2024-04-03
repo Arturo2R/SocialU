@@ -1,4 +1,4 @@
-import { ActionIcon,Switch, Textarea } from "@mantine/core";
+import { ActionIcon, Switch, Textarea } from "@mantine/core";
 import React from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const CommentForm = (props: Props) => {
-  const {user} = useAuth()
+  const { user, bussinessAccount, hasBussinessAccount } = useAuth()
   const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
 
   const form = useForm({
@@ -21,6 +21,7 @@ const CommentForm = (props: Props) => {
       content: "",
       anonimo: user?.configuration?.anonimoDefault || false,
       postId: props.postId,
+      asBussiness: false,
     },
   });
 
@@ -30,7 +31,7 @@ const CommentForm = (props: Props) => {
     <form
       className="flex gap-x-2"
       onSubmit={form.onSubmit((values) => {
-        createComment(values, user);
+        createComment(values, user, hasBussinessAccount, bussinessAccount);
         form.reset();
       })}
       name="comment-form"
@@ -51,6 +52,21 @@ const CommentForm = (props: Props) => {
           required
           {...form.getInputProps("content")}
         />
+        {hasBussinessAccount && (
+          <Switch
+            mt="xs"
+            size="md"
+            color={bussinessAccount?.color || DEFAULT_COLOR}
+            label={"Comentar como " + bussinessAccount?.name}
+            checked={form.values.asBussiness}
+            onChange={(e) => {
+              form.setFieldValue("asBussiness", e.currentTarget.checked);
+              setAnonimo(e.currentTarget.checked);
+              form.setFieldValue("anonimo", e.currentTarget.checked);
+            }}
+          ></Switch>
+
+        )}
         <Switch
           mt="xs"
           color={DEFAULT_COLOR}
@@ -63,7 +79,7 @@ const CommentForm = (props: Props) => {
         ></Switch>
       </div>
       {/* <div className=""> */}
-      
+
       <ActionIcon
         aria-label="Enviar Comentario"
         component="button"

@@ -233,6 +233,7 @@ export const useFirestore = () => {
     content: string;
     postId: string;
     anonimo: boolean;
+    asBussiness?: boolean;
   }
 
   interface createCommentProps extends CommentFormProps {
@@ -248,7 +249,7 @@ export const useFirestore = () => {
 
 
 
-  const createComment = async (data: CommentFormProps, user: any) => {
+  const createComment = async (data: CommentFormProps, user: any, hasBussinessAccount: boolean, bussinessAccount?: bussiness) => {
     if (
       user?.displayName &&
       user.uid
@@ -259,6 +260,8 @@ export const useFirestore = () => {
 
         const commentRef = collection(db, "posts", data.postId, "comments");
         const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
+
+
         const Payload: createCommentProps = {
           content: data.content,
           anonimo: data.anonimo,
@@ -270,14 +273,42 @@ export const useFirestore = () => {
           },
           postedAt: serverTimestamp(),
           parentId: "",
+          asBussiness: data.asBussiness,
           postId: data.postId,
         };
+
+        const author = (() => {
+          if (data.anonimo) {
+            if (data.asBussiness) {
+              return {
+                image: bussinessAccount?.logo,
+                name: bussinessAccount?.name,
+                ref: `user/${user.uid}`,
+                userName: bussinessAccount?.name,
+              }
+            } else {
+              "anonimo"
+            }
+          } else {
+            return {
+              image: user?.photoURL || "",
+              name: user?.configuration?.useUserName ? user?.userName : user?.displayName,
+              ref: `user/${user.uid}`,
+              userName: user.userName || "",
+            }
+          }
+        })()
+
+
 
         if (data.anonimo) {
           // Si el comentarrio es anonimo
           await Promise.all([
             // Crea el comentario en la ruta de pública
-            addDoc(onlyPublicPostsRef, { ...Payload, author: "anonimo" }),
+            addDoc(onlyPublicPostsRef, {
+              ...Payload,
+              author: author,
+            }), // Esto es lo que tengo que cambiar
             // Crea el comentario en la ruta de backup "posts"
             addDoc(commentRef, Payload),
             // Incrementa el número de comentarios

@@ -65,7 +65,7 @@ declare global {
 
   interface PostCardProps {
     author:
-    | { image?: string | null; name: string; id: string, color?: string}
+    | { image?: string | null; name: string; id: string, color?: string }
     | "anonimo";
     priority?: boolean;
     tags?: string[];
@@ -138,6 +138,8 @@ declare global {
     // login(email: string, password: string): Promise<UserCredential>;
     suscribetoPost(postId: string, remove: boolean): Promise<void>;
     user: UserState | null;
+    bussinessAccount?: bussiness;
+    hasBussinessAccount: boolean
     setUser: Function
     logout(): void;
     // valid: boolean|string;
@@ -172,7 +174,7 @@ declare global {
     description: string;
     logo: string;
     url: string;
-    members: {email: string, firebaseuid}[];
+    members: { email: string, firebaseuid }[];
   }
 
   type CategoryState = { color: string, name: string, value: string, variant: string }

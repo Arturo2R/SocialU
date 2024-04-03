@@ -26,7 +26,6 @@ import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
 import config from "../config";
-import businessAccounts from "../bussiness_accounts.json"
 import { useWatch } from 'react-hook-form';
 // import { useEditor } from "@tiptap/react";
 // import Placeholder from '@tiptap/extension-placeholder'
@@ -69,7 +68,7 @@ export const checkImage = async (url: string, cacheImage?: boolean): Promise<boo
 }
 
 const CrearPost = () => {
-  const { user } = useAuth()
+  const { user, bussinessAccount, hasBussinessAccount } = useAuth()
   const { register, setValue, handleSubmit, watch, control, formState: { errors }, getValues } = hform({
     defaultValues: {
       title: "",
@@ -109,29 +108,6 @@ const CrearPost = () => {
     getInitialValueInEffect: false,
   });
 
-  const [bussinessAccount, setBussinessAccount] = useState<bussiness>()
-  const [hasBussinessAccount, setHasBussinessAccount] = useState(false)
-
-  useEffect(() => {
-    let foundBussiness
-
-    if (user) {
-      console.log("aja", user.email)
-      foundBussiness = businessAccounts.bussiness.find(bussines =>
-        bussines.members.some(member => member.email === user.email)
-      )
-    }
-
-    if (!foundBussiness) {
-      setHasBussinessAccount(false)
-    } else {
-      setHasBussinessAccount(true)
-    }
-
-    setBussinessAccount(foundBussiness);
-
-  }, [user])
-
 
   // const [value, setValue] = useState<Date | null>(null);
 
@@ -162,8 +138,6 @@ const CrearPost = () => {
 
   useEffect(() => {
     setValue("anonimo", asBussiness)
-    console.log("asBussiness", asBussiness)
-    console.log("anonimo", getValues("anonimo"))
   }, [asBussiness, setValue])
 
 
@@ -202,8 +176,6 @@ const CrearPost = () => {
         className: "my-notification-class",
         icon: <FileCheck />,
       });
-      setHasBussinessAccount(false);
-      setBussinessAccount(null);
     } else {
       throw new Error("No hay usuario");
     }
