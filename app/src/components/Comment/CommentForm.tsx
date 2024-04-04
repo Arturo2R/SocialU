@@ -1,5 +1,5 @@
 import { ActionIcon, Switch, Textarea } from "@mantine/core";
-import React from "react";
+import React, { useEffect } from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
 import { useState } from "react";
@@ -14,18 +14,24 @@ type Props = {
 
 const CommentForm = (props: Props) => {
   const { user, bussinessAccount, hasBussinessAccount } = useAuth()
-  const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
+  // const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
+  // const [asBussiness, setAsBussiness] = useState<boolean>(hasBussinessAccount)
 
   const form = useForm({
     initialValues: {
       content: "",
       anonimo: user?.configuration?.anonimoDefault || false,
       postId: props.postId,
-      asBussiness: false,
+      asBussiness: hasBussinessAccount,
     },
   });
 
   const { createComment, creating } = useFirestore();
+
+  useEffect(() => {
+    form.setFieldValue('anonimo', form.values.asBussiness)
+  }
+    , [form.values.asBussiness])
 
   return (
     <form
@@ -58,24 +64,14 @@ const CommentForm = (props: Props) => {
             size="md"
             color={bussinessAccount?.color || DEFAULT_COLOR}
             label={"Comentar como " + bussinessAccount?.name}
-            checked={form.values.asBussiness}
-            onChange={(e) => {
-              form.setFieldValue("asBussiness", e.currentTarget.checked);
-              setAnonimo(e.currentTarget.checked);
-              form.setFieldValue("anonimo", e.currentTarget.checked);
-            }}
+            {...form.getInputProps('asBussiness', { type: 'checkbox' })}
           ></Switch>
-
         )}
         <Switch
           mt="xs"
           color={DEFAULT_COLOR}
           label="Enviar Anonimamente"
-          checked={anonimo}
-          onChange={(e) => {
-            setAnonimo(e.currentTarget.checked);
-            form.setFieldValue("anonimo", e.currentTarget.checked);
-          }}
+          {...form.getInputProps('anonimo', { type: 'checkbox' })}
         ></Switch>
       </div>
       {/* <div className=""> */}

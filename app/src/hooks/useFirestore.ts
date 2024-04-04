@@ -256,8 +256,6 @@ export const useFirestore = () => {
     ) {
       try {
         setCreating(true);
-
-
         const commentRef = collection(db, "posts", data.postId, "comments");
         const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
 
@@ -287,7 +285,7 @@ export const useFirestore = () => {
                 userName: bussinessAccount?.name,
               }
             } else {
-              "anonimo"
+              return "anonimo"
             }
           } else {
             return {
@@ -309,6 +307,7 @@ export const useFirestore = () => {
               ...Payload,
               author: author,
             }), // Esto es lo que tengo que cambiar
+
             // Crea el comentario en la ruta de backup "posts"
             addDoc(commentRef, Payload),
             // Incrementa el número de comentarios
@@ -317,6 +316,7 @@ export const useFirestore = () => {
             }),
             posthog.capture('comment_created', {
               postId: data.postId,
+              firebaseuid: user.uid,
               anonimo: true,
             })
           ]);
