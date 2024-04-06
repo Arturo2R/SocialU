@@ -60,8 +60,11 @@ declare global {
       bussinessUrl: string;
       bussinessDescription: string;
     };
-
+    renderMethod?: renderMethod;
+    messageFormat: 'html'|'tiptapJSON' | 'text'; // Provide the strings types
   }
+
+  type renderMethod = 'DangerouslySetInnerHtml' | 'NonEditableTiptap' | 'none'; // Provide the strings types
 
   interface PostCardProps {
     author:
@@ -71,6 +74,7 @@ declare global {
     tags?: string[];
     imageData?: imageData;
     image?: string;
+    renderMethod?: renderMethod;
     description: string;
     title?: string;
     date?: Date;

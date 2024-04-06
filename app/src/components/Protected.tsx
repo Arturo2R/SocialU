@@ -21,8 +21,8 @@ export function Route({ children }: Props) {
   // if (loading) return <h1>Loading</h1>;
 
   useEffect(() => {
-    // if (!user && !loading) {
-      if (!user) {
+    if (!user && !loading) {
+      //if (!user) {
       router.push("/bienvenido");
     }
   }, [user, loading]);

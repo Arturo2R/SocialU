@@ -66,6 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [bussinessAccount, setBussinessAccount] = useState<bussiness>()
   const [hasBussinessAccount, setHasBussinessAccount] = useState(false)
   const router = useRouter();
+  const [currentPath, setCurrentPath] = useState(router.pathname);
   const [loading, setLoading] = useState(true);
   // const [valid, setValid] = useState<boolean | "unset">("unset");
   // state for superUser
@@ -171,14 +172,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // console.log("unsubuscribe effect", valid);
     const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
+        setLoading(false)
         setUser(currentUser);
+        if (currentPath== "/bienvenido") {
+          router.push("/").finally(() => setLoading(false))
+        }
         // console.log({ currentUser });
         const fectchUser = async () => {
           const newUser = await createOrFetchUser(currentUser, setUser);
           // setLoading(false);
           // console.log("elusuario", user);
           const valid = StudentValidation(currentUser.email);
-          console.log("la validacion es ", valid);
           // setValid(quees);
           if (valid === true) {
             if (newUser) {
@@ -190,7 +194,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 color: "green",
               });
             }
-            if (router.pathname === "/bienvenido") { router.push("/").finally(() => setLoading(false)) }
           }
           if (valid === false) {
             logout();
@@ -236,6 +239,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setBussinessAccount(foundBussiness);
 
   }, [user])
+
+  useEffect(() => {
+    const handleRouteChange = (url:string) => {
+      setCurrentPath(url);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    // Cleanup function to remove the listener when the component unmounts
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
 
 
 

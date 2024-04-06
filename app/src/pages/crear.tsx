@@ -21,19 +21,13 @@ import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
 import { DEFAULT_COLOR, MAXIMUM_MESSAGE_LENGTH, MAXIMUM_TITLE_LENGTH, MINIMUM_MESSAGE_LENGTH, MINIMUM_TITLE_LENGTH } from "../constants";
 // import { DatePicker, DatePickerInput } from "@mantine/dates";
-import '@mantine/dates/styles.css';
 import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
 import config from "../config";
 import { useWatch } from 'react-hook-form';
-// import { useEditor } from "@tiptap/react";
-// import Placeholder from '@tiptap/extension-placeholder'
-// import {Editor} from "novel"
-// import Editor from "../components/Editor"
-
-// import dynamic from 'next/dynamic';
-// const Editor = dynamic(() => import('novel').then((module) => module.Editor));
+import {TextEditor} from "../components/TextEditor";
+import '@mantine/dates/styles.css';
 
 const conf = config()
 
@@ -89,10 +83,8 @@ const CrearPost = () => {
     defaultValue: false, // provide a default value if necessary
   });
 
-  console.log(errors);
 
 
-  console.log(user?.anonimoDefault)
   // Event state
   const [opened, setOpened] = useState(false) // #MOdal
   //image state
@@ -104,6 +96,8 @@ const CrearPost = () => {
 
   const [imageData, setImageData] = useState<{ width: number, height: number } | null>(null);
 
+  const [editor, setEditor] = useState()
+
   const matches = useMediaQuery('(max-width: 768px)', true, {
     getInitialValueInEffect: false,
   });
@@ -112,6 +106,7 @@ const CrearPost = () => {
   // const [value, setValue] = useState<Date | null>(null);
 
   const router = useRouter();
+
 
 
   const [imageChecking, setImageChecking] = useState<null | "loading" | "loaded">(null)
@@ -144,9 +139,9 @@ const CrearPost = () => {
 
   const submitPost: SubmitHandler<FormPost> = postValues => {
     if (user) {
-      let payload: ComputedPost = postValues
+      let payload: ComputedPost = {...postValues, renderMethod: "DangerouslySetInnerHtml", messageFormat: "html"}
       if (postValues.image && imageData) {
-        payload = { ...postValues, imageData: imageData }
+        payload = { ...payload, imageData: imageData }
       }
       if (postValues.date && postValues.time) {
         console.log("date: ", postValues.date, "time: ", postValues.time)
@@ -166,7 +161,7 @@ const CrearPost = () => {
       }
       console.log("sip", payload)
       createPost(payload, user);
-      router.push({ pathname: "/", query: { nrf: true } }, { pathname: "/", }, { shallow: true });
+      router.push({ pathname: "/", query: { nrf: true } }, { pathname: "/", }, { shallow: true, scroll: true });
       notifications.show({
         id: "created-post",
         autoClose: 3000,
@@ -239,8 +234,8 @@ const CrearPost = () => {
                   />
                 )}
               />
-
-              <Textarea
+              <TextEditor control={control} name="message" required editor={editor} setEditor={setEditor} />
+              {/*<Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
                 error={errors.message?.message}
@@ -253,7 +248,7 @@ const CrearPost = () => {
                   minLength: { value: MINIMUM_MESSAGE_LENGTH, message: `No menos de ${MINIMUM_MESSAGE_LENGTH} caracteres` },
                   maxLength: { value: MAXIMUM_MESSAGE_LENGTH, message: `No más de ${MAXIMUM_MESSAGE_LENGTH} caracteres` }
                 })}
-              />
+              /> */}
 
               {/* <TypographyStylesProvider pl="0">
                 <Editor />

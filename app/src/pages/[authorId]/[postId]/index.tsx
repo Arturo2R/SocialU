@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   Title,
+  TypographyStylesProvider,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
@@ -163,23 +164,37 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
           )}
         </Group>
 
-        {content?.message && (
+        {(content?.message && content?.renderMethod === "DangerouslySetInnerHtml") && (
+            <TypographyStylesProvider>
+              <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md hyphens-auto " dangerouslySetInnerHTML={{ __html:  content.message}}></div>
+            </TypographyStylesProvider>
+          )}
+        {(content?.message && (content.renderMethod === "none" || !content?.renderMethod) ) && (
           <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md hyphens-auto " lang="es">{content.message}</Text>
-          //  <TypographyStylesProvider>
-          //     <div className="max-w-lg text-md" dangerouslySetInnerHTML={{ __html: content.message}}></div>
-          // </TypographyStylesProvider>
-
         )}
-        {(content?.anonimo === false && content.authorName) || (content.asBussiness && content.bussiness) ? (
+  
+
+        {(content?.anonimo === false && content.authorName) && (
           <AuthorInfo
             isBussiness={content.asBussiness}
-            link={content.bussiness?.bussinessUrl || content?.userName}
-            name={content.bussiness?.bussinessName || content?.authorName}
-            email={content.bussiness?.bussinessUrl || content?.authorEmail || `${content?.userName}@uninorte.edu.co`}
-            image={content.bussiness?.bussinessLogo || content.authorImage || "/profile.jpg"}
+            link={content?.userName}
+            name={ content?.authorName}
+            email={content?.authorEmail || `${content?.userName}@uninorte.edu.co`}
+            image={content.authorImage || "/profile.jpg"}
             icon
           />
-        ) : (
+        )}
+        {(content?.anonimo === false && content?.asBussiness) && (
+          <AuthorInfo
+            isBussiness={content.asBussiness}
+            link={content.bussiness?.bussinessUrl}
+            name={content.bussiness?.bussinessName}
+            email={content.bussiness?.bussinessUrl || `${content?.userName}@uninorte.edu.co`}
+            image={content.bussiness?.bussinessLogo || "/profile.jpg"}
+            icon
+          />
+        )}
+        {(content?.anonimo && content.asBussiness === false)&& (
           <Text color={DEFAULT_COLOR} size="lg">
             Anonimo
           </Text>

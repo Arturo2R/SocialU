@@ -17,6 +17,7 @@ import {
   Stack,
   Text,
   Title,
+  TypographyStylesProvider,
 } from "@mantine/core";
 
 import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
@@ -35,6 +36,7 @@ export const PostCard: FC<PostCardProps> = ({
   title,
   image,
   commentsQuantity,
+  renderMethod,
   description,
   postId,
   asistants,
@@ -146,11 +148,13 @@ export const PostCard: FC<PostCardProps> = ({
           hideLabel="Menos"
           transitionDuration={120}
         >
-          <Text>{description}</Text>
-          {/* <TypographyStylesProvider>
-          <div dangerouslySetInnerHTML={{ __html:  description}}></div>
-          
-          </TypographyStylesProvider> */}
+          {renderMethod === "DangerouslySetInnerHtml" ? (
+            <TypographyStylesProvider>
+              <div dangerouslySetInnerHTML={{ __html:  description}}></div>
+            </TypographyStylesProvider>
+          ):(
+            <Text>{description}</Text>
+          )}
         </Spoiler>
         {event && (
           <>

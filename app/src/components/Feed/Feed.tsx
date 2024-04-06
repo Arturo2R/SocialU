@@ -73,6 +73,7 @@ export function Feed({ data, user }: FeedProps) {
               userUID={user?.uid}
               description={post.message}
               priority={index < 4}
+              renderMethod={post.renderMethod || "none"}
               commentsQuantity={post?.commentsQuantity}
               author={(() => {
                 if (post.anonimo) {
