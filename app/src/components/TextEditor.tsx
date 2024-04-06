@@ -45,7 +45,7 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
       ],
       editorProps: {
         attributes: {
-          class: 'min-h-32',
+          class: 'TextEditor',
         },
       },
       editable: editable || true,
@@ -102,7 +102,6 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
 
       <RichTextEditor.Content />
     </RichTextEditor>
-    <div className="!border-none min-h-32" id="Dummy"></div>
     {(error) && <span className="text-red-500">{error.message}</span>}
     </>
   );
