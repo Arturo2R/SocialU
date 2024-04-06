@@ -814,12 +814,6 @@ body {
   }
 }
 
-.ununsueless {
-  @apply !border-none min-h-32 ;
-}
-
-
-
 
 .ProseMirror {
   @apply !p-0;
