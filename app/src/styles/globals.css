@@ -821,6 +821,7 @@ body {
 
 .TextEditor {
   min-height: 8rem;
+  display: block;
 }
 
 .fdasdflask {
