@@ -76,7 +76,7 @@ export default function ImageDropzone({
       accept={IMAGE_MIME_TYPE}
       
     >
-      <Group  justify="center" gap="xl" mih={100} style={{ pointerEvents: 'none' }}>
+      <Group  justify="center" gap="xl" mih={70} style={{ pointerEvents: 'none' }}>
         <Dropzone.Accept>
           <IconUpload
             style={{ width: rem(52), height: rem(52), color: 'var(--mantine-color-blue-6)' }}
@@ -98,10 +98,10 @@ export default function ImageDropzone({
 
         <div>
           <Text size="xl" inline>
-            Imagén Principal (Opcional)
+            Imagén
           </Text>
           <Text size="sm" c="dimmed" inline mt={7}>
-            Envia solo una imagen de máximo 5 Mb
+            5 mb Max
           </Text>
         </div>
       </Group>

@@ -203,7 +203,7 @@ const CrearPost = () => {
               />
               <Textarea  // Titulo
                 variant="unstyled"
-                placeholder="Titulo (Opcional)"
+                placeholder="Titulo"
                 error={errors.title?.message}
                 size="xl"
                 minRows={1}
