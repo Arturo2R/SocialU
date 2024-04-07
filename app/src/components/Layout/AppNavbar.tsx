@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from 'react';
-import { Group, Code } from '@mantine/core';
+import { Group, Code, NavLink } from '@mantine/core';
 import {
   IconLogout,
 } from '@tabler/icons-react';
@@ -16,21 +16,16 @@ import Config from "../../config"
 export function AppNavbar() {
   // const { classes, cx } = useStyles();
   const { logout } = useAuth();
-  const [active, setActive] = useState('d');
+
 
   const links = data.map((item) => (
-    <Link
-      className={classes.link}
-      data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        setActive(item.label);
-      }}
-    >
-      <item.icon className={classes.linkIcon} stroke="1.5" />
-      <span>{item.label}</span>
-    </Link>
+    <NavLink
+        label={item.label}
+        leftSection={<item.icon className={classes.linkIcon} stroke="1.5" />}
+        href={item.link}
+        key={item.label}
+        component={Link}
+      />
   ));
 
   return (
