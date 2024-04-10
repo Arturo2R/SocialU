@@ -174,9 +174,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (currentUser) {
         setLoading(false)
         setUser(currentUser);
-        if (currentPath== "/bienvenido") {
-          router.push("/").finally(() => setLoading(false))
-        }
+        console.log(currentPath)
+        // if (currentPath== "/bienvenido") {
+        setLoading(false)
+        router.push("/")
+        // }
         // console.log({ currentUser });
         const fectchUser = async () => {
           const newUser = await createOrFetchUser(currentUser, setUser);
@@ -241,7 +243,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user])
 
   useEffect(() => {
-    const handleRouteChange = (url:string) => {
+    const handleRouteChange = (url: string) => {
       setCurrentPath(url);
     };
 
