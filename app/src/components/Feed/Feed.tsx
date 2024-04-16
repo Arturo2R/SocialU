@@ -69,6 +69,7 @@ export function Feed({ data, user }: FeedProps) {
 
           {(liveData ?? data).filter((post) => category?.value ? post.tags?.includes(category?.value) : true).map((post: Post, index: number) => (
             <PostCard
+              viewsNumber={post.viewsCounter}
               imageData={post?.imageData}
               userUID={user?.uid}
               description={post.message}

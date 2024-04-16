@@ -29,6 +29,7 @@ import { Timestamp } from "@firebase/firestore";
 import styles from "./PostPage.module.css"
 import BackButton from "../../../components/BackButton";
 import { Tag } from "../../../components/Post/Tag";
+import posthog from "posthog-js";
 
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
@@ -86,8 +87,10 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   console.log(id)
   const [comments, setComments] = useState<CommentProps[] | undefined>();
   const [numberOfComments, setNumberOfComments] = useState(content.commentsQuantity || 0)
+  const [onlyOneView, setAlreadyViewed] = useState<Boolean>(false)
 
   useEffect(() => {
+    
     let q = query(
       collection(db, PATH, id, "comments"),
       orderBy("postedAt", "desc")
@@ -106,10 +109,43 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
       setComments(commentsDB);
       setNumberOfComments(commentsDB.length)
     });
+
+    
+      
     return () => {
       unsuscribe()
     };
   }, []);
+
+  const nada = "nada"
+
+  useEffect(() => {
+    if (onlyOneView === false){
+      fetch(`/api/views?password=eyquecomovalavaina&id=${id}&userId=${authorId}&feedView=false`, {
+        method: 'POST',
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({})
+    })
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => {
+      console.error(error);
+      posthog.capture('$exception', {
+        message: error.message,
+        error: "Error publicando un view",
+        function: "Client UseEffect Post page"
+      });
+    });
+    setAlreadyViewed(true)
+  }
+
+  return () => {
+    setAlreadyViewed(false)
+  };
+  }, [])
+  
 
 
   // if (loading) {
@@ -157,9 +193,9 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
             <Tag key={index} label={tag} />
           ))
           }
-          {fecha && (
+          {(fecha||content.viewsCounter) && (
             <Text className="italic text-stone-400">
-              {dayjs(fecha).fromNow()}
+              {dayjs(fecha).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`} 
             </Text>
           )}
         </Group>

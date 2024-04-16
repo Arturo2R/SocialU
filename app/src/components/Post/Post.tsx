@@ -45,6 +45,7 @@ export const PostCard: FC<PostCardProps> = ({
   imageData,
   priority,
   tags,
+  viewsNumber,
   // createdAt,
   subscribeToPost,
 }) => {
@@ -226,6 +227,10 @@ export const PostCard: FC<PostCardProps> = ({
           {commentsQuantity && (
             <Text size="xs" c="dimmed"  >{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>
           )}
+          {viewsNumber && (
+            <Text size="xs" c="dimmed"  >{viewsNumber} Vista{viewsNumber > 1 ? "s" : ""}</Text>
+          )}
+
 
           {/* {createdAt && (
               <Text size="xs" c="dimmed"  >• {dayjs(createdAt).fromNow()}</Text>

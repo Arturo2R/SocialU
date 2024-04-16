@@ -83,6 +83,7 @@ declare global {
     createdAt?: Timestamp;
     // relevantCommentary?: Object;
     asistants?: suscription[];
+    viewsNumber?: number;
     commentsQuantity?: number;
     // key: number;
     userUID?: string;
@@ -112,6 +113,13 @@ declare global {
     authorImage: string;
     userName?: string;
     commentsQuantity?: number;
+    views: View[];
+    viewsCounter;
+  }
+
+  type View = {
+    userId: string;
+    viewedAt: Timestamp;
   }
 
 
