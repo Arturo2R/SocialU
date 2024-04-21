@@ -17,10 +17,39 @@ import { auth, db } from "../firebase";
 import { PATH } from "../constants"
 import posthog from "posthog-js";
 
-export const useFirestore = () => {
+interface CommentFormProps {
+  content: string;
+  postId: string;
+  anonimo: boolean;
+  asBussiness?: boolean;
+}
+
+interface configurationForm extends User, AppConfiguration { }
+interface FirestoreReturn {
+  data: Post[] | undefined;
+  error?: string | undefined;
+  loading: boolean;
+  creating: boolean;
+  postsLoading: "loading" | "loaded" | "error";
+  authorProfile: any;
+  fetchUserData: (user: any, setter: Function) => void;
+  createUser: (user: any, setter: Function) => void;
+  fetchUser: (userName: string) => void;
+  updateProfile: (id: string, Payload: configurationForm, user: User, setter: Function) => void;
+  updatingProfile: "loading" | "loaded" | "error" | false;
+  fetchData: () => void;
+  creatingPost: "loading" | "loaded" | "error" | false;
+  createPost: (formData: ComputedPost, user: UserState) => void;
+  createOrFetchUser: (user: any, setter: Function) => Promise<boolean>;
+  fetchPost: (id: string) => void;
+  createComment: (data: CommentFormProps, user: any, hasBussinessAccount: boolean, bussinessAccount?: bussiness) => void;
+  suscribe: (postId: string, remove: boolean, user: UserState) => void;
+}
+
+export const useFirestore: () => FirestoreReturn = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>();
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState();
   const [postsLoading, setPostsLoading] = useState<
     "loading" | "loaded" | "error"
   >("loading");
@@ -229,12 +258,7 @@ export const useFirestore = () => {
     }
   };
 
-  interface CommentFormProps {
-    content: string;
-    postId: string;
-    anonimo: boolean;
-    asBussiness?: boolean;
-  }
+ 
 
   interface createCommentProps extends CommentFormProps {
     author: {
@@ -367,6 +391,76 @@ export const useFirestore = () => {
 
   }
 
+
+  const createUser = async (user: any, setter: Function) => {
+    if (user?.displayName && user?.uid && user?.email) {
+      try {
+        console.log("Creando Un Nuevo Usuario");
+        setCreating(true);
+
+        const emailDomainRegex = /([a-z]*)@([a-z]*.[a-z]*.[a-z]*)/gm;
+        const [email, userName, hostDomain] = emailDomainRegex.exec(
+          user.email
+        ) || ["lalama.com", "lalalama.com", "lalama.com"];
+
+        const Payload: UserState = {
+          displayName: user.displayName,
+          uid: user.uid,
+          email,
+          userName,
+          useUserName: true,
+          anonimoDefault: false,
+          ...(user.phoneNumber && { phoneNumber: user.phoneNumber }),
+          ...(user.photoURL && { photoURL: user.photoURL }),
+        };
+        setter(Payload);
+        await setDoc(userRef, Payload)
+      } catch (error: any) {
+        console.log(error);
+        posthog?.capture('$exception', {
+          message: error.message,
+          error: "Error creando el usuario",
+          function: "createOrFetchUser",
+        })
+      } finally {
+        setCreating(false);
+        posthog.identify(user.uid, {
+          university: "Universidad Del Norte",
+          created: user.metadata.creationTime,
+          email: user.email,
+          last_login: user.metadata.lastSignInTime,
+        })
+
+  }
+    }}
+  const fetchUserData = async (user: any, setter: Function) => {
+    const userRef = doc(db, "user", user.uid);
+    let docExists: boolean;
+    let userSnap;
+    let userProfile;
+    try {
+      userSnap = await getDoc(userRef);
+      docExists = userSnap.exists();
+  
+      if (docExists) {
+        userProfile = userSnap.data();
+        setter(userProfile);
+        posthog.identify(user.uid, {
+          email: user.email,
+          firebase_id: user.uid,
+          last_login: user.metadata.lastSignInTime,
+        },)
+      }
+    } catch (error) {
+      console.error(error.message);
+      posthog?.capture('$exception', {
+        message: error.message,
+        error: "Error buscando el usuario",
+        function: "fetchUserData",
+      })
+    }
+  }
+
   const createOrFetchUser = async (user: any, setter: Function): Promise<boolean> => {
     // const {state} = useStore();
     console.log("Buscando al Usuario", user.email)
@@ -450,7 +544,7 @@ export const useFirestore = () => {
     anonimoDefault: boolean,
   }
 
-  interface configurationForm extends User, AppConfiguration { }
+  
 
   const [updatingProfile, setUpdatingProfile] = useState<"loading" | "loaded" | "error" | false>(false)
   //? Función Provisional, pasar a una función en un contexto propio
@@ -546,6 +640,8 @@ export const useFirestore = () => {
     postsLoading,
     authorProfile,
     fetchUser,
+    fetchUserData,
+    createUser,
     updateProfile,
     updatingProfile,
     fetchData,
@@ -556,4 +652,5 @@ export const useFirestore = () => {
     createComment,
     suscribe,
   };
+
 };

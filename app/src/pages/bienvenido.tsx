@@ -17,9 +17,22 @@ import styles from './bievenido.module.css'
 import '@mantine/core/styles/Button.css';
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext';
+import { auth } from "../firebase";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Bienvenido() {
-  const { loginWithMicrosoft, loading } = useAuth();
+  const { loginWithMicrosoft, loading, effection } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    
+    effection(true)
+    // return () => {
+    //   unsubuscribe()
+    // }
+  }, [auth])
+  
+
   return (
     <div className={styles.gradient}>
       <Container size="xs" py={40} >

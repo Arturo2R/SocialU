@@ -151,7 +151,8 @@ declare global {
     suscribetoPost(postId: string, remove: boolean): Promise<void>;
     user: UserState | null;
     bussinessAccount?: bussiness;
-    hasBussinessAccount: boolean
+    hasBussinessAccount: boolean;
+    effection: (boolean) => () => Promise<Function>;
     setUser: Function
     logout(): void;
     // valid: boolean|string;

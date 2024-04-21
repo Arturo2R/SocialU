@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // state for superUser
   // const [superUser, setSuperUser] = useState<superUser | undefined>(undefined);
 
-  const { createOrFetchUser, suscribe } = useFirestore();
+  const { createOrFetchUser, suscribe, fetchUserData, createUser  } = useFirestore();
 
   // ! Dont delete this, it will be used later
   // const signup = (email: string, password: string) => {
@@ -91,7 +91,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       prompt: 'select_account',
 
       // Target specific email with login hint.
-      login_hint: "usuario@uninorte.edu.co",
       login_type: "popup",
       // select_account: "true",
       // use_account: "true",
@@ -168,78 +167,101 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 
 
-  useEffect(() => {
+
+  const validation= (email:string, newUser:Boolean) =>{
+    const valid = StudentValidation(email);
+    // setValid(quees);
+    if (valid === true) {
+      if (newUser) {
+        notifications.show({
+          id: "welcome",
+          autoClose: 5000,
+          title: "Bienvenido a SocialU!",
+          message: "Estas usando un correo universitario permitido",
+          color: "green",
+        });
+      }
+    }
+    if (valid === false) {
+      logout();
+      notifications.show({
+        id: "get-out",
+        autoClose: false,
+        title: "No Estas Permitido",
+        message:
+          "No estas usando un correo universtario de una de nuestras universidades permitidas",
+        color: "red",
+        icon: <X />,
+      });
+    }
+  }
+
+  const effection = async (redirect:Boolean = false): Promise<Function>=> {
     // console.log("unsubuscribe effect", valid);
-    const unsubuscribe = onAuthStateChanged(auth, (currentUser: any) => {
-      if (currentUser) {
-        setLoading(false)
-        setUser(currentUser);
-        console.log(currentPath)
-        // if (currentPath== "/bienvenido") {
-        setLoading(false)
-        router.push("/")
-        // }
-        // console.log({ currentUser });
-        const fectchUser = async () => {
-          const newUser = await createOrFetchUser(currentUser, setUser);
-          // setLoading(false);
-          // console.log("elusuario", user);
-          const valid = StudentValidation(currentUser.email);
-          // setValid(quees);
-          if (valid === true) {
-            if (newUser) {
-              notifications.show({
-                id: "welcome",
-                autoClose: 5000,
-                title: "Bienvenido a SocialU!",
-                message: "Estas usando un correo universitario permitido",
-                color: "green",
-              });
-            }
-          }
-          if (valid === false) {
-            logout();
-            notifications.show({
-              id: "get-out",
-              autoClose: false,
-              title: "No Estas Permitido",
-              message:
-                "No estas usando un correo universtario de una de nuestras universidades permitidas",
-              color: "red",
-              icon: <X />,
-            });
-            setLoading(false)
-          }
+    return onAuthStateChanged(auth, async (currentUser: any) => {
+        if (currentUser) {
+          setLoading(false)
+          let newUser = createOrFetchUser(currentUser, setUser)
+          validation(currentUser.email, newUser)
+
+          // push to the latest route
+          router.push("/")
+          setLoading(false)
+          // console.log(currentPath)
+          // if (currentPath== "/bienvenido") {
+
+        } else {
+          console.log("No hay usuario");
+          setLoading(false)
         }
-        fectchUser()
+      }
+    );
+
+  }
+
+
+
+  // useEffect(() => {
+  //   const unsubuscribe = effection(false)
+
+  //   return () => {
+  //     unsubuscribe()
+  //   }
+  // }, [auth]);
+
+  // useEffect(() => {
+  //   fetchUserData()
+  // }, [user])
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
+      if (currentUser) {
+        fetchUserData(currentUser, setUser)
       } else {
         console.log("No hay usuario");
         setLoading(false)
       }
     });
 
-
-    return () => unsubuscribe();
-  }, [auth]);
+    return () => {
+      unsubscribe();
+    };
+  }, [auth])
 
   useEffect(() => {
     let foundBussiness
-
     if (user) {
       console.log("aja", user.email)
       foundBussiness = businessAccounts.bussiness.find(bussines =>
         bussines.members.some(member => member.email === user.email)
       )
     }
-
     if (!foundBussiness) {
       setHasBussinessAccount(false)
     } else {
       setHasBussinessAccount(true)
     }
-
     setBussinessAccount(foundBussiness);
-
   }, [user])
 
   useEffect(() => {
@@ -264,6 +286,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         // signup,
         // login,
+        effection,
         user,
         setUser,
         suscribetoPost,
