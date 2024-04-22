@@ -11,42 +11,17 @@ import {
   serverTimestamp,
   setDoc, updateDoc, where
 } from "firebase/firestore";
-import { nanoid } from "nanoid";
+import { nanoid } from "../utils";
 import { useState } from "react";
 import { auth, db } from "../firebase";
 import { PATH } from "../constants"
 import posthog from "posthog-js";
 
-interface CommentFormProps {
-  content: string;
-  postId: string;
-  anonimo: boolean;
-  asBussiness?: boolean;
-}
+
 
 interface configurationForm extends User, AppConfiguration { }
-interface FirestoreReturn {
-  data: Post[] | undefined;
-  error?: string | undefined;
-  loading: boolean;
-  creating: boolean;
-  postsLoading: "loading" | "loaded" | "error";
-  authorProfile: any;
-  fetchUserData: (user: any, setter: Function) => void;
-  createUser: (user: any, setter: Function) => void;
-  fetchUser: (userName: string) => void;
-  updateProfile: (id: string, Payload: configurationForm, user: User, setter: Function) => void;
-  updatingProfile: "loading" | "loaded" | "error" | false;
-  fetchData: () => void;
-  creatingPost: "loading" | "loaded" | "error" | false;
-  createPost: (formData: ComputedPost, user: UserState) => void;
-  createOrFetchUser: (user: any, setter: Function) => Promise<boolean>;
-  fetchPost: (id: string) => void;
-  createComment: (data: CommentFormProps, user: any, hasBussinessAccount: boolean, bussinessAccount?: bussiness) => void;
-  suscribe: (postId: string, remove: boolean, user: UserState) => void;
-}
 
-export const useFirestore: () => FirestoreReturn = () => {
+export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState();
@@ -260,31 +235,26 @@ export const useFirestore: () => FirestoreReturn = () => {
 
  
 
-  interface createCommentProps extends CommentFormProps {
-    author: {
-      image: string;
-      name: string;
-      ref: `user/${string}`;
-      userName: string;
-    };
-    postedAt: any;
-    parentId?: string | null;
-  }
 
 
 
-  const createComment = async (data: CommentFormProps, user: any, hasBussinessAccount: boolean, bussinessAccount?: bussiness) => {
+
+  const createComment = async (data: CommentFormProps, user: any, hasBussinessAccount: boolean,  bussinessAccount?: bussiness, route?: string, ) => {
     if (
       user?.displayName &&
       user.uid
     ) {
       try {
         setCreating(true);
-        const commentRef = collection(db, "posts", data.postId, "comments");
-        const onlyPublicPostsRef = collection(db, PATH, data.postId, "comments");
+        const commentRef = doc(db, "posts", data.postId);
+        const onlyPublicPostsRef = doc(db, PATH, data.postId);
+
+        const commentId = nanoid();
+        const newId = route ? route+commentId : commentId;
 
 
         const Payload: createCommentProps = {
+          id: commentId,
           content: data.content,
           anonimo: data.anonimo,
           author: {
@@ -293,10 +263,11 @@ export const useFirestore: () => FirestoreReturn = () => {
             ref: `user/${user.uid}`,
             userName: user.userName || "",
           },
-          postedAt: serverTimestamp(),
+          postedAt: new Date().toJSON(),
           parentId: "",
           asBussiness: data.asBussiness,
           postId: data.postId,
+          timeFormat: "JSONDate"
         };
 
         const author = (() => {
@@ -321,19 +292,37 @@ export const useFirestore: () => FirestoreReturn = () => {
           }
         })()
 
+        
 
+        console.log("commentRoute: ", route)
+        console.log(newId)
+
+        console.log({
+          [`subComments.${newId}`]: {
+            ...Payload,
+            author: author,
+          }
+        })
 
         if (data.anonimo) {
           // Si el comentarrio es anonimo
           await Promise.all([
+
             // Crea el comentario en la ruta de pública
-            addDoc(onlyPublicPostsRef, {
-              ...Payload,
-              author: author,
+            updateDoc(onlyPublicPostsRef, {
+              [`comentarios.${ newId}`]: {
+                ...Payload,
+                
+                author: author,
+              }
             }), // Esto es lo que tengo que cambiar
 
             // Crea el comentario en la ruta de backup "posts"
-            addDoc(commentRef, Payload),
+            updateDoc(commentRef, {
+              [`comentarios.${ newId}`]: {
+                ...Payload,
+                author: author,
+              }}),
             // Incrementa el número de comentarios
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)
@@ -347,9 +336,17 @@ export const useFirestore: () => FirestoreReturn = () => {
         } else {
           await Promise.all([
             // Crea el comentario en la ruta de pública
-            addDoc(onlyPublicPostsRef, Payload),
+            updateDoc(onlyPublicPostsRef, {
+              [`comentarios.${ newId}`]: {
+                ...Payload,
+                author: author,
+              }}),
             // Crea el comentario en la ruta de backup "posts"
-            addDoc(commentRef, Payload),
+            updateDoc(commentRef, {
+              [`comentarios.${ newId}`]: {
+                ...Payload,
+                author: author,
+              }}),
             // Incrementa el número de comentarios
             updateDoc(doc(db, PATH, data.postId as string), {
               commentsQuantity: increment(1)

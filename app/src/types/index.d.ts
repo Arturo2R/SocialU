@@ -114,8 +114,36 @@ declare global {
     userName?: string;
     commentsQuantity?: number;
     views: View[];
+    comentarios: subComments;
     viewsCounter;
   }
+
+  interface CommentFormProps {
+    content: string;
+    postId: string;
+    anonimo: boolean;
+    asBussiness?: boolean;
+  }
+
+  interface createCommentProps extends CommentFormProps {
+    id: string;
+    author: {
+      image: string;
+      name: string;
+      ref: `user/${string}`;
+      userName: string;
+    };
+    postedAt: Date;
+    parentId?: string | null;
+    timeFormat?: "JSONDate" | "Timestamp";
+  }
+
+  type subComments = {[commentId: string]: PostComment}
+  interface PostComment extends createCommentProps {
+    subComments: subComments;
+
+  }
+
 
   type View = {
     userId: string;

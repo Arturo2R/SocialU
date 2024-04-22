@@ -4,6 +4,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { Send, } from 'tabler-icons-react'
 import { useAuth } from '../../context/AuthContext'
 import { useFirestore } from '../../hooks/useFirestore'
+import { DEFAULT_COLOR } from '../../constants'
+import CommentForm from './CommentForm'
 
 type Props = {
   opened: boolean, 
@@ -16,46 +18,16 @@ const MiniCommentForm = ({opened, postId, userNameToResponder,  }: Props) => {
   const { register,control,  handleSubmit, watch, formState: { errors } } = useForm({
     defaultValues: {
       content: "",
-      anonimo: user?.configuration.anonimoDefault, //
+      anonimo: true, //
       postId: postId,
     }
   });
-  const { createComment } = useFirestore();
   
-  const onSubmit = (data:any) => createComment(data, user);
-  return ( <p>Nada</p>   )
+  return ( <Collapse in={opened}>
+    <CommentForm postId={postId}/>
+  </Collapse>  )
 }
-    {/* <Collapse in={opened}>
-          <form  onSubmit={handleSubmit(onSubmit)}>
-            <Textarea defaultValue={userNameToResponder &&("@"+userNameToResponder)} required={true} {...register("content")} />
-              <div className="flex">
-
-              <Controller
-                defaultValue={false}
-                name="anonimo"
-                control={control}
-                render={({ field }) =>( 
-                  <Switch
-                    mt="sm"
-                    mb="md"
-                    label="Anonimo"
-                    color={DEFAULT_COLOR}
-                    {...field}
-                  />
-                  )
-                }
-               />
-            <ActionIcon
-              type="submit"
-              component="button"
-              color={DEFAULT_COLOR}
-              radius="xl"
-              >
-              <Send />
-            </ActionIcon>
-              </div>
-          </form>
-        </Collapse> */}
+    {/* */}
 
 
 export default MiniCommentForm

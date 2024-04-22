@@ -39,6 +39,7 @@ export const getServerSideProps = async (context:{query:{nrf:boolean}}) => {
     ...(doc.data().time && {
       time: JSON.stringify(doc?.data()?.time),
     }),
+    ...(doc.data().comentarios && { comentarios: JSON.stringify(doc.data().comentarios)}),
     ...(doc.data().computedDate && {
       computedDate: doc?.data()?.computedDate?.toJSON(),
     }),

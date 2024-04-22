@@ -7,34 +7,49 @@ import Link from "next/link";
 // import { Transition } from "@mantine/core";
 
 type CommentWallProps = {
-  comments?: CommentProps[];
+  comments?: Post["comentarios"];
   postId: string;
   setRespondTo?: Dispatch<SetStateAction<string>>;
+  oldComments: CommentProps[];
 };
 
 
 
-const CommentWall = ({ comments, postId, setRespondTo }: CommentWallProps) => {
+const CommentWall = ({ comments, postId, setRespondTo, oldComments }: CommentWallProps) => {
   return (
     <>
-      {auth.currentUser ? <CommentForm postId={postId} /> : (
-        <Paper component={Link} href="/bienvenido" p="lg" bg="#e2e8f0" variant="😀" radius="md">
-          <Text ta="center">
-            Para comentar debes iniciar sesión con tu cuenta universitaria
-          </Text>
-        </Paper>
-      )}
+     <CommentForm postId={postId}/>
       {comments &&
-        comments?.map((co, index) => (
+        Object.values(comments)
+        .sort((comment1, comment2)=>  new Date(comment2.postedAt).getTime() - new Date(comment1.postedAt).getTime())
+        .map((co, index) => (
           <Comment
             key={index}
             postedAt={co.postedAt}
             subComments={co.subComments}
             content={co.content}
             author={co.author}
+            commentRoute={co.id}
             id={co.id}
+            postId={postId}
             // setRespondTo={setRespondTo}
-            parentId={co.parentId}
+            parentId={co.postId}
+          />
+        ))}
+        {oldComments &&
+        oldComments?.map((co, index) => (
+          <Comment
+            old={true}
+            key={index}
+            postedAt={co.postedAt}
+            subComments={co.subComments}
+            content={co.content}
+            author={co.author}
+            commentRoute={co.id}
+            id={co.id}
+            postId={co.postId}
+            // setRespondTo={setRespondTo}
+            parentId={co.postId}
           />
         ))}
     </>

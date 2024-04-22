@@ -59,6 +59,7 @@ export async function getStaticProps(context: any) {
       ...(data?.date && { date: data.date.toJSON() }),
       ...(data?.time && { time: JSON.stringify(data.time) }),
       ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
+      ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios)}),
     }
     return {
       revalidate: 20,
@@ -78,16 +79,45 @@ export const getStaticPaths = async () => {
 
 
 
-const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
+const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
   // const { postId, authorId } = router.query;
   // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
   //loading state
   // const [respondTo, setRespondTo] = useState("")
   console.log(id)
+  const [content, setContent] = useState(data)
   const [comments, setComments] = useState<CommentProps[] | undefined>();
-  const [numberOfComments, setNumberOfComments] = useState(content.commentsQuantity || 0)
+
   const [onlyOneView, setAlreadyViewed] = useState<Boolean>(false)
+
+  
+  
+
+
+  useEffect(() => {
+    const postRef = doc(db, PATH, id);
+
+    // Create a snapshot listener
+    const unsubscribe = onSnapshot(postRef, (postSnap) => {
+        const data:Post = postSnap.data();
+        const Payload = {
+          ...data,
+          createdAt: data?.createdAt?.toMillis(),
+          ...(data?.date && { date: data.date.toJSON() }),
+          ...(data?.time && { time: JSON.stringify(data.time) }),
+          ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
+          ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios)}),
+        }
+        setContent(Payload)
+      })
+
+  
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+  
 
   useEffect(() => {
     
@@ -107,7 +137,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
         }));
       // console.log("raw", commentsDB);
       setComments(commentsDB);
-      setNumberOfComments(commentsDB.length)
+
     });
 
     
@@ -160,7 +190,7 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
   // if (error) return <Text>{error}</Text>;
 
   const fecha: Date = content.createdAt
-  const eventDate: Timestamp = content.isEvent ? content.computedDate || content.date : undefined
+  const eventDate =  content?.computedDate || content?.date ;
 
   return (
 
@@ -263,8 +293,8 @@ const PostPage = ({ data: content, postId: id, authorId }: PostPageProps) => {
 
         <div className="z-10 my-2">
 
-          <Title order={3} mb="sm" >Comentarios  • {numberOfComments}</Title>
-          <CommentWall postId={id} comments={comments} />
+          <Title order={3} mb="sm" >Comentarios  • {content.commentsQuantity}</Title>
+          <CommentWall postId={id} oldComments={comments} comments={ content.comentarios && JSON.parse(content.comentarios)} />
         </div>
 
       </Paper>
