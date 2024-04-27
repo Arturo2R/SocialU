@@ -58,7 +58,7 @@ export function Comment({
       setSubCommentsOpened((o) => !o)
     }
     } >
-        <Text size="md">{content}</Text>  
+        <Text size="md" className="break-words whitespace-normal">{content}</Text>  
         <Group justify="flex-start" gap="xs" onClick={
             (e) => {
               e.stopPropagation();

@@ -21,7 +21,7 @@
   ],
   "theme_color": "#e8590c",
   "background_color": "#141517",
-  "start_url": "/",
+  "start_url": "/?nrf=false",
   "id": "social-u",
   "display": "standalone",
   "orientation": "portrait"

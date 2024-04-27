@@ -1,5 +1,6 @@
 import { ActionIcon } from '@mantine/core'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { ChevronLeft } from 'tabler-icons-react'
 
@@ -8,17 +9,19 @@ type BackButtonProps = {
 }
 
 const BackButton = ({id}: BackButtonProps) => {
+  const router = useRouter()
   return (
     <ActionIcon
-              scroll={false}
-              href={{
-                pathname: `/`,
-                query: { nrf: true },
-                hash: id,
-              }}
+              //component={Link} 
+              //scroll={false}
+              onClick={() => router.back()}
+             // href={{
+               // pathname: `/`,
+                //query: { nrf: true },
+                // hash: id,
+              //}}
               variant="light" 
               color="gray" 
-              component={Link} 
               classNames={{ 
                 root: "!flex justify-items-center" 
                 }} 
