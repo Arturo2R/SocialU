@@ -236,6 +236,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser: any) => {
       if (currentUser) {
+        setUser(currentUser)
         fetchUserData(currentUser, setUser)
       } else {
         console.log("No hay usuario");

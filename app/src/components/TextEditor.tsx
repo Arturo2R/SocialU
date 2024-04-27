@@ -70,22 +70,22 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
       
     }}  editor={theEditor}>
       {theEditor && (
-        <BubbleMenu editor={theEditor}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Highlight />
-            <RichTextEditor.Link />
+        <BubbleMenu editor={theEditor} >
+          <RichTextEditor.ControlsGroup >
+            <RichTextEditor.Italic  h="30" w="30" />
+            <RichTextEditor.Highlight h="30" w="30" />
+            <RichTextEditor.Bold h="30" w="30" />
+            <RichTextEditor.Link h="30" w="30" />
           </RichTextEditor.ControlsGroup>
         </BubbleMenu>
       )}
       {theEditor && (
-        <FloatingMenu editor={theEditor} >
+        <FloatingMenu editor={theEditor}  >
           <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H2 />
-            <RichTextEditor.H3 />
-            <RichTextEditor.BulletList />
-            <RichTextEditor.OrderedList />
+            <RichTextEditor.H2 h="30" w="30" />
+            <RichTextEditor.H3 h="30" w="30" />
+            <RichTextEditor.BulletList h="30" w="30" />
+            <RichTextEditor.OrderedList h="30" w="30" />
           </RichTextEditor.ControlsGroup>
         </FloatingMenu>
       )}

@@ -1,8 +1,8 @@
 import {
   Button,
-  Center,
+  // Center,
   Container,
-  Input,
+  // Input,
   Modal,
   MultiSelect,
   Textarea,
@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm as hform } from "react-hook-form";
 import { FileCheck } from "tabler-icons-react";
-import DatePick from "../components/Comment/DatePick";
+// import DatePick from "../components/Comment/DatePick";
 import Switc from "../components/Comment/Switc";
 import ImageDropzone from "../components/ImageDropzone";
 import Layout from "../components/Layout/Layout";
@@ -21,7 +21,7 @@ import { useAuth } from "../context/AuthContext";
 import { useFirestore } from "../hooks/useFirestore";
 import { DEFAULT_COLOR, MAXIMUM_MESSAGE_LENGTH, MAXIMUM_TITLE_LENGTH, MINIMUM_MESSAGE_LENGTH, MINIMUM_TITLE_LENGTH } from "../constants";
 // import { DatePicker, DatePickerInput } from "@mantine/dates";
-import { DatePicker } from "@mantine/dates";
+// import { DatePicker } from "@mantine/dates";
 import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
 import config from "../config";
@@ -63,7 +63,7 @@ export const checkImage = async (url: string, cacheImage?: boolean): Promise<boo
 
 const CrearPost = () => {
   const { user, bussinessAccount, hasBussinessAccount } = useAuth()
-  const { register, setValue, handleSubmit, watch, control, formState: { errors }, getValues } = hform({
+  const { register, setValue, handleSubmit, control, formState: { errors }, } = hform({
     defaultValues: {
       title: "",
       message: "",
@@ -98,9 +98,9 @@ const CrearPost = () => {
 
   const [editor, setEditor] = useState()
 
-  const matches = useMediaQuery('(max-width: 768px)', true, {
-    getInitialValueInEffect: false,
-  });
+  // const matches = useMediaQuery('(max-width: 768px)', true, {
+  //   getInitialValueInEffect: false,
+  // });
 
 
   // const [value, setValue] = useState<Date | null>(null);
@@ -272,13 +272,13 @@ const CrearPost = () => {
                 name="anonimo"
               />
 
-              <Switc
+              {/* <Switc
                 label="Reunion / Solicitar Ayuda"
                 control={control}
                 name="isEvent"
-              />
+              /> */}
 
-              {watch("isEvent") && (
+              {/* {watch("isEvent") && (
                 <>
                   {matches ? (
                     <Controller
@@ -319,7 +319,7 @@ const CrearPost = () => {
                     />
                   </Input.Wrapper>
                 </>
-              )}
+              )} */}
 
             </div>
 
