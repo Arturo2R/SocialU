@@ -18,7 +18,7 @@ const SEO = ({
   canonical,
   twitterCreator,
 }: SEOp) => {
-  const url = `https://${config.domain}${canonical}`;
+  const url = `https://${config.domain}/${canonical}`;
 
   // function addProductJsonLd() {
   //   return {
@@ -92,7 +92,7 @@ const SEO = ({
       <meta name="description" content={description} />
       <link
         rel="canonical"
-        href={`https://${config.domain}/${canonical}`}
+        href={url}
         key="canonical"
       />
       <meta property="og:type" content="article" />

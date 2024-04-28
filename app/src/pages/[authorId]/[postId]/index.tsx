@@ -30,7 +30,10 @@ import styles from "./PostPage.module.css"
 import BackButton from "../../../components/BackButton";
 import { Tag } from "../../../components/Post/Tag";
 import posthog from "posthog-js";
+import Head from "next/head";
+import config from "../../../config";
 
+const {domain} = config()
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
 dayjs.extend(relativeTime);
@@ -175,7 +178,66 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
     setAlreadyViewed(false)
   };
   }, [])
+
+  const postAuthor = data.anonimo ? "Anonimo" : data.userName
   
+  // const qaJSONLd = `{
+  //   "@context": "https://schema.org",
+  //   "@type": "QAPage",
+  //   "mainEntity": {
+  //     "@type": "Question",
+  //     "name": "What is the capital of France?",
+  //     "text": "I've heard that the capital of France is either Paris or London. Can anyone confirm this?",
+  //     "answerCount": 1,
+  //     "upvoteCount": 1,
+  //     "dateCreated": "2022-01-01T00:00:00Z",
+  //     "author": {
+  //       "@type": "Person",
+  //       "name": "User1"
+  //     },
+  //     "acceptedAnswer": {
+  //       "@type": "Answer",
+  //       "text": "{data.title}",
+  //       "dateCreated": "{data.createdAt}",
+  //       "upvoteCount": "{data.viewsCounter}",
+  //       "url": "https://example.com/answer-url",
+  //       "author": {
+  //         "@type": "Person",
+  //         "name": "${postAuthor}"
+  //       }
+  //     }
+  //   }
+  // }`
+
+  const socialMediaPostJSONLd = `
+  {
+    "@context": "https://schema.org",
+    "@type": "SocialMediaPosting",
+    "sharedContent": {
+      "@type": "WebPage",
+      "url": "https:/${domain}/${postAuthor}/${id}",
+      "headline": "${data.title || "Post"}",
+      "datePublished": "${new Date(data.createdAt).toISOString()}",
+      "author": {
+        "@type": "Person",
+        "name": "${postAuthor}"
+      }
+    }
+  }
+`;
+
+  const blogPostJSONLd = `
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "${data.title || "Post"}",
+      "datePublished": ${new Date(data.createdAt).toISOString()}",,
+      "author": {
+        "@type": "Person",
+        "name": ${postAuthor}
+      }
+    }
+  `;
 
 
   // if (loading) {
@@ -196,7 +258,14 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
 
     <Layout>
 
-      <SEO canonical={`${authorId}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title || `Post ${id}`} />
+      <Head>
+      <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: data.message.length > 150 ?  blogPostJSONLd  : socialMediaPostJSONLd}}
+        />
+      </Head>
+
+      <SEO canonical={`${postAuthor}/${id}`} description={content.message} twitterCreator="Social\U" mainImage={content.image} title={content.title || `Post ${id}`} />
       <span className="hidden bg-dark/50 dark:bg-white/50"></span>
 
       <Paper classNames={{ root: styles.postPage }}>
