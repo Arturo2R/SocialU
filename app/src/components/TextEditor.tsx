@@ -82,8 +82,8 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
       {theEditor && (
         <FloatingMenu editor={theEditor}  >
           <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H2 h="30" w="30" />
-            <RichTextEditor.H3 h="30" w="30" />
+            {/* <RichTextEditor.H2 h="30" w="30" />
+            <RichTextEditor.H3 h="30" w="30" /> */}
             <RichTextEditor.BulletList h="30" w="30" />
             <RichTextEditor.OrderedList h="30" w="30" />
           </RichTextEditor.ControlsGroup>
