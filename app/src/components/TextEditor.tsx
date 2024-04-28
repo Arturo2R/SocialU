@@ -35,7 +35,12 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
   
   const theEditor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Configure an included extension
+        heading: {
+          levels: [2,3,4,5],
+        },
+      }),
       Placeholder.configure({ placeholder: 'Mensaje' }),
       Link,
       Highlight,
