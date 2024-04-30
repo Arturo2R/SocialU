@@ -84,7 +84,7 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
           </RichTextEditor.ControlsGroup>
         </BubbleMenu>
       )}
-      {theEditor && (
+      {/* {theEditor && (
         <FloatingMenu editor={theEditor}  >
           <RichTextEditor.ControlsGroup>
             {/* <RichTextEditor.H2 h="30" w="30" />
@@ -93,7 +93,7 @@ export const TextEditor = ({editor, setEditor, editable, name, required, control
             <RichTextEditor.OrderedList h="30" w="30" />
           </RichTextEditor.ControlsGroup>
         </FloatingMenu>
-      )}
+      )} */}
       {/* <RichTextEditor.Toolbar sticky stickyOffset={60}>
         <RichTextEditor.ControlsGroup>
           <RichTextEditor.Bold />
