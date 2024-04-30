@@ -38,6 +38,7 @@
     "@tiptap/react": "^2.2.4",
     "@tiptap/starter-kit": "^2.2.4",
     "@vercel/edge-config": "^1.1.0",
+    "@vercel/kv": "^1.0.1",
     "cookies-next": "^2.0.4",
     "cx": "^22.4.1",
     "dayjs": "^1.11.10",
