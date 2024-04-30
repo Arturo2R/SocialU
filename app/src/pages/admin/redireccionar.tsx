@@ -17,7 +17,7 @@ const Holi = (props: Props) => {
   const form = useForm({
     mode: 'controlled',
     initialValues: {
-      original_url: 'https://redsocialu.com/',
+      original_url: '',
       utm_source: 'social',
       utm_medium: 'instagram',
       utm_campaign: '',
@@ -47,7 +47,7 @@ const Holi = (props: Props) => {
           withAsterisk
           required
           label="Original URL"
-          placeholder="https://redsocialu.com/"
+          placeholder="/anonimo/dfakjsd"
           {...form.getInputProps('original_url')}
         />
 
