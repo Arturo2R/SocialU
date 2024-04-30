@@ -1,9 +1,9 @@
 import { createClient } from '@vercel/kv';
-const kv = createClient({
-    url: process.env.NEXT_PUBLIC_NEWKV_REST_API_URL || "",
-    token: process.env.NEXT_PUBLIC_NEWKV_REST_API_TOKEN || "",
-  });
 export async function getServerSideProps(context) {
+    const kv = createClient({
+        url: process.env.NEXT_PUBLIC_NEWKV_REST_API_URL || "",
+        token: process.env.NEXT_PUBLIC_NEWKV_REST_API_TOKEN || "",
+      });
     const { id } = context.query;
     // Perform a search in the Edge runtime API based on the id parameter
     const redirectUrl = await kv.get(id);
