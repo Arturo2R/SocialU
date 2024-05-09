@@ -25,22 +25,22 @@ import SeeUser from "../../../components/Post/SeeUser";
 import SEO from "../../../components/SEO";
 import { db } from "../../../firebase";
 import { DEFAULT_COLOR, PATH } from "../../../constants";
-import { Timestamp } from "@firebase/firestore";
 import styles from "./PostPage.module.css"
 import BackButton from "../../../components/BackButton";
 import { Tag } from "../../../components/Post/Tag";
 import posthog from "posthog-js";
 import Head from "next/head";
 import config from "../../../config";
+import type { InferGetStaticPropsType, GetStaticProps } from 'next'
 
-const {domain} = config()
+const { domain } = config()
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
 dayjs.extend(relativeTime);
 dayjs.locale(es);
 // const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
-export async function getStaticProps(context: any) {
+export const getStaticProps = (async (context ) => {
   const { postId, authorId } = context.params
   console.log("postID: ", postId, "authorId: ", authorId)
   console.log("el path:", PATH)
@@ -48,11 +48,13 @@ export async function getStaticProps(context: any) {
     const postRef = doc(db, PATH, postId);
     // TODO: Arreglar Urgente aqui, un problema que cuando se crea un nuevo post, no puedo acceser a es, puede que sea por el ISR
     const postSnap: anything = await getDoc(postRef);
+    console.log("ladata: ", postSnap)
     const data: Post = postSnap.data()
     if (!data) {
       return {
         notFound: true,
       }
+
     }
 
     // console.log(data.computedDate?.toJSON())
@@ -62,16 +64,22 @@ export async function getStaticProps(context: any) {
       ...(data?.date && { date: data.date.toJSON() }),
       ...(data?.time && { time: JSON.stringify(data.time) }),
       ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
-      ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios)}),
+      ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios) }),
     }
     return {
-      revalidate: 20,
+      revalidate: 200,
       props: { data: Payload, postId, authorId: JSON.stringify(authorId) }, // will be passed to the page component as props
     }
   } catch (error: any) {
     console.error("Error en en ISR del post ", error.message)
+    posthog.capture('$exception', {
+      message: error.message,
+      error: "Error en ISR del post",
+      function: "Server getStaticProps Post page"
+    });
+    return {notFound: true}
   }
-}
+}) satisfies GetStaticProps<{ data: Post, postId: string, authorId: string, }>
 
 export const getStaticPaths = async () => {
   return {
@@ -82,7 +90,7 @@ export const getStaticPaths = async () => {
 
 
 
-const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
+const PostPage = ({ data, postId: id, authorId }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // const { postId, authorId } = router.query;
   // const id: string = typeof] postId === "string" ? postId : "nada-que-ver";
   // const [content, setContent] = useState<Post | undefined>();
@@ -94,8 +102,8 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
 
   const [onlyOneView, setAlreadyViewed] = useState<Boolean>(false)
 
-  
-  
+
+
 
 
   useEffect(() => {
@@ -103,27 +111,27 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
 
     // Create a snapshot listener
     const unsubscribe = onSnapshot(postRef, (postSnap) => {
-        const data:Post = postSnap.data();
-        const Payload = {
-          ...data,
-          createdAt: data?.createdAt?.toMillis(),
-          ...(data?.date && { date: data.date.toJSON() }),
-          ...(data?.time && { time: JSON.stringify(data.time) }),
-          ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
-          ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios)}),
-        }
-        setContent(Payload)
-      })
+      const data: Post = postSnap.data();
+      const Payload = {
+        ...data,
+        createdAt: data?.createdAt?.toMillis(),
+        ...(data?.date && { date: data.date.toJSON() }),
+        ...(data?.time && { time: JSON.stringify(data.time) }),
+        ...(data?.computedDate && { computedDate: data.computedDate.toJSON() }),
+        ...(data?.comentarios && { comentarios: JSON.stringify(data.comentarios) }),
+      }
+      setContent(Payload)
+    })
 
-  
+
     return () => {
       unsubscribe()
     }
   }, [])
-  
+
 
   useEffect(() => {
-    
+
     let q = query(
       collection(db, PATH, id, "comments"),
       orderBy("postedAt", "desc")
@@ -143,8 +151,8 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
 
     });
 
-    
-      
+
+
     return () => {
       unsuscribe()
     };
@@ -153,34 +161,34 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
   const nada = "nada"
 
   useEffect(() => {
-    if (onlyOneView === false){
-      fetch(`/api/views?password=eyquecomovalavaina&id=${id}&userId=${authorId}&feedView=false`, {
+    if (onlyOneView === false) {
+      fetch(`/api/views?password=eyquecomovalavaina&id=${id}&userId=${authorId || "asdfafs"}&feedView=false`, {
         method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({})
-    })
-      .then(response => response.json())
-      .then(result => console.log(result))
-      .catch(error => {
-      console.error(error);
-      posthog.capture('$exception', {
-        message: error.message,
-        error: "Error publicando un view",
-        function: "Client UseEffect Post page"
-      });
-    });
-    setAlreadyViewed(true)
-  }
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      })
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch(error => {
+          console.error(error);
+          posthog.capture('$exception', {
+            message: error.message,
+            error: "Error publicando un view",
+            function: "Client UseEffect Post page"
+          });
+        });
+      setAlreadyViewed(true)
+    }
 
-  return () => {
-    setAlreadyViewed(false)
-  };
+    return () => {
+      setAlreadyViewed(false)
+    };
   }, [])
 
   const postAuthor = data.anonimo ? "Anonimo" : data.userName
-  
+
   // const qaJSONLd = `{
   //   "@context": "https://schema.org",
   //   "@type": "QAPage",
@@ -252,16 +260,16 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
   // if (error) return <Text>{error}</Text>;
 
   const fecha: Date = content.createdAt
-  const eventDate =  content?.computedDate || content?.date ;
+  const eventDate = content?.computedDate || content?.date;
 
   return (
 
     <Layout>
 
       <Head>
-      <script
+        <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: data.message.length > 150 ?  blogPostJSONLd  : socialMediaPostJSONLd}}
+          dangerouslySetInnerHTML={{ __html: data.message.length > 150 ? blogPostJSONLd : socialMediaPostJSONLd }}
         />
       </Head>
 
@@ -292,34 +300,35 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
             <Tag key={index} label={tag} />
           ))
           }
-          {(fecha||content.viewsCounter) && (
+          {(fecha || content.viewsCounter) && (
             <Text className="italic text-stone-400">
-              {dayjs(fecha).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`} 
+              {dayjs(fecha).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`}
             </Text>
           )}
         </Group>
 
         {(content?.message && content?.renderMethod === "DangerouslySetInnerHtml") && (
-            <TypographyStylesProvider>
-              <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es" dangerouslySetInnerHTML={{ __html:  content.message}}></div>
-            </TypographyStylesProvider>
-          )}
-        {(content?.message && (content.renderMethod === "none" || !content?.renderMethod) ) && (
+          <TypographyStylesProvider>
+            <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es" dangerouslySetInnerHTML={{ __html: content.message }}></div>
+          </TypographyStylesProvider>
+        )}
+        {(content?.message && (content.renderMethod === "none" || !content?.renderMethod)) && (
           <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es">{content.message}</Text>
         )}
-  
+
 
         {(content?.anonimo === false && content.authorName) && (
           <AuthorInfo
             isBussiness={content.asBussiness}
             link={content?.userName}
-            name={ content?.authorName}
+            name={content?.authorName}
             email={content?.authorEmail || `${content?.userName}@uninorte.edu.co`}
             image={content.authorImage || "/profile.jpg"}
             icon
           />
         )}
-        {(content?.anonimo === false && content?.asBussiness) && (
+        {console.log(content)}
+        {(content?.anonimo && content?.asBussiness) && (
           <AuthorInfo
             isBussiness={content.asBussiness}
             link={content.bussiness?.bussinessUrl}
@@ -329,7 +338,7 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
             icon
           />
         )}
-        {(content?.anonimo && content.asBussiness === false)&& (
+        {(content?.anonimo && content.asBussiness === false) && (
           <Text color={DEFAULT_COLOR} size="lg">
             Anonimo
           </Text>
@@ -363,7 +372,7 @@ const PostPage = ({ data, postId: id, authorId }: PostPageProps) => {
         <div className="z-10 my-2">
 
           <Title order={3} mb="sm" >Comentarios  • {content.commentsQuantity}</Title>
-          <CommentWall postId={id} oldComments={comments} comments={ content.comentarios && JSON.parse(content.comentarios)} />
+          <CommentWall postId={id} oldComments={comments} comments={content.comentarios && JSON.parse(content.comentarios)} />
         </div>
 
       </Paper>
