@@ -133,7 +133,7 @@ declare global {
       ref: `user/${string}`;
       userName: string;
     };
-    postedAt: Date;
+    postedAt: Date.toJSON;
     parentId?: string | null;
     timeFormat?: "JSONDate" | "Timestamp";
   }

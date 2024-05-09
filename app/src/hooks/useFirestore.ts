@@ -239,10 +239,10 @@ export const useFirestore = () => {
 
 
 
-  const createComment = async (data: CommentFormProps, user: any, hasBussinessAccount: boolean,  bussinessAccount?: bussiness, route?: string, ) => {
+  const createComment = async (data: CommentFormProps, currentUser: UserState, hasBussinessAccount: boolean,  bussinessAccount?: bussiness, route?: string, ) => {
     if (
-      user?.displayName &&
-      user.uid
+      currentUser?.displayName &&
+      currentUser.uid
     ) {
       try {
         setCreating(true);
@@ -258,10 +258,10 @@ export const useFirestore = () => {
           content: data.content,
           anonimo: data.anonimo,
           author: {
-            image: user?.photoURL || "",
-            name: user?.configuration?.useUserName ? user?.userName : user?.displayName,
-            ref: `user/${user.uid}`,
-            userName: user.userName || "",
+            image: currentUser?.photoURL || "",
+            name:  currentUser?.useUserName ? currentUser?.userName : currentUser?.displayName ,
+            ref: `user/${currentUser.uid}`,
+            userName: currentUser.userName || "",
           },
           postedAt: new Date().toJSON(),
           parentId: "",
@@ -276,7 +276,7 @@ export const useFirestore = () => {
               return {
                 image: bussinessAccount?.logo,
                 name: bussinessAccount?.name,
-                ref: `user/${user.uid}`,
+                ref: `user/${currentUser.uid}`,
                 userName: bussinessAccount?.name,
               }
             } else {
@@ -284,10 +284,10 @@ export const useFirestore = () => {
             }
           } else {
             return {
-              image: user?.photoURL || "",
-              name: user?.configuration?.useUserName ? user?.userName : user?.displayName,
-              ref: `user/${user.uid}`,
-              userName: user.userName || "",
+              image: currentUser?.photoURL || "",
+              name: currentUser?.useUserName ? currentUser?.userName : currentUser?.displayName,
+              ref: `user/${currentUser.uid}`,
+              userName: currentUser.userName || "",
             }
           }
         })()
@@ -329,7 +329,7 @@ export const useFirestore = () => {
             }),
             posthog.capture('comment_created', {
               postId: data.postId,
-              firebaseuid: user.uid,
+              firebaseuid: currentUser.uid,
               anonimo: true,
             })
           ]);
