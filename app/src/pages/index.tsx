@@ -68,7 +68,7 @@ export default function HomePage({data}: HomeProps) {
     "font-size: 32px",
   ].join(";");
 
-  console.log("%cJah Tu Crees Que Puedes Hackearme, Aqui estuvo Horbag ¡Que iluso!", baseStyles);
+  console.log("%cJah Tu Crees Que Puedes Hackearme, ¡Que iluso!", baseStyles);
 
   useEffect(() => {
     router.replace('/?nrf=true', undefined, { shallow: true })
