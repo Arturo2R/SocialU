@@ -14,7 +14,7 @@ import {
 import { nanoid } from "../utils";
 import { useState } from "react";
 import { auth, db } from "../firebase";
-import { PATH } from "../constants"
+import { MAX_RESULTS, PATH } from "../constants"
 import posthog from "posthog-js";
 
 
@@ -62,7 +62,7 @@ export const useFirestore = () => {
       const q = query(
         collection(db, PATH),
         orderBy("createdAt", "desc"),
-        limit(100)
+        limit(MAX_RESULTS)
       );
       // const querySnapshot = await getDocs(q);
 
