@@ -151,9 +151,9 @@ export const PostCard: FC<PostCardProps> = ({
         >
           {renderMethod === "DangerouslySetInnerHtml" ? (
             <TypographyStylesProvider>
-              <div dangerouslySetInnerHTML={{ __html:  description}}></div>
+              <div className="bn-container" dangerouslySetInnerHTML={{ __html: description }}></div>
             </TypographyStylesProvider>
-          ):(
+          ) : (
             <Text>{description}</Text>
           )}
         </Spoiler>

@@ -41,7 +41,8 @@ const storageRef = ref(storage);
 // Create a child reference
 const profilesImages = ref(storage, 'profiles');
 const postsBanners = ref(storage, 'postsBanners');
+const attachments = ref(storage, 'attachments');
 
 
 // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-export { auth, app, db, storage, storageRef, profilesImages, postsBanners };
+export { auth, app, db, storage, storageRef, profilesImages, postsBanners, attachments };

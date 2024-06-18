@@ -1,15 +1,13 @@
 import {
   Button,
-  // Center,
   Container,
-  // Input,
   Modal,
   MultiSelect,
   Textarea,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm as hform } from "react-hook-form";
 import { FileCheck } from "tabler-icons-react";
 // import DatePick from "../components/Comment/DatePick";
@@ -26,8 +24,16 @@ import { useMediaQuery } from "@mantine/hooks";
 import posthog from "posthog-js";
 import config from "../config";
 import { useWatch } from 'react-hook-form';
-import {TextEditor} from "../components/TextEditor";
+
 import '@mantine/dates/styles.css';
+import dynamic from "next/dynamic";
+import PostCardLoading from "../components/Post/PostCardLoading";
+import { EditorLoader } from "../components/TextEditor";
+
+const TextEditor = dynamic(() => import("../components/TextEditor"), { 
+  ssr: false,
+  loading: () => <EditorLoader />,
+ });
 
 const conf = config()
 
@@ -96,7 +102,6 @@ const CrearPost = () => {
 
   const [imageData, setImageData] = useState<{ width: number, height: number } | null>(null);
 
-  const [editor, setEditor] = useState()
 
   // const matches = useMediaQuery('(max-width: 768px)', true, {
   //   getInitialValueInEffect: false,
@@ -234,7 +239,12 @@ const CrearPost = () => {
                   />
                 )}
               />
-              <TextEditor control={control} name="message" required editor={editor} setEditor={setEditor} />
+              <TextEditor 
+                control={control} 
+                name="message" 
+                required 
+                editable
+                />
               {/*<Textarea
                 placeholder="Mensaje"
                 variant="unstyled"
