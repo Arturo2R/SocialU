@@ -796,6 +796,16 @@ Ensure the default browser behavior of the `hidden` attribute.
 @tailwind utilities;
 /* @tailwind variants; */
 
+/* :root {
+ } */
+/* --bn-colors-selected-text: #ffffff;
+  --bn-colors-selected-background: #3f3f3f;
+  --bn-colors-menu-background: #ffffff;
+--bn-colors-tooltip-text: #3f3f3f;
+--bn-colors-tooltip-background: #efefef;
+--bn-colors-hovered-text: #3f3f3f;
+--bn-colors-hovered-background: #efefef; */
+
 body {
   --mantine-font-size-xs: 0.875rem;
   --mantine-font-size-sm: 1rem;
@@ -819,7 +829,8 @@ body {
   @apply !p-0;
 }
 
-.TextEditor {
+.bn-editor {
+  --bn-colors-editor-background: hsla(0, 0%, 100%, 0);
   min-height: 8rem;
   display: block;
 }
@@ -827,7 +838,7 @@ body {
 .fdasdflask {
   @apply !flex justify-self-center;
 }
-
+/* 
 .mantine-Button-root {
   background-color: var(--button-bg) !important;
   color: var(--button-color) !important;
@@ -858,4 +869,4 @@ body {
 
 .mantine-ActionIcon-root:hover {
   background-color: var(--ai-hover) !important;
-}
+} */

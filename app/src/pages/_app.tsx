@@ -6,10 +6,10 @@ import { AuthProvider } from "../context/AuthContext";
 
 import Head from "next/head";
 
-
 import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css';
 import "../styles/globals.css";
+import "@blocknote/mantine/style.css";
 
 import { MantineProvider, createTheme, MantineColorScheme, rem } from '@mantine/core';
 import { Notifications } from "@mantine/notifications";

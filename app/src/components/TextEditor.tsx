@@ -1,135 +1,94 @@
-import { RichTextEditor, Link } from '@mantine/tiptap';
-import { useEditor, BubbleMenu, FloatingMenu, Node } from '@tiptap/react';
-import Highlight from '@tiptap/extension-highlight';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import '@mantine/tiptap/styles.css';
-import { useController } from 'react-hook-form';
-import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from '../constants';
-import { useEffect } from 'react';
+"use client"
+// import { RichTextEditor, Link } from '@mantine/tiptap';
+// import { useEditor, BubbleMenu, FloatingMenu, Node } from '@tiptap/react';
+// import Highlight from '@tiptap/extension-highlight';
+// import StarterKit from '@tiptap/starter-kit';
+// import Placeholder from '@tiptap/extension-placeholder';
+import { uploadImage, checkImageAdultnessWithMicrosoft } from "../hooks/image"
+
+import { es } from "./es"
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+
+import { useColorScheme } from "@mantine/hooks";
+import { Skeleton, TypographyStylesProvider, useMantineColorScheme } from "@mantine/core";
+import { useController } from "react-hook-form";
+import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "../constants";
+import { FileDatabase } from "tabler-icons-react";
+// import '@mantine/tiptap/styles.css';
+
+
+// import { useController } from 'react-hook-form';
+// import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from '../constants';
+// import { useEffect } from 'react';
+
+
 
 // const content =
 //   '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
 
 interface TextEditorProps {
-  editor: any;
-  setEditor: any;
   name: string;
   required?: boolean;
   editable?: boolean;
   control: any
 }
 
-export const TextEditor = ({editor, setEditor, editable, name, required, control}:TextEditorProps) => {
+const TextEditor = ({ editable, name, required, control }: TextEditorProps) => {
   const {
-    field: { onChange, value, ref },
+    field,
     formState: { errors },
     fieldState: { invalid, error },
   } = useController({
     name,
     control,
-    rules: { required: "La descripcion es necesaria",
-    minLength: { value: MINIMUM_MESSAGE_LENGTH*2, message: `Muy poco contenido, metele más` },
-    maxLength: { value: MAXIMUM_MESSAGE_LENGTH*2, message: `Nojoda te pasastes.` } },
+    rules: {
+      required: "La descripcion es necesaria",
+      minLength: { value: MINIMUM_MESSAGE_LENGTH * 2, message: `Muy poco contenido, metele más` },
+      maxLength: { value: MAXIMUM_MESSAGE_LENGTH ** 20, message: `Nojoda te pasastes.` }
+    },
   });
-  
-  const theEditor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        // Configure an included extension
-        heading: {
-          levels: [2,3,4,5],
-        },
-      }),
-      Placeholder.configure({ placeholder: 'Mensaje' }),
-      Link,
-      Highlight,
-    //   Underline,
-    //   Superscript,
-    //   SubScript,
-    //   TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      ],
-      editorProps: {
-        attributes: {
-          class: 'TextEditor',
-        },
-      },
-      editable: editable || true,
-      content: '<p></p>',
-      onUpdate: ({ editor }) => {
-        const html = editor.getHTML();
-        onChange(html);
-      },
-    // content,
-  })
-  
-  useEffect(() => {
-    setEditor(theEditor);
-  }, [])
-  
+
+  const { colorScheme } = useMantineColorScheme()
+
+  const theEditor = useCreateBlockNote({
+    defaultStyles: true,
+    dictionary: es,
+    enableBlockNoteExtensions: true,
+    uploadFile: uploadImage,
+  });
+
+  const onDocumentChange = async () => {
+    // Converts the editor's contents from Block objects to HTML and store to state.
+    const html = await theEditor.blocksToHTMLLossy(theEditor.document);
+    field.onChange(html);
+  };
+
 
   return (
-    <>
-    <RichTextEditor classNames={{
-      "root": "!border-none",
-      
-    }}  editor={theEditor}>
-      {theEditor && (
-        <BubbleMenu editor={theEditor} >
-          <RichTextEditor.ControlsGroup >
-            <RichTextEditor.Italic  h="30" w="30" />
-            <RichTextEditor.Highlight h="30" w="30" />
-            <RichTextEditor.Bold h="30" w="30" />
-            <RichTextEditor.Link h="30" w="30" />
-          </RichTextEditor.ControlsGroup>
-        </BubbleMenu>
-      )}
-      {/* theEditor && 
-        <FloatingMenu editor={theEditor}  >
-          <RichTextEditor.ControlsGroup>
-             <RichTextEditor.H2 h="30" w="30" />
-            <RichTextEditor.H3 h="30" w="30" /> 
-            <RichTextEditor.BulletList h="30" w="30" />
-            <RichTextEditor.OrderedList h="30" w="30" />
-          </RichTextEditor.ControlsGroup>
-        </FloatingMenu>
-      )} */}
-      {/* <RichTextEditor.Toolbar sticky stickyOffset={60}>
-        <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Bold />
-          <RichTextEditor.Italic />
-          <RichTextEditor.Underline />
-          <RichTextEditor.Strikethrough />
-          <RichTextEditor.ClearFormatting />
-          <RichTextEditor.Highlight />
-          <RichTextEditor.Code />
-        </RichTextEditor.ControlsGroup>
+    <div className="min-h-32">
 
-        <RichTextEditor.ControlsGroup>
-        <RichTextEditor.H1 />
-        <RichTextEditor.H2 />
-        <RichTextEditor.H3 />
-        <RichTextEditor.H4 />
-        </RichTextEditor.ControlsGroup>
-        
-        <RichTextEditor.ControlsGroup>
-        <RichTextEditor.Blockquote />
-          <RichTextEditor.Hr />
-          <RichTextEditor.BulletList />
-          <RichTextEditor.OrderedList />
-          </RichTextEditor.ControlsGroup>
-          
-          <RichTextEditor.ControlsGroup>
-          <RichTextEditor.Link />
-          <RichTextEditor.Unlink />
-          </RichTextEditor.ControlsGroup>
-          
-        </RichTextEditor.Toolbar> */}
-      
+      <BlockNoteView
+        editor={theEditor}
+        editable={editable || true}
+        onChange={onDocumentChange}
+        theme={colorScheme}
+      />
 
-      <RichTextEditor.Content />
-    </RichTextEditor>
-    {(error) && <span className="text-red-500">{error.message}</span>}
-    </>
+      {(error) && <span className="text-red-500">{error.message}</span>}
+    </div>
   );
 }
+
+export const EditorLoader = () => {
+  return (
+    <div className="flex flex-col w-full min-h-32 gap-y-2">
+      <Skeleton height="18" width="96%" radius="sm" />
+      <Skeleton height="18" width="92%"radius="sm" />
+      <Skeleton height="18" width="98%"radius="sm" />
+      <Skeleton height="18" width="42%"radius="sm" />
+    </div>
+  )
+}
+
+export default TextEditor;

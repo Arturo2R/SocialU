@@ -33,6 +33,8 @@ import Head from "next/head";
 import config from "../../../config";
 import type { InferGetStaticPropsType, GetStaticProps } from 'next'
 
+// import "@blocknote/mantine/style.css";
+
 const { domain } = config()
 
 export interface PostPageProps { data: Post, postId: string; authorId: string };
@@ -40,7 +42,7 @@ dayjs.extend(relativeTime);
 dayjs.locale(es);
 // const PATH = process.env.NEXT_PUBLIC_DB_COLLECTION_PATH || "developmentPosts"
 
-export const getStaticProps = (async (context ) => {
+export const getStaticProps = (async (context) => {
   const { postId, authorId } = context.params
   console.log("postID: ", postId, "authorId: ", authorId)
   console.log("el path:", PATH)
@@ -77,7 +79,7 @@ export const getStaticProps = (async (context ) => {
       error: "Error en ISR del post",
       function: "Server getStaticProps Post page"
     });
-    return {notFound: true}
+    return { notFound: true }
   }
 }) satisfies GetStaticProps<{ data: Post, postId: string, authorId: string, }>
 
@@ -309,7 +311,7 @@ const PostPage = ({ data, postId: id, authorId }: InferGetStaticPropsType<typeof
 
         {(content?.message && content?.renderMethod === "DangerouslySetInnerHtml") && (
           <TypographyStylesProvider>
-            <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es" dangerouslySetInnerHTML={{ __html: content.message }}></div>
+            <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content.message }}></div>
           </TypographyStylesProvider>
         )}
         {(content?.message && (content.renderMethod === "none" || !content?.renderMethod)) && (
