@@ -8,10 +8,10 @@ import Head from "next/head";
 
 import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css';
-import "../styles/globals.css";
 import "@blocknote/mantine/style.css";
+import "../styles/globals.css";
 
-import { MantineProvider, createTheme, MantineColorScheme, rem } from '@mantine/core';
+import { MantineProvider, createTheme, MantineColorScheme } from '@mantine/core';
 import { Notifications } from "@mantine/notifications";
 import { DataStateProvider } from "../context/DataStateContext";
 import posthog from 'posthog-js'
