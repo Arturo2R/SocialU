@@ -27,7 +27,7 @@ export default function () {
        //{ color: "#ED553B", name: "Clases", value: "clases" },
        { color: "#20639B", name: "Anuncios", value: "anuncios" },
        // Hola
-       { color: "#8000FF", name: "Parciales finales", value: "parciales_finales" },
+       { color: "#008000", name: "Matrícula 2024-3", value: "MatrículaUN" },
     ],
     appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
     
