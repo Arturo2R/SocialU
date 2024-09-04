@@ -25,7 +25,10 @@ export default function () {
        // { color: "#2F4B7C", name: "Imagen", value: "imagen" },
        { color: "#3CAEA3", name: "Eventos", value: "eventos" },
        //{ color: "#ED553B", name: "Clases", value: "clases" },
-       { color: "#20639B", name: "Anuncios", value: "anuncios" },
+       { color: "#20639B", name: "Ventas", value: "Ventas" },
+       //
+       { color: "#431C53", name: "Objetos perdidos", value: "Objetos_perdidos" },
+
        // Hola
        
     ],
