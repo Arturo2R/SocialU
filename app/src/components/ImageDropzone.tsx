@@ -1,11 +1,16 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useRef, useState } from "react";
-import { postsBanners } from "../firebase";
+import React, { useEffect, useRef, useState } from "react";
+import { postsBanners } from "@lib/firebase";
 import '@mantine/dropzone/styles.css';
 
 import { Group, Text, rem, Image } from '@mantine/core';
 import { IconUpload, IconPhoto, IconX, } from '@tabler/icons-react';
 import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { api } from "@backend/api";
+import { useAction, useMutation, useQuery } from "convex/react";
+import posthog from "posthog-js";
+import { modals } from "@mantine/modals";
+// import { checkImageAdultnessWithMicrosoft, useCheckImageAdultnessWithMicrosoft } from "@hooks/image";
 
 export default function ImageDropzone({
   image,
@@ -24,29 +29,78 @@ export default function ImageDropzone({
 }) {
   const [i64, set64] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
-
+  const generateUploadUrl = useMutation(api.post.generateUploadUrl)
+  const getUrl = useMutation(api.post.getFileUrl)
+  const checkImage = useAction(api.post.checkImage)
   // const addImage = (file: File[]) => useStore.setState({ image: file[0].name });
 
-  const addImage = (file: File[]) => {
-    console.log(file);
+  const openYouCantModal = () => modals.open({
+      title: "¡Que Pensabas!",
+      children: (
+        <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
+      )
+    })
 
+  const addImage = async (file: File[]) => {
+    setImageLoading("loading")
 
     setImage(file[0]);
+
     const reader = new FileReader();
     reader.onloadend = function () {
       if (typeof reader.result === "string") set64(reader.result);
     };
     reader.readAsDataURL(file[0]);
 
-    const imageRef = ref(postsBanners, file[0].name);
+    // Step 1: Get a short-lived upload URL
 
-    uploadBytes(imageRef, file[0], {
-      contentType: "image/webp",
-    }).then((image) => {
-      // put the image url in the state
-      getDownloadURL(image.ref).then((url) => setImageUrl(url));
-    });
+    const postUrl = await generateUploadUrl();
+    // Step 2: POST the file to the URL
+
+    const result = await fetch(postUrl, {
+      method: "POST",
+      headers: { "Content-Type": file[0]!.type },
+      body: file[0],
+    }).then((res) => res.json());
+
+    const { storageId } = result;
+
+    // Step 3: Save the newly allocated storage id to the database
+    const url = await getUrl({imageId: storageId});
+
+
+    if(url){
+      setImageUrl(url)
+
+      const isValid = await checkImage({url, inputType: "url"});
+      console.log("que tan valido es", isValid)
+      if (!isValid){
+        openYouCantModal()
+        setImage(null); set64(null); setImageUrl(null);
+        setImageLoading("loaded")
+        posthog.capture("obscene_image", {
+          // email: user?.email,
+          image_url: imageUrl,
+        })
+      }
+      setImageLoading("loaded")
+    }
   };
+
+  // useEffect(() => {
+  //   async function fetchAndCheckImage() {
+  //     if (imageUrl) {
+  //       const isValid = await checkImageAdultnessWithMicrosoft(imageUrl); // Adjusted to direct API call or function usage
+  //       if (!isValid) {
+  //         setImage(null);
+  //         set64(null);
+  //         setImageUrl(null);
+  //       }
+  //     }
+  //   }
+
+  //   fetchAndCheckImage();
+  // }, [imageUrl]);
 
 
 

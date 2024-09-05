@@ -1,3 +1,4 @@
+"use client"
 import {
   Container
 } from "@mantine/core";
@@ -5,12 +6,18 @@ import Masonry from 'react-masonry-css';
 import { PostCard } from "../Post/Post";
 import SEO from "../SEO";
 import mansory from "./Feed.module.css";
-import { useData } from "../../context/DataStateContext";
+import { useData } from "@context/DataStateContext";
 import PostCardLoading from "../Post/PostCardLoading";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 import FilterByTags from "../FilterByTags";
 import { useState } from "react";
+import { api } from "@backend/api";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 
+// ...
+
+// const users = useQuery(api.post.getFeed);
+// import {useQuery} from "@/ca"
 // import InfiniteScroll from 'react-infinite-scroller';
 
 interface FeedProps {
@@ -19,7 +26,6 @@ interface FeedProps {
 }
 
 export function Feed({ data, user }: FeedProps) {
-  // const { classes } = useStyles();
 
   // error state
   // const [error, setError] = useState<Error | null>(null);
@@ -30,7 +36,7 @@ export function Feed({ data, user }: FeedProps) {
   const [category, setCategory] = useState<CategoryState | null>(null)
 
 
-
+  // console.log(posts)
 
   // if (postsLoading === "loading") {
   //   return (
@@ -50,16 +56,43 @@ export function Feed({ data, user }: FeedProps) {
     500: 1,
     default: 1,
   };
+
+  const convexposts = useQuery(api.post.getFeed);
+
   return (
     <>
 
       <SEO canonical="/" title="Feed" description="Mira las ultimas noticias de tus compañeros universitarios" />
       <Container className="p-0 mb-10 md:mb-0">
-
+      <Masonry
+          breakpointCols={breakpointColumnsObj}
+          className={mansory.grid}
+          columnClassName={mansory.column}
+          >
+          {convexposts ? convexposts.map((post, index) => (
+              <PostCard
+                viewsNumber={post.viewsCounter}
+                description={post.content}
+                priority={index < 4}
+                commentsQuantity={post.commentsCounter}
+                renderMethod="DangerouslySetInnerHtml"
+                title={post.title}
+                key={index}
+                postId={post._id}
+                author="anonimo"
+                subscribeToPost={suscribetoPost}
+                image={post.image}
+              />
+          )) : (
+            <PostCardLoading />
+          )}
+      </Masonry>
         {/* <Stack spacing="lg" className="max-w-sm mx-auto">  */}
         {/* ts-ignore */}
 
         <FilterByTags category={category} categorySetter={setCategory} />
+
+
 
 
         <Masonry

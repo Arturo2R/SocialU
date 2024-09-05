@@ -1,7 +1,10 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { attachments } from "../firebase";
+import { attachments } from "@lib/firebase";
 
 import posthog from "posthog-js";
+
+
+
 
 export const uploadImage = async (file: File) => {
     const imageRef = ref(attachments, file.name);
@@ -35,12 +38,12 @@ export const getBase64Image = async (file: File) => {
 
 }
 
-export const checkImageAdultnessWithMicrosoft = async (url: string, cacheImage?: boolean): Promise<boolean> => {
+export const useCheckImageAdultnessWithMicrosoft = async (url: string, cacheImage?: boolean): Promise<boolean> => {
     let data = {
         "DataRepresentation": "URL",
         "Value": url
     };
-    let isPorn: boolean = false
+    let isValid: boolean = false
     try {
         let response = await fetch(process.env.NEXT_PUBLIC_AZURE_NAP_URL + `/contentmoderator/moderate/v1.0/ProcessImage/Evaluate${cacheImage ? "?CacheImage=true" : ""}`, {
             method: 'POST',
@@ -52,9 +55,9 @@ export const checkImageAdultnessWithMicrosoft = async (url: string, cacheImage?:
         });
 
         let result = await response.json();
-        isPorn = result.IsImageAdultClassified
+        isValid = result.IsImageAdultClassified
     } catch (error) {
         console.error("Un error mirando la imagen", error)
     }
-    return isPorn
+    return isValid
 }

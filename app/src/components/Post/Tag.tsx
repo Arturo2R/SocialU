@@ -1,5 +1,5 @@
 import { Badge } from "@mantine/core";
-import config from "../../config";
+import config from "@lib/config";
 
 const conf = config();
 

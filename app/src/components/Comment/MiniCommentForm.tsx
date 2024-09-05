@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { Send, } from 'tabler-icons-react'
 import { useAuth } from '../../context/AuthContext'
 import { useFirestore } from '../../hooks/useFirestore'
-import { DEFAULT_COLOR } from '../../constants'
+import { DEFAULT_COLOR } from '../../lib/constants'
 import CommentForm from './CommentForm'
 
 type Props = {

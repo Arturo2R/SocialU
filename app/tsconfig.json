@@ -26,7 +26,15 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "baseUrl": ".", // Esto permite usar rutas relativas desde la raíz del proyecto
+    "paths": {
+      "@components/*": ["./src/components/*"],
+      "@context/*": ["./src/context/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@backend/*": ["./convex/_generated/*"],
+      "@lib/*": ["./src/lib/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
@@ -36,8 +44,8 @@
     "src/components/Post/Post.story.tsx",
     "src/components/Comment/CommentTesting.js",
     ".next/types/**/*.ts"
-  ],
+, "src/context/providers.tsx", "src/components/PostHogPageView.tsx", "../scripts/deleteuser.ts", "../scripts/migration.ts"  ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

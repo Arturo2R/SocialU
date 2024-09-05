@@ -20,7 +20,7 @@ import {
   TypographyStylesProvider,
 } from "@mantine/core";
 
-import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
+import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "@lib/constants";
 import { Tag } from "./Tag";
 
 // import dayjs from "dayjs";

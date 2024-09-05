@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 // import { Post, PostProps } from "./Post";
 import {Button} from "@mantine/core"
-import { DEFAULT_COLOR } from '../../constants';
+import { DEFAULT_COLOR } from '../../lib/constants';
 
 const meta: Meta<typeof Button> = {
   component: Button,

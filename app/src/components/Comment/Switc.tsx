@@ -1,6 +1,6 @@
 import { Switch } from "@mantine/core";
 import { useController, useWatch } from "react-hook-form";
-import { DEFAULT_COLOR } from "../../constants";
+import { DEFAULT_COLOR } from "@lib/constants";
 
 interface Props { control: any, name: string, label: string, def?: boolean, color?: string, size?: 'md' | 'sm' | 'lg' | 'xs' | 'xl' }
 

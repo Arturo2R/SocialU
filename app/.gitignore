@@ -43,3 +43,5 @@ yarn-error.log*
 
 # storybook
 storybook-static
+# Million Lint
+.million

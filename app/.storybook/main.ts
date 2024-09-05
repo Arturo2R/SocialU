@@ -5,6 +5,7 @@ const config: StorybookConfig = {
     "../src/**/*.mdx",
     "../src/**/**/*.story.@(js|jsx|mjs|ts|tsx)",
   ],
+
   "addons": [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
@@ -13,12 +14,16 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-styling-webpack"
   ],
+
   "framework": {
     "name": "@storybook/nextjs",
     "options": {}
   },
-  "docs": {
-    "autodocs": "tag"
+
+  "docs": {},
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript"
   }
 };
 export default config;

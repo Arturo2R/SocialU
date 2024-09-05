@@ -1,13 +1,12 @@
-const million = require('million/compiler')
-
+const MillionLint = require('@million/lint');
+const million = require('million/compiler');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === 'true'
 });
-
 const withPWA = require('next-pwa')({
   dest: 'public',
-  disable: process.env.NODE_ENV === 'development',
-})
+  disable: process.env.NODE_ENV === 'development'
+});
 
 // next.config.js
 const withMDX = require('@next/mdx')({
@@ -17,38 +16,33 @@ const withMDX = require('@next/mdx')({
     // as the package is ESM only
     // https://github.com/remarkjs/remark-gfm#install
     remarkPlugins: [],
-    rehypePlugins: [],
+    rehypePlugins: []
     // If you use `MDXProvider`, uncomment the following line.
     // providerImportSource: "@mdx-js/react",
-  },
-})
-
+  }
+});
 const millionConfig = {
-  auto: true,
+  auto: true
   // if you're using RSC:
   // auto: { rsc: true },
-}
-
-
-const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
+};
+const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
+  // {
   reactStrictMode: true,
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-        port: '',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lh3.googleusercontent.com',
-        port: '',
-      },
-    ],
+    remotePatterns: [{
+      protocol: 'https',
+      hostname: 'firebasestorage.googleapis.com',
+      port: ''
+    }, {
+      protocol: 'https',
+      hostname: 'mild-gecko-296.convex.cloud',
+      port: ''
+    }]
   },
   experimental: {
     scrollRestoration: true,
@@ -59,30 +53,23 @@ const nextConfig = withBundleAnalyzer(withPWA(withMDX({ // {
     // Dangerously allow production builds to successfully complete even if
     // your project has type errors.
     // !! WARN !!
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true
   },
-
   async rewrites() {
-    return [
-      {
-        source: "/ingest/:path*",
-        destination: "https://app.posthog.com/:path*",
-      },
-    ];
+    return [{
+      source: "/ingest/:path*",
+      destination: "https://app.posthog.com/:path*"
+    }];
   },
-
   async headers() {
-    return [
-      {
-        // Apply these headers to all routes in your application.
-        source: '/:path*',
-        headers: [{
-          key: 'Referrer-Policy',
-          value: 'strict-origin-when-cross-origin'
-        }],
-      },
-    ]
-  },
+    return [{
+      // Apply these headers to all routes in your application.
+      source: '/:path*',
+      headers: [{
+        key: 'Referrer-Policy',
+        value: 'strict-origin-when-cross-origin'
+      }]
+    }];
+  }
 })));
-
-module.exports = million.next(nextConfig, millionConfig);
+module.exports = MillionLint.next({ rsc: true })(nextConfigg);

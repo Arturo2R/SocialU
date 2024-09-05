@@ -1,44 +1,25 @@
 "use client"
-// import { RichTextEditor, Link } from '@mantine/tiptap';
-// import { useEditor, BubbleMenu, FloatingMenu, Node } from '@tiptap/react';
-// import Highlight from '@tiptap/extension-highlight';
-// import StarterKit from '@tiptap/starter-kit';
-// import Placeholder from '@tiptap/extension-placeholder';
-import { uploadImage, checkImageAdultnessWithMicrosoft } from "../hooks/image"
+import { uploadImage } from "@hooks/image"
 
 import { es } from "./es"
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 
-import { useColorScheme } from "@mantine/hooks";
-import { Skeleton, TypographyStylesProvider, useMantineColorScheme } from "@mantine/core";
+import { Skeleton, useMantineColorScheme } from "@mantine/core";
 import { useController } from "react-hook-form";
-import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "../constants";
-import { FileDatabase } from "tabler-icons-react";
-// import '@mantine/tiptap/styles.css';
+import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "@lib/constants";
 
-
-// import { useController } from 'react-hook-form';
-// import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from '../constants';
-// import { useEffect } from 'react';
-
-
-
-// const content =
-//   '<h2 style="text-align: center;">Welcome to Mantine rich text editor</h2><p><code>RichTextEditor</code> component focuses on usability and is designed to be as simple as possible to bring a familiar editing experience to regular users. <code>RichTextEditor</code> is based on <a href="https://tiptap.dev/" rel="noopener noreferrer" target="_blank">Tiptap.dev</a> and supports all of its features:</p><ul><li>General text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strike-through</s> </li><li>Headings (h1-h6)</li><li>Sub and super scripts (<sup>&lt;sup /&gt;</sup> and <sub>&lt;sub /&gt;</sub> tags)</li><li>Ordered and bullet lists</li><li>Text align&nbsp;</li><li>And all <a href="https://tiptap.dev/extensions" target="_blank" rel="noopener noreferrer">other extensions</a></li></ul>';
-
-interface TextEditorProps {
+export interface TextEditorProps {
   name: string;
   required?: boolean;
   editable?: boolean;
   control: any
 }
 
-const TextEditor = ({ editable, name, required, control }: TextEditorProps) => {
+const TextEditor = ({ editable, name, control }: TextEditorProps) => {
   const {
     field,
-    formState: { errors },
-    fieldState: { invalid, error },
+    fieldState: { error },
   } = useController({
     name,
     control,
@@ -74,7 +55,6 @@ const TextEditor = ({ editable, name, required, control }: TextEditorProps) => {
         onChange={onDocumentChange}
         theme={colorScheme}
       />
-
       {(error) && <span className="text-red-500">{error.message}</span>}
     </div>
   );

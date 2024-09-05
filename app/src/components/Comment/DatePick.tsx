@@ -1,7 +1,7 @@
 import { Switch } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useController, useForm } from "react-hook-form";
-import { DEFAULT_COLOR } from "../../constants";
+import { DEFAULT_COLOR } from "@lib/constants";
 
 interface Props { control:any, name:string, label:string, required:boolean, }
 

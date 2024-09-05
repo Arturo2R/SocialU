@@ -11,8 +11,10 @@ import { UserCredential } from "firebase/auth";
 import Link from "next/link";
 import React from "react";
 import { ColorSchemeToggle } from "../ColorSchemeToggle/ColorSchemeToggle";
-import { DEFAULT_COLOR } from "../../constants";
-import config from "../../config";
+import { DEFAULT_COLOR } from "@lib/constants";
+import config from "@lib/config";
+import { Authenticated, Unauthenticated } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 
 interface AppHeaderProps {
   opened: boolean;
@@ -26,7 +28,7 @@ export const AppHeader = ({
   opened,
   setOpened,
   color,
-  user,
+  // user,
   loginProvider
 }: AppHeaderProps) => {
 
@@ -34,6 +36,7 @@ export const AppHeader = ({
     const randomIndex = Math.floor(date.getDate() % stringList.length);
     return stringList[randomIndex];
   }
+  const { user } = useUser();
 
   const stringList = config().appNames;
   const randomString = process.env.VERCEL_ENV==="preview" ? "βeta" : getRandomString(new Date(), stringList);
@@ -60,24 +63,13 @@ export const AppHeader = ({
         </Group>
       </Link>
 
-
       <Group>
-        {user?.displayName && (
-          <Text className="hidden md:block">{user?.displayName}</Text>
-        )}
-        {user && (
-          <Avatar alt={`${user.displayName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />
-        )}
-        {(user === null) && (loginProvider) && (
-          <Button
-            size="xs"
-            color={DEFAULT_COLOR}
-            onClick={loginProvider}
-          >
-            Iniciar Sesión
-          </Button>
-        )}
-        {(user === null) && (!loginProvider) && (
+        <Authenticated>
+           <Text className="hidden md:block">{user?.fullName}</Text>
+          <Avatar alt={`${user?.fullName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.imageUrl} />
+          <ColorSchemeToggle />
+        </Authenticated>
+        <Unauthenticated>
           <Button
             component={Link}
             href="/bienvenido"
@@ -86,15 +78,8 @@ export const AppHeader = ({
           >
             Iniciar Sesión
           </Button>
-
-        )}
-
-        {user?.photoURL && <Avatar alt={`${user.displayName} image`} className="hidden sm:inline-block" radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.photoURL} />}
-
-        {user && <ColorSchemeToggle />}
+        </Unauthenticated>
       </Group>
-
-
     </Group>
   );
 };

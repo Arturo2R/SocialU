@@ -14,21 +14,25 @@ import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 // import { useToggle } from "@mantine/hooks";
 import { useState } from "react";
-import { DEFAULT_COLOR } from "../../constants";
-import MiniCommentForm from "./MiniCommentForm";
-import CommentForm from "./CommentForm";
+import { DEFAULT_COLOR } from "@lib/constants";
 
+import CommentForm from "./CommentForm";
+import {  Id } from "@backend/dataModel";
+import { PostComment } from "@convex/comment";
+import { UserState } from "@context/UserStateContext";
+import { propsToAttributes } from "@blocknote/core";
 export interface CommentProps {
-  id: string;
-  parentId?: string;
-  postId: string;
-  postedAt: Date;
+  id: Id<"comment">;
+  parentId?: Id<"comment">;
+  postId: Id<"post">;
+  postedAt: number; // Number of date
   content: string;
   author: { name: string; image: string, color?:string, } | "anonimo";
-  subComments?: subComments;
-  commentRoute: string;
+  subComments?: PostComment[];
   old?: boolean;
+  anonimoDefault?: boolean;
   level?: number;
+  user: UserState;
   //setRespondTo?: Dispatch<SetStateAction<string>>;
 }
 
@@ -38,11 +42,11 @@ export function Comment({
   author,
   old,
   postId,
-  parentId,
   subComments,
+  anonimoDefault,
   id,
-  commentRoute,
   level = 1,
+  user
  // setRespondTo
 }: CommentProps) {
   // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
@@ -53,7 +57,7 @@ export function Comment({
   //handleRespondTo = () =>{ if (author?.name) setRespondTo(author?.name && author?.name)}
   
   return (
-    <div  className="p-4 mt-2 border-l-[2px] pb-0 max-w-2xl border-l-gray-400/40" >
+    <div  className="ps-4 mt-2 border-l-[2px] pb-0 max-w-2xl border-l-gray-400/40" >
       <Stack gap={7} onClick={()=>{
       setSubCommentsOpened((o) => !o)
     }
@@ -90,7 +94,7 @@ export function Comment({
               e.stopPropagation();
             }
         }>
-          <CommentForm postId={postId} commentId={id} respondto={commentRoute+".subComments."} closeCollapse={setOpen} />
+          <CommentForm user={user} postId={postId}  respondto={id}  closeCollapse={setOpen} />
         </Collapse>  
       </Stack>
 
@@ -109,21 +113,22 @@ export function Comment({
             e.stopPropagation();
           }
       }>
-          <Stack >
+          <Stack>
             { Object.values(subComments)
               .sort((comment1, comment2)=>  new Date(comment2.postedAt).getTime() - new Date(comment1.postedAt).getTime())
               .map((subco, index) => (
               <Comment
                 postId={postId}
                 level={level+1}
-                commentRoute={commentRoute+".subComments."+subco.id}
-                id={subco.id}
+                id={subco._id}
                 parentId={subco.parentId}
                 key={index}
-                postedAt={subco.postedAt}
+                postedAt={subco._creationTime}
+                anonimoDefault={anonimoDefault}
                 author={subco.author}
                 content={subco.content}
-                subComments={subco.subComments}
+                subComments={subco.subcomments}
+                user={user}
                 />
             ))}
           </Stack>

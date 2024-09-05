@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import configData from '../config';
+import configData from '../lib/config';
 
 const config = configData();
 
