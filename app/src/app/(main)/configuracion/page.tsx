@@ -15,10 +15,11 @@ import { api } from "@backend/api";
 import { DEFAULT_COLOR } from "@lib/constants";
 import { useUser } from "@context/UserStateContext";
 
+import Protected from "@components/Protected";
 
 const configuracion = () => {
     // const { user } = useStore.getState();
-    const user = useUser()
+    const {user} = useUser()
 
 
     // const [loading, setLoading] = useState<boolean>(false)
@@ -81,7 +82,7 @@ const configuracion = () => {
 
 
     return (
-        // <Protected.Route>
+        <Protected.Route>
         <Paper p="md" shadow="sm" radius="md">
             <Title>Configuración</Title>
             <form onSubmit={form.onSubmit((values) => saveConfiguration(values))}><Stack>
@@ -146,7 +147,7 @@ const configuracion = () => {
             </Stack>
             </form>
         </Paper>
-        // </Protected.Route>
+    </Protected.Route>
     );
 };
 

@@ -15,6 +15,7 @@ import {
 
 import { DEFAULT_COLOR } from "@lib/constants";
 import { Tag } from "./Post/Tag";
+import convertAllAToSpan from '@lib/converToNonA';
 
 // import dayjs from "dayjs";
 // import es from "dayjs/locale/es";
@@ -116,9 +117,9 @@ export const PostCard = ({
           expanded={expanded}
           onExpandedChange={setExpanded}
         >
-          {renderMethod === "DangerouslySetInnerHtml" ? (
+          {(renderMethod === "DangerouslySetInnerHtml")? (
             <TypographyStylesProvider>
-              <div className="bn-container" dangerouslySetInnerHTML={{ __html: description }}></div>
+              <div className="bn-container" dangerouslySetInnerHTML={{ __html: description.includes('<a') ? convertAllAToSpan(description.replace('<audio', '<audio controls')) : description.replace('<audio', '<audio controls') }}></div>
             </TypographyStylesProvider>
           ) : (
             <Text>{description}</Text>

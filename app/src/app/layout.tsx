@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
 import React from 'react';
 
 // Authentication with clerk and db with Convex
-import ConvexClientProvider from "../context/ConvexClientProvider";
+import {ConvexClientProvider} from "@context/ConvexClientProvider";
 import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
 import { ClerkProvider } from "@clerk/nextjs";
+
 // Custom Data Provider
 import {UserStateProvider} from "@context/UserStateContext"
 import {FeedStateProvider} from "@context/FeedContext"
 
 // Posthog analytics for full app tracking and reports
 import { PHProvider } from "@context/providers";
-import PostHogPageView from "@components/PostHogPageView";
+// import PostHogPageView from "@components/PostHogPageView";
 
 // Mantine Components
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
@@ -26,6 +27,7 @@ import '@mantine/core/styles.css';
 import "@blocknote/mantine/style.css";
 import "../styles/globals.css";
 import config from "@lib/config";
+import dynamic from "next/dynamic";
 
 const conf = config()
 
@@ -50,6 +52,10 @@ export const metadata: Metadata = {
     siteName: conf.siteName,
   }
 };
+
+const PostHogPageView = dynamic(() => import('@components/PostHogPageView'), {
+  ssr: false,
+})
 
 
 export default function RootLayout({

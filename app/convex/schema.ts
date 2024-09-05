@@ -1,36 +1,56 @@
-import  {v} from "convex/values"
+import { v } from "convex/values"
 import { defineSchema, defineTable } from "convex/server";
 import { literals, optional } from "convex-helpers/validators";
-import config from "../src/lib/config"; 
+import { authTables } from "@convex-dev/auth/server";
+import config from "../src/lib/config";
 
-const {categories} = config();
+const { categories } = config();
 let lascategories = categories.map((category) => category.value)
 
+
 export default defineSchema({
+    ...authTables,
     post: defineTable({
         anonimo: v.boolean(),
         asBussiness: v.boolean(),
-        viewsCounter:v.number(),
+        viewsCounter: v.number(),
         commentsCounter: v.number(),
         slug: v.string(),
-        content: v.union(v.string(), v.any()),
+        content: v.union(v.string(), v.array(v.any())),
+        contentInMarkdown: v.optional(v.string()),
+        contentInHtml: v.optional(v.string()),
         title: v.optional(v.string()),
         authorId: v.id("user"),
         tags: v.optional(v.array(v.string())),
         //categoryId: v.optional(v.id("category")),
         image: v.optional(v.string()),
-        imageData: v.optional(v.object({height: v.float64(), width: v.float64()})),
+        imageData: v.optional(v.object({ height: v.float64(), width: v.float64() })),
         organizationId: v.optional(v.id("organization")),
         priority: v.optional(v.boolean()),
-        renderMethod: literals("DangerouslySetInnerHtml","NonEditableTiptap","none","CustomTiptapParser"),
-        messageFormat: literals("Markdown","HTML","Tiptap"),
+        renderMethod: literals("DangerouslySetInnerHtml", "NonEditableTiptap", "none", "CustomTiptapParser"),
+        messageFormat: literals("Markdown", "HTML", "Tiptap"),
         categoryValue: v.optional(literals(...lascategories)),
         subComments: v.optional(v.array(v.id("comment"))),
+        isOld: v.optional(v.boolean()),
+        // tempUser_deprecated: v.optional(v.object({
+        //     name: v.string(),
+        //     email: v.string(),
+        //     displayName: v.string(),
+        //     ref: v.string(),
+        // })),
+        // tempBussines_deprecated: v.optional(v.object({
+        //     description: v.string(),
+        //     name: v.string(),
+        //     email: v.optional(v.string()),
+        //     logo: v.string(),
+        //     color: v.string(),
+        //     url: v.string(),
+        // }))
         //fields: v.optional(v.any()),
-    }).index("by_popularity",["viewsCounter", "commentsCounter"])
-        .index("by_author",["authorId"])
-        .index("by_category",["categoryValue"])
-        .index("by_slug",["slug"]),
+    }).index("by_popularity", ["viewsCounter", "commentsCounter"])
+        .index("by_author", ["authorId"])
+        .index("by_category", ["categoryValue"])
+        .index("by_slug", ["slug"]),
     comment: defineTable({
         authorId: v.id("user"),
         parentId: v.optional(v.id("comment")),
@@ -40,13 +60,13 @@ export default defineSchema({
         asOrganization: v.optional(v.boolean()),
         organizationId: v.optional(v.id("organization")),
         subComments: v.optional(v.array(v.id("comment"))),
-    }).index("withPost",["postId"]).index("by_author",["authorId"]),
+    }).index("withPost", ["postId"]).index("by_author", ["authorId"]),
     reaction: defineTable({
         userId: v.id("user"),
-        reaction_type: literals("like","dislike"),
-        content_type: literals("post","comment"),
-        contentId: v.union(v.id("post"),v.id("comment"))
-    }).index("byUser",["userId"]).index("byContent",["content_type"]).index("byType",["reaction_type"]).index("byContentId",["contentId"]),
+        reaction_type: literals("like", "dislike"),
+        content_type: literals("post", "comment"),
+        contentId: v.union(v.id("post"), v.id("comment"))
+    }).index("byUser", ["userId"]).index("byContent", ["content_type"]).index("byType", ["reaction_type"]).index("byContentId", ["contentId"]),
     organization: defineTable({
         name: v.string(),
         color: v.string(),
@@ -57,7 +77,7 @@ export default defineSchema({
     }),
     user: defineTable({
         email: v.string(),
-        clerkid:v.string(),
+        clerkid: v.string(),
         firebaseid: v.optional(v.string()),
         displayName: v.optional(v.string()),
         photoURL: v.optional(v.string()),
@@ -73,14 +93,14 @@ export default defineSchema({
             anonimoDefault: v.boolean(),
             useUserName: v.boolean(),
         })),
-    }).index("byFirebaseId",["firebaseid"]).index("byClerkId",["clerkid"])
+    }).index("byFirebaseId", ["firebaseid"]).index("byClerkId", ["clerkid"])
     ,
     university: defineTable({
         name: v.string(),
         logo: v.string(),
         url: v.string(),
         domain: v.string(),
-    }).index("byDomain",["domain"])
+    }).index("byDomain", ["domain"])
     ,
     category: defineTable({
         color: v.string(),

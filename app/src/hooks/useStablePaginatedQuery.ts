@@ -15,7 +15,10 @@ import { useRef } from "react";
  * @returns UsePaginatedQueryResult
  */
 export const useStablePaginatedQuery = ((name, ...args) => {
-  const result = usePaginatedQuery(name, ...args);
+  let result
+  if (name) {
+    result = usePaginatedQuery(name, ...args);
+  }
   const stored = useRef(result); // ref objects are stable between rerenders
 
   // If data is still loading, wait and do nothing

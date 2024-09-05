@@ -19,7 +19,7 @@
 - [ ] Button about Community Guidelines
 - [ ] Button on who we are
 
-- [ ] Clean Repository
+- [x] Clean Repository
 - [ ] Migrate to TurboRepo
 - [ ] Text Content Moderation and better image moderation
 
@@ -32,10 +32,10 @@
     - [ ] Fix File Uploading
     - [ ] Eliminate VIdeo Uploading
 - [ ] Microblogging Comentarios
-- [ ] Filtración
+- [x] Filtración
 - [ ] Organización Por Popularidad
 - [x] Carga Infinita 
-- [ ] UI Infinite Scroll
+- [x] UI Infinite Scroll
 - [ ] Busqueda de Posts
 	- [ ] Busqueda semántica de posts
 	- [ ] Guardar los posts en un formato más composible, para mejorar la extracción de datos

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "es5",
     "lib": [
       "dom",
@@ -17,7 +18,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -29,23 +30,44 @@
     ],
     "baseUrl": ".", // Esto permite usar rutas relativas desde la raíz del proyecto
     "paths": {
-      "@components/*": ["./src/components/*"],
-      "@context/*": ["./src/context/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@backend/*": ["./convex/_generated/*"],
-      "@lib/*": ["./src/lib/*"]
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@context/*": [
+        "./src/context/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@backend/*": [
+        "./convex/_generated/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "./convex/**/*.ts",
+    "./convex/*.ts",
     "src/context/AuthContext.tsx",
     "src/components/Post/Post.story.tsx",
     "src/components/Comment/CommentTesting.js",
-    ".next/types/**/*.ts"
-, "src/context/providers.tsx", "src/components/PostHogPageView.tsx", "../scripts/deleteuser.ts", "../scripts/migration.ts"  ],
+    ".next/types/**/*.ts",
+    "src/context/providers.tsx",
+    "src/components/PostHogPageView.tsx",
+    "../scripts/deleteuser.ts",
+    "../scripts/migration.ts"
+  ],
   "exclude": [
     "node_modules"
   ],
+  "references": [
+    {
+      "path": "./convex"
+    }
+  ]
 }

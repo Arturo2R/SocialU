@@ -41,6 +41,8 @@ import { useEffect } from "react";
 import { useAddView } from "./OneView";
 import LoadingPost from "./loading";
 import { useQuery } from "convex-helpers/react/cache/hooks";
+// import { ViewPost } from "@components/TextEditor";
+import dynamic from "next/dynamic";
 
 // import "@blocknote/mantine/style.css";
 
@@ -56,7 +58,11 @@ dayjs.locale(es);
 
 //     return slugs.map(slug=>{slug})
 // }
+interface ViewPostProps {
+    content: any[]
+}
 
+const ViewPost: React.ComponentType<ViewPostProps> = dynamic(() => import('@components/TextEditor').then(mod => mod.ViewPost), { ssr: false });
 
 
 const PostPage = ({ params }: { params: { postSlug: string } } ) => {
@@ -67,9 +73,6 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
     if (content === undefined) {
         return <LoadingPost />
     }
-
-    const fecha = dayjs(content?._creationTime).fromNow()
-    
 
     return (
         <Paper classNames={{ root: styles.postPage }}>
@@ -91,21 +94,23 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
             )}
 
             <Group mb="xs">
-            {content?.tags && content.tags.map((tag, index) => (
-                <Tag key={index} label={tag} />
-            ))
-            }
-            {(fecha && content?.viewsCounter) && (
+            {content?.categoryValue && (
+                <Tag label={content?.categoryValue} />
+            )}
+            {(content?.viewsCounter) && (
                 <Text className="italic text-stone-400">
-                {dayjs(fecha).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`}
+                {dayjs(content?._creationTime).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`}
                 </Text>
             )}
             </Group>
 
-            {(content?.content && content?.renderMethod === "DangerouslySetInnerHtml") && (
-            <TypographyStylesProvider>
-                <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content.content }}></div>
-            </TypographyStylesProvider>
+            {(content?.content && (content?.renderMethod === "DangerouslySetInnerHtml")) && (
+                <TypographyStylesProvider>
+                    <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content.content.replace('<audio', '<audio controls').replace('<video', '<video controls') }}></div>
+                </TypographyStylesProvider>
+            )}
+            {(content?.content && content?.renderMethod === "NonEditableTiptap") && (
+                <ViewPost content={content.content as any[]} />
             )}
             {(content?.content && (content.renderMethod === "none" || !content?.renderMethod)) && (
             <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es">{content.content}</Text>

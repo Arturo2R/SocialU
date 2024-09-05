@@ -12,6 +12,7 @@ import classes from './NavbarSimple.module.css';
 import Config from "@lib/config"
 import { Authenticated } from "convex/react";
 import { useClerk } from "@clerk/nextjs";
+import Protected from "@components/Protected";
 
   const data = Config().sidebar
   const version = Config().version
@@ -22,13 +23,14 @@ export function AppNavbar() {
 
 
   const links = data.map((item) => (
-    <NavLink
-        label={item.label}
-        leftSection={<item.icon className={classes.linkIcon} stroke="1.5" />}
-        href={item.link}
-        key={item.label}
-        component={Link}
-      />
+    <Protected.Component on={item.isProtected} key={item.label}>
+      <NavLink
+          label={item.label}
+          leftSection={<item.icon className={classes.linkIcon} stroke="1.5" />}
+          href={item.link}
+          component={Link}
+        />
+    </Protected.Component>
   ));
 
   return (

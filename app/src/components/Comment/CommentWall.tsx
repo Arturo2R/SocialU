@@ -21,7 +21,7 @@ type CommentWallProps = {
 
 const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) => {
   const comments = useQuery(api.comment.getCommentsForPost, {  postId });
-  const user = useUser()
+  const {user, isAuthenticated} = useUser()
 
   return (
     <>
@@ -52,6 +52,7 @@ const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) =>
             // setRespondTo={setRespondTo}
             parentId={co.postId}
             subComments={co.subcomments}
+            isAuthenticated={isAuthenticated}
           />
         ))}
 

@@ -15,12 +15,12 @@ export default function () {
     },
     version: pk.version,
     sidebar: [
-      { link: "/", label: "Feed", icon: IconBellRinging },
-      { link: "/crear", label: "Crear Post", icon: IconSend },
+      { link: "/", label: "Feed", icon: IconBellRinging, isProtected: false },
+      { link: "/crear", label: "Crear Post", icon: IconSend, isProtected: true },
       // { link: "/", label: "Security", icon: Fingerprint },
       // { link: "/", label: "SSH Keys", icon: Key },
       // { link: "/", label: "Databases", icon: DatabaseImport },
-      { link: "/configuracion", label: "Configuración", icon: IconSettings },
+      { link: "/configuracion", label: "Configuración", icon: IconSettings, isProtected: true },
       // { link: "/about", label: "Sobre Nosotros", icon: TwoFA },
     ],
     categories: [

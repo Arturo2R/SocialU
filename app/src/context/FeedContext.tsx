@@ -1,9 +1,11 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react";
-import {Doc} from "@backend/dataModel";
-import {api} from "@backend/api";
-import {useStablePaginatedQuery} from "@hooks/useStablePaginatedQuery";
+import { Doc } from "@backend/dataModel";
+import { api } from "../../convex/_generated/api";
+import { useStablePaginatedQuery } from "@hooks/useStablePaginatedQuery";
 import React from "react";
+import { usePaginatedQuery } from "convex/react";
+import { useQuery } from "convex-helpers/react/cache/hooks";
 
 interface FeedContext {
   category: CategoryState | null;
@@ -15,39 +17,40 @@ interface FeedContext {
 }
 
 export const FeedStateContext = createContext<FeedContext | undefined>(
-    undefined
+  undefined
 )
 
 export const usefeed = () => {
-    const context = useContext(FeedStateContext)
-    if (!context) throw new Error("There is no feedState provider")
-    return context
+  const context = useContext(FeedStateContext)
+  if (!context) throw new Error("There is no feedState provider")
+  return context
 }
 
 
 type CategoryState = { color: string, name: string, value: string, variant: string }
-export function FeedStateProvider({children}: {children: React.ReactNode}) {
+export function FeedStateProvider({ children }: { children: React.ReactNode }) {
   const [category, setCategory] = useState<CategoryState | null>(null)
-  
-  const {results:posts, status, loadMore, isLoading} = useStablePaginatedQuery(api.post.getFeed, {filterbyCategory: category?.value || undefined}, {initialNumItems: 10, })
+  const query = useQuery(api.post.getFeed, { filterbyCategory: category?.value || undefined, paginationOpts: { cursor: null, numItems: 10 } })
 
-    // useEffect(() => {
-    //     if(isAuthenticated && !isLoading) {
-    //         if(feed) {
-    //             console.log(feed)
-    //             const foundBussiness = businessAccounts.bussiness.find(bussines =>
-    //                 bussines.members.some(member => member.email === feed.email)
-    //             )
-    //             console.log(foundBussiness)
-    //             if(foundBussiness) {
-    //                 setfeed({...feed, isMember: true, organization: foundBussiness})
-    //                 console.log(feed)
-    //             } else {
-    //                 setfeed({...feed, isMember: false})}
-    //             }
-    //     }
-    // }, [isLoading, isAuthenticated])
+  const { results: posts, status, loadMore, isLoading } = usePaginatedQuery(api.post.getFeed, { filterbyCategory: category?.value || undefined }, { initialNumItems: 10, })
+
+  // useEffect(() => {
+  //     if(isAuthenticated && !isLoading) {
+  //         if(feed) {
+  //             console.log(feed)
+  //             const foundBussiness = businessAccounts.bussiness.find(bussines =>
+  //                 bussines.members.some(member => member.email === feed.email)
+  //             )
+  //             console.log(foundBussiness)
+  //             if(foundBussiness) {
+  //                 setfeed({...feed, isMember: true, organization: foundBussiness})
+  //                 console.log(feed)
+  //             } else {
+  //                 setfeed({...feed, isMember: false})}
+  //             }
+  //     }
+  // }, [isLoading, isAuthenticated])
 
 
-    return <FeedStateContext.Provider value={{ category, setCategory, posts, status, loadMore, isLoading }}>{children}</FeedStateContext.Provider>
+  return <FeedStateContext.Provider value={{ category, setCategory, posts, status, loadMore, isLoading }}>{children}</FeedStateContext.Provider>
 }

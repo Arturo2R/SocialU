@@ -1,0 +1,1714 @@
+openapi: 3.0.3
+info:
+  title: Convex App - OpenAPI 3.0
+  version: 0.0.0
+servers:
+  - url: https://mild-gecko-296.convex.cloud
+security:
+  - bearerAuth: []
+tags:
+  - name: query
+    description: Functions that read data
+  - name: mutation
+    description: Functions that write/update/delete data
+  - name: action
+    description: Functions that can make calls to external APIs
+paths:
+  /api/run/post/getFeed:
+    post:
+      summary: Calls a query at the path post.js:getFeed
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.getFeed"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.getFeed"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/create:
+    post:
+      summary: Calls a mutation at the path post.js:create
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.create"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.create"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/revalidate:
+    post:
+      summary: Calls a action at the path post.js:revalidate
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.revalidate"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.revalidate"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/slugs:
+    post:
+      summary: Calls a query at the path post.js:slugs
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.slugs"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.slugs"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/get:
+    post:
+      summary: Calls a query at the path post.js:get
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.get"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.get"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/addView:
+    post:
+      summary: Calls a mutation at the path post.js:addView
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.addView"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.addView"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/generateUploadUrl:
+    post:
+      summary: Calls a mutation at the path post.js:generateUploadUrl
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.generateUploadUrl"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.generateUploadUrl"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/getFileUrl:
+    post:
+      summary: Calls a mutation at the path post.js:getFileUrl
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.getFileUrl"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.getFileUrl"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/post/checkImage:
+    post:
+      summary: Calls a action at the path post.js:checkImage
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_post.checkImage"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_post.checkImage"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/user/current:
+    post:
+      summary: Calls a query at the path user.js:current
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_user.current"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_user.current"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/user/getSafeUser:
+    post:
+      summary: Calls a query at the path user.js:getSafeUser
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_user.getSafeUser"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_user.getSafeUser"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/user/getUserByUserName:
+    post:
+      summary: Calls a query at the path user.js:getUserByUserName
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_user.getUserByUserName"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_user.getUserByUserName"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/user/slugs:
+    post:
+      summary: Calls a query at the path user.js:slugs
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_user.slugs"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_user.slugs"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/user/update:
+    post:
+      summary: Calls a mutation at the path user.js:update
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_user.update"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_user.update"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/comment/get:
+    post:
+      summary: Calls a query at the path comment.js:get
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_comment.get"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_comment.get"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/comment/create:
+    post:
+      summary: Calls a mutation at the path comment.js:create
+      tags:
+        - mutation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_comment.create"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_comment.create"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/comment/getCommentsForPost:
+    post:
+      summary: Calls a query at the path comment.js:getCommentsForPost
+      tags:
+        - query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_comment.getCommentsForPost"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_comment.getCommentsForPost"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/auth/signIn:
+    post:
+      summary: Calls a action at the path auth.js:signIn
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_auth.signIn"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_auth.signIn"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+  /api/run/auth/signOut:
+    post:
+      summary: Calls a action at the path auth.js:signOut
+      tags:
+        - action
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Request_auth.signOut"
+        required: true
+      responses:
+        "200":
+          description: Convex executed your request and returned a result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response_auth.signOut"
+        "400":
+          description: Failed operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+        "500":
+          description: Convex Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FailedResponse"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Token of the format "Bearer {token}" for normal authentication and "Convex {token}" for admin tokens.
+  schemas:
+    Request_post.getFeed:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - paginationOpts
+          properties:
+            filterbyCategory:
+              oneOf:
+                - type: string
+                  enum:
+                    - "confesiones"
+                - type: string
+                  enum:
+                    - "eventos"
+                - type: string
+                  enum:
+                    - "anuncios"
+                - type: string
+                  enum:
+                    - "parciales_finales"
+            paginationOpts:
+              type: object
+              required:
+                - cursor
+                - numItems
+              properties:
+                cursor:
+                  type: string
+                  nullable: true
+                endCursor:
+                  type: string
+                  nullable: true
+                id:
+                  type: number
+                maximumBytesRead:
+                  type: number
+                maximumRowsRead:
+                  type: number
+                numItems:
+                  type: number
+
+    Response_post.getFeed:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.create:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - anonimo
+            - asBussiness
+            - content
+          properties:
+            anonimo:
+              type: boolean
+            asBussiness:
+              type: boolean
+            content:
+              oneOf:
+                - type: string
+                - type: array
+                  items: {}
+            contentInHtml:
+              type: string
+            contentInMarkdown:
+              type: string
+            image:
+              type: string
+            messageFormat:
+              oneOf:
+                - type: string
+                  enum:
+                    - "Markdown"
+                - type: string
+                  enum:
+                    - "HTML"
+                - type: string
+                  enum:
+                    - "Tiptap"
+            renderMethod:
+              oneOf:
+                - type: string
+                  enum:
+                    - "DangerouslySetInnerHtml"
+                - type: string
+                  enum:
+                    - "NonEditableTiptap"
+                - type: string
+                  enum:
+                    - "none"
+                - type: string
+                  enum:
+                    - "CustomTiptapParser"
+            tags:
+              type: array
+              items:
+                type: string
+            title:
+              type: string
+
+    Response_post.create:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.revalidate:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - author
+            - id
+          properties:
+            author:
+              type: string
+            id:
+              type: string
+
+    Response_post.revalidate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.slugs:
+      type: object
+      required:
+        - args
+      properties:
+        args: {}
+
+    Response_post.slugs:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.get:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - slug
+          properties:
+            slug:
+              type: string
+
+    Response_post.get:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value:
+          type: object
+          required:
+            - _creationTime
+            - _id
+            - anonimo
+            - asBussiness
+            - authorId
+            - commentsCounter
+            - content
+            - messageFormat
+            - renderMethod
+            - slug
+            - viewsCounter
+          properties:
+            _creationTime:
+              type: number
+            _id:
+              type: string
+              description: ID from table "post"
+            anonimo:
+              type: boolean
+            asBussiness:
+              type: boolean
+            author:
+              type: object
+              required:
+                - displayName
+                - id
+                - link
+                - userName
+              properties:
+                displayName:
+                  type: string
+                id:
+                  type: string
+                  description: ID from table "user"
+                image:
+                  type: string
+                link:
+                  type: string
+                userName:
+                  type: string
+            authorId:
+              type: string
+              description: ID from table "user"
+            categoryValue:
+              oneOf:
+                - type: string
+                  enum:
+                    - "confesiones"
+                - type: string
+                  enum:
+                    - "eventos"
+                - type: string
+                  enum:
+                    - "anuncios"
+                - type: string
+                  enum:
+                    - "parciales_finales"
+            commentsCounter:
+              type: number
+            content:
+              oneOf:
+                - type: string
+                - type: array
+                  items: {}
+            contentInHtml:
+              type: string
+            contentInMarkdown:
+              type: string
+            image:
+              type: string
+            imageData:
+              type: object
+              required:
+                - height
+                - width
+              properties:
+                height:
+                  type: number
+                width:
+                  type: number
+            isOld:
+              type: boolean
+            messageFormat:
+              oneOf:
+                - type: string
+                  enum:
+                    - "Markdown"
+                - type: string
+                  enum:
+                    - "HTML"
+                - type: string
+                  enum:
+                    - "Tiptap"
+            organization:
+              type: object
+              required:
+                - color
+                - displayName
+                - id
+                - link
+                - userName
+              properties:
+                color:
+                  type: string
+                displayName:
+                  type: string
+                id:
+                  type: string
+                  description: ID from table "organization"
+                image:
+                  type: string
+                link:
+                  type: string
+                userName:
+                  type: string
+            organizationId:
+              type: string
+              description: ID from table "organization"
+            priority:
+              type: boolean
+            renderMethod:
+              oneOf:
+                - type: string
+                  enum:
+                    - "DangerouslySetInnerHtml"
+                - type: string
+                  enum:
+                    - "NonEditableTiptap"
+                - type: string
+                  enum:
+                    - "none"
+                - type: string
+                  enum:
+                    - "CustomTiptapParser"
+            slug:
+              type: string
+            subComments:
+              type: array
+              items:
+                type: string
+                description: ID from table "comment"
+            tags:
+              type: array
+              items:
+                type: string
+            title:
+              type: string
+            viewsCounter:
+              type: number
+
+    Request_post.addView:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - slug
+          properties:
+            slug:
+              type: string
+
+    Response_post.addView:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.generateUploadUrl:
+      type: object
+      required:
+        - args
+      properties:
+        args: {}
+
+    Response_post.generateUploadUrl:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.getFileUrl:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - imageId
+          properties:
+            imageId:
+              type: string
+              description: ID from table "_storage"
+
+    Response_post.getFileUrl:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_post.checkImage:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - inputType
+          properties:
+            cacheImage:
+              type: boolean
+            id:
+              type: string
+              description: ID from table "_storage"
+            inputType:
+              oneOf:
+                - type: string
+                  enum:
+                    - "url"
+                - type: string
+                  enum:
+                    - "id"
+            url:
+              type: string
+
+    Response_post.checkImage:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.current:
+      type: object
+      required:
+        - args
+      properties:
+        args: {}
+
+    Response_user.current:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.deleteFromClerk:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - clerkUserId
+          properties:
+            clerkUserId:
+              type: string
+
+    Response_user.deleteFromClerk:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.getSafeUser:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - userId
+          properties:
+            userId:
+              type: string
+              description: ID from table "user"
+
+    Response_user.getSafeUser:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.getUserByUserName:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - slug
+          properties:
+            slug:
+              type: string
+
+    Response_user.getUserByUserName:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.slugs:
+      type: object
+      required:
+        - args
+      properties:
+        args: {}
+
+    Response_user.slugs:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.update:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              type: object
+              required:
+                - anonimoDefault
+                - useUserName
+              properties:
+                anonimoDefault:
+                  type: boolean
+                career:
+                  type: string
+                description:
+                  type: string
+                phoneNumber:
+                  type: number
+                semester:
+                  type: number
+                useUserName:
+                  type: boolean
+
+    Response_user.update:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_user.upsertFromClerk:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - data
+          properties:
+            data: {}
+
+    Response_user.upsertFromClerk:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_comment.get:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - commentId
+          properties:
+            commentId:
+              type: string
+
+    Response_comment.get:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_comment.create:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - anonimo
+            - content
+            - postId
+          properties:
+            anonimo:
+              type: boolean
+            asOrganization:
+              type: boolean
+            content:
+              type: string
+            parentId:
+              type: string
+              description: ID from table "comment"
+            postId:
+              type: string
+              description: ID from table "post"
+
+    Response_comment.create:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_comment.getCommentsForPost:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - postId
+          properties:
+            postId:
+              type: string
+              description: ID from table "post"
+
+    Response_comment.getCommentsForPost:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_auth.signIn:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          properties:
+            params: {}
+            provider:
+              type: string
+            refreshToken:
+              type: string
+            verifier:
+              type: string
+
+    Response_auth.signIn:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_auth.signOut:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+
+    Response_auth.signOut:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    Request_auth.store:
+      type: object
+      required:
+        - args
+      properties:
+        args:
+          type: object
+          required:
+            - args
+          properties:
+            args:
+              oneOf:
+                - type: object
+                  required:
+                    - generateTokens
+                    - type
+                    - userId
+                  properties:
+                    generateTokens:
+                      type: boolean
+                    sessionId:
+                      type: string
+                      description: ID from table "authSessions"
+                    type:
+                      type: string
+                      enum:
+                        - "signIn"
+                    userId:
+                      type: string
+                      description: ID from table "users"
+                - type: object
+                  required:
+                    - type
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - "signOut"
+                - type: object
+                  required:
+                    - refreshToken
+                    - type
+                  properties:
+                    refreshToken:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "refreshSession"
+                - type: object
+                  required:
+                    - allowExtraProviders
+                    - generateTokens
+                    - params
+                    - type
+                  properties:
+                    allowExtraProviders:
+                      type: boolean
+                    generateTokens:
+                      type: boolean
+                    params: {}
+                    provider:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "verifyCodeAndSignIn"
+                    verifier:
+                      type: string
+                - type: object
+                  required:
+                    - type
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - "verifier"
+                - type: object
+                  required:
+                    - signature
+                    - type
+                    - verifier
+                  properties:
+                    signature:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "verifierSignature"
+                    verifier:
+                      type: string
+                - type: object
+                  required:
+                    - profile
+                    - provider
+                    - providerAccountId
+                    - signature
+                    - type
+                  properties:
+                    profile: {}
+                    provider:
+                      type: string
+                    providerAccountId:
+                      type: string
+                    signature:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "userOAuth"
+                - type: object
+                  required:
+                    - allowExtraProviders
+                    - code
+                    - expirationTime
+                    - provider
+                    - type
+                  properties:
+                    accountId:
+                      type: string
+                      description: ID from table "authAccounts"
+                    allowExtraProviders:
+                      type: boolean
+                    code:
+                      type: string
+                    email:
+                      type: string
+                    expirationTime:
+                      type: number
+                    phone:
+                      type: string
+                    provider:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "createVerificationCode"
+                - type: object
+                  required:
+                    - account
+                    - profile
+                    - provider
+                    - type
+                  properties:
+                    account:
+                      type: object
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                        secret:
+                          type: string
+                    profile: {}
+                    provider:
+                      type: string
+                    shouldLinkViaEmail:
+                      type: boolean
+                    shouldLinkViaPhone:
+                      type: boolean
+                    type:
+                      type: string
+                      enum:
+                        - "createAccountFromCredentials"
+                - type: object
+                  required:
+                    - account
+                    - provider
+                    - type
+                  properties:
+                    account:
+                      type: object
+                      required:
+                        - id
+                      properties:
+                        id:
+                          type: string
+                        secret:
+                          type: string
+                    provider:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "retrieveAccountWithCredentials"
+                - type: object
+                  required:
+                    - account
+                    - provider
+                    - type
+                  properties:
+                    account:
+                      type: object
+                      required:
+                        - id
+                        - secret
+                      properties:
+                        id:
+                          type: string
+                        secret:
+                          type: string
+                    provider:
+                      type: string
+                    type:
+                      type: string
+                      enum:
+                        - "modifyAccount"
+                - type: object
+                  required:
+                    - type
+                    - userId
+                  properties:
+                    except:
+                      type: array
+                      items:
+                        type: string
+                        description: ID from table "authSessions"
+                    type:
+                      type: string
+                      enum:
+                        - "invalidateSessions"
+                    userId:
+                      type: string
+                      description: ID from table "users"
+
+    Response_auth.store:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - "success"
+            - "error"
+        errorMessage:
+          type: string
+        errorData:
+          type: object
+        value: {}
+
+    FailedResponse:
+      type: object
+      properties: {}

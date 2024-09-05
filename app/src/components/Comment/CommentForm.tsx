@@ -1,4 +1,4 @@
-import { ActionIcon, Paper, SegmentedControl, Switch, Text, Textarea } from "@mantine/core";
+import { ActionIcon, Avatar, Paper, SegmentedControl, Switch, Text, Textarea } from "@mantine/core";
 import React, { useEffect } from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
@@ -9,13 +9,15 @@ import { nanoid } from "@lib/utils";
 import { useMutation } from "convex/react";
 import { api } from "@backend/api";
 import { Id } from "@backend/dataModel";
-import { UserState } from "@context/UserStateContext";
+import { UserObject } from "@context/UserStateContext";
+import { UserInfoOnComment } from "./UserInfoOnComment";
+
 
 type Props = {
   postId: Id<"post">;
   respondto?: Id<"comment">;
   closeCollapse?: Function
-  user: UserState;
+  user: UserObject;
 };
 
 const CommentForm = (props: Props) => {
@@ -79,6 +81,10 @@ const CommentForm = (props: Props) => {
             required
             {...form.getInputProps("content")}
           />
+          <UserInfoOnComment asBussiness={form.values.asBussiness} isAnonimus={form.values.anonimo}
+            org={{image: props.user?.organization.logo, name: props.user?.organization.name}}
+            user={{image: props.user?.photoURL, name: props.user?.settings.useUserName ? props.user?.username : props.user?.displayName}}
+           />
           {props.user!.isMember && (
             <Switch
               mt="xs"

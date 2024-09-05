@@ -90,8 +90,10 @@ export const create = mutation({
         anonimo: v.boolean(),
         asBussiness: v.boolean(),
         image: v.optional(v.string()),
-        content: v.string(),
+        content: v.union(v.string(), v.array(v.any())),
         tags: v.optional(v.array(v.string())),
+        contentInHtml: v.optional(v.string()),
+        contentInMarkdown: v.optional(v.string()),
     }, 
     handler: async (ctx, args) => {
         const user = await getCurrentUserOrThrow(ctx);
@@ -99,6 +101,7 @@ export const create = mutation({
 
         let post = {
             ...args,
+            categoryValue: args.tags?.[0],
             commentsCounter: 0,
             viewsCounter: 0,
             slug,
@@ -329,6 +332,7 @@ export const checkImage = action({
         return !isImageAdult
     },
 })
+
 
 
 

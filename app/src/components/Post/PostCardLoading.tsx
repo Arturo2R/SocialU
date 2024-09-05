@@ -1,12 +1,16 @@
+
 import { Card, Group, Skeleton } from '@mantine/core'
 import React from 'react'
 import styles from "./Post.module.css"
 
-type Props = {}
+
+type Props = {
+    ascardwidth?: boolean
+}
 
 const PostCardLoading = (props: Props) => {
   return (
-   <article className="max-w-sm px">
+   <article className={"max-w-sm px"}>
     <Card withBorder p="xs" radius="md">
         <Card.Section className={styles.mainImage}>
             <Skeleton height="200" className="w-full"/>

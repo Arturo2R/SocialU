@@ -15,12 +15,15 @@ import relativeTime from "dayjs/plugin/relativeTime";
 // import { useToggle } from "@mantine/hooks";
 import { useState } from "react";
 import { DEFAULT_COLOR } from "@lib/constants";
-
 import CommentForm from "./CommentForm";
 import {  Id } from "@backend/dataModel";
-import { PostComment } from "@convex/comment";
-import { UserState } from "@context/UserStateContext";
-import { propsToAttributes } from "@blocknote/core";
+import { PostComment } from "../../../index";
+import { UserObject } from "@context/UserStateContext";
+import Protected from "@components/Protected";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+// import { propsToAttributes } from "@blocknote/core";
 export interface CommentProps {
   id: Id<"comment">;
   parentId?: Id<"comment">;
@@ -32,7 +35,8 @@ export interface CommentProps {
   old?: boolean;
   anonimoDefault?: boolean;
   level?: number;
-  user: UserState;
+  user?: UserObject;
+  isAuthenticated?: boolean;
   //setRespondTo?: Dispatch<SetStateAction<string>>;
 }
 
@@ -46,12 +50,14 @@ export function Comment({
   anonimoDefault,
   id,
   level = 1,
-  user
+  user,
+  isAuthenticated
  // setRespondTo
 }: CommentProps) {
   // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
   const [subCommentsOpened, setSubCommentsOpened] = useState(true);
+  const router = useRouter();
   dayjs.extend(relativeTime);
   dayjs.locale(es);
   //handleRespondTo = () =>{ if (author?.name) setRespondTo(author?.name && author?.name)}
@@ -80,22 +86,24 @@ export function Comment({
             •
             {postedAt && (
               <Text size="sm" color="dimmed">
-               {dayjs(old?postedAt?.toDate():postedAt).fromNow()}
+               {dayjs(postedAt).fromNow()}
               </Text>
             )}
-        {!old && (
-          <Anchor onClick={() => setOpen((o) => !o)} color={DEFAULT_COLOR} >
-          Responder
-        </Anchor>
-        )}
+
+            <Anchor onClick={() => {console.log(isAuthenticated);isAuthenticated ? setOpen((o) => !o) : router.push("/bienvenido")}} c={DEFAULT_COLOR} >
+            Responder
+            </Anchor>
+
         </Group>
-        <Collapse in={opened} onClick={
+        {user && (
+          <Collapse in={opened} onClick={
             (e) => {
               e.stopPropagation();
             }
-        }>
+          }>
           <CommentForm user={user} postId={postId}  respondto={id}  closeCollapse={setOpen} />
         </Collapse>  
+        )}
       </Stack>
 
      <div className="ml-11">
@@ -129,6 +137,7 @@ export function Comment({
                 content={subco.content}
                 subComments={subco.subcomments}
                 user={user}
+                isAuthenticated={isAuthenticated}
                 />
             ))}
           </Stack>

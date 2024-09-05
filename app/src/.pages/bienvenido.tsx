@@ -120,7 +120,7 @@ export default function Bienvenido() {
             <List.Item>Al continuar, estás aceptando nuestros <Link href="/terminos-y-condiciones" className='text-orange-400 underline'>términos y condiciones</Link>.</List.Item>
           </List>
 
-          <Button fullWidth onClick={()=>signInWith("oauth_microsoft")} mt="xl" color='orange'>
+          <Button fullWidth onClick={()=>handleSignIn("oauth_microsoft")} mt="xl" color='orange'>
             Iniciar Sesión
           </Button>
         </Paper>

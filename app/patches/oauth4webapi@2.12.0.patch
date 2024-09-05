@@ -1,0 +1,25 @@
+diff --git a/build/index.js b/build/index.js
+index 5ff49a6829964666737efcec17e344930a8d592e..f777ff31c685c6d10bd01b7acb89f0e273e9d265 100644
+--- a/build/index.js
++++ b/build/index.js
+@@ -1029,11 +1029,17 @@ function validateOptionalIssuer(expected, result) {
+     }
+     return result;
+ }
++//Nojoda, cule de vaina que tuve que pasar 10 horas para arreglar esto. Que vaina eche replace 'common' with 'organizations' or 'consumers' if using a different account type for the Entra app:
+ function validateIssuer(expected, result) {
+-    if (result.claims.iss !== expected) {
+-        throw new OPE('unexpected JWT "iss" (issuer) claim value');
++    if (expected === 'https://login.microsoftonline.com/common/v2.0'
++        && result.claims.tid !== undefined
++        && result.claims.iss === `https://login.microsoftonline.com/${result.claims.tid}/v2.0`) {
++        return result;
+     }
+-    return result;
++    if (result.claims.iss === expected) {
++        return result
++    }
++    throw new OPE('unexpected JWT "iss" (issuer) claim value, papa')
+ }
+ const branded = new WeakSet();
+ function brand(searchParams) {

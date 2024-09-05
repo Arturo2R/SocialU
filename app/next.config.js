@@ -1,3 +1,4 @@
+/** @type {import('next').NextConfig} */
 const MillionLint = require('@million/lint');
 const million = require('million/compiler');
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
@@ -46,7 +47,8 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
   },
   experimental: {
     scrollRestoration: true,
-    instrumentationHook: true
+    instrumentationHook: true,
+    typedRoutes: true
   },
   typescript: {
     // !! WARN !!
@@ -56,10 +58,24 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
     ignoreBuildErrors: true
   },
   async rewrites() {
-    return [{
-      source: "/ingest/:path*",
-      destination: "https://app.posthog.com/:path*"
-    }];
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/cvx/:path*",
+        destination: process.env.NEXT_PUBLIC_CONVEX_SITE_URL + "/:path*",
+      },
+      {
+        source: "/dashboard",
+        destination: "https://dashboard.convex.dev/t/arturo-rebolledo/socialu-472e8/mild-gecko-296/data"
+      }
+    ];
   },
   async headers() {
     return [{
