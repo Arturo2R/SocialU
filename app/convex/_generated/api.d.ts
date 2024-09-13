@@ -1,3 +1,5 @@
+/* prettier-ignore-start */
+
 /* eslint-disable */
 /**
  * Generated `api` utility.
@@ -13,7 +15,6 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as auth from "../auth.js";
 import type * as comment from "../comment.js";
 import type * as http from "../http.js";
 import type * as post from "../post.js";
@@ -28,7 +29,6 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
   comment: typeof comment;
   http: typeof http;
   post: typeof post;
@@ -42,3 +42,5 @@ export declare const internal: FilterApi<
   typeof fullApi,
   FunctionReference<any, "internal">
 >;
+
+/* prettier-ignore-end */

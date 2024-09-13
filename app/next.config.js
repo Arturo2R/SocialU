@@ -88,4 +88,5 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
     }];
   }
 })));
-module.exports = MillionLint.next({ rsc: true })(nextConfigg);
+// module.exports = MillionLint.next({ rsc: true })(nextConfigg);
+module.exports = nextConfigg;

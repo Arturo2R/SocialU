@@ -20,41 +20,41 @@ type CommentWallProps = {
 
 
 const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) => {
-  const comments = useQuery(api.comment.getCommentsForPost, {  postId });
-  const {user, isAuthenticated} = useUser()
-
+  const comments = useQuery(api.comment.getCommentsForPost, { postId });
+  const { user, isAuthenticated } = useUser()
+  console.log(user?.isMember)
   return (
     <>
       <Authenticated>
-        <CommentForm postId={postId} user={user}  />
+        <CommentForm postId={postId} user={user} />
       </Authenticated>
-     <Unauthenticated>
-      <Paper component={Link} href="/bienvenido" p="lg" bg="#e2e8f0" variant="😀" radius="md" shadow="md">
-        <Text ta="center">
-          Para comentar debes iniciar sesión con tu cuenta universitaria
-        </Text>
-      </Paper>
-     </Unauthenticated>
+      <Unauthenticated>
+        <Paper component={Link} href="/bienvenido" p="lg" bg="#e2e8f0" variant="😀" radius="md" shadow="md">
+          <Text ta="center">
+            Para comentar debes iniciar sesión con tu cuenta universitaria
+          </Text>
+        </Paper>
+      </Unauthenticated>
       {comments &&
         Object.values(comments)
-        .map((co, index) => (
-          <Comment
-            key={index}
-            anonimoDefault={user?.settings?.anonimoDefault}
-            postedAt={co._creationTime}
-            // subComments={co.subComments}
-            content={co.content}
-            author={co.author}
-            commentRoute={co._id}
-            id={co._id}
-            postId={postId}
-            user={user}
-            // setRespondTo={setRespondTo}
-            parentId={co.postId}
-            subComments={co.subcomments}
-            isAuthenticated={isAuthenticated}
-          />
-        ))}
+          .map((co, index) => (
+            <Comment
+              key={index}
+              anonimoDefault={user?.settings?.anonimoDefault}
+              postedAt={co._creationTime}
+              // subComments={co.subComments}
+              content={co.content}
+              author={co.author}
+              commentRoute={co._id}
+              id={co._id}
+              postId={postId}
+              user={user}
+              // setRespondTo={setRespondTo}
+              parentId={co.postId}
+              subComments={co.subcomments}
+              isAuthenticated={isAuthenticated}
+            />
+          ))}
 
     </>
   );

@@ -5,7 +5,9 @@ import React from 'react';
 // Authentication with clerk and db with Convex
 import {ConvexClientProvider} from "@context/ConvexClientProvider";
 import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useAuth } from "@clerk/nextjs";
+
+
 
 // Custom Data Provider
 import {UserStateProvider} from "@context/UserStateContext"

@@ -1,11 +1,12 @@
 "use client"
 import { createContext, useContext, useEffect, useState } from "react";
 import { api } from "@backend/api";
-import { useConvexAuth } from "convex/react";
+// import { useConvexAuth } from "convex/react";
 import { useQuery } from "convex-helpers/react/cache/hooks";
 import businessAccounts from "@lib/bussiness_accounts.json";
-// import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { Doc } from "@backend/dataModel";
+import { useConvexAuth, useConvex } from "convex/react";
 
 
 
@@ -36,34 +37,41 @@ export type UserState = { user: UserObject, isLoading: boolean, isAuthenticated?
 
 export function UserStateProvider({ children }: { children: React.ReactNode }) {
     const [SuperUser, setUser] = useState<UserState["user"]>(null)
-
-    let user: Doc<"user"> | null = null;
-    const { isLoading, isAuthenticated } = useConvexAuth();
-    // const { isLoaded:isLoading, userId, sessionId, getToken, isSignedIn: isAuthenticated } = useAuth()
-
-
+    const convex = useConvex()
+    // let user: Doc<"user"> | null = null;
+    const [user, setuser] = useState<Doc<"user"> | null>(null)
+    // const { isLoading, isAuthenticated } = useConvexAuth();
+    const { isLoading, isAuthenticated } = useConvexAuth()
+    const [isMember, setMembresy] = useState<boolean>(false)
+    // user = useQuery(api.user.current);
+    const getUser = async () => {
+        let usernow = await convex.query(api.user.current)
+        setuser(usernow)
+    }
     useEffect(() => {
-        console.log(isLoading, isAuthenticated)
-        try {
-            user = useQuery(api.user.current);
-        } catch (error) {
-            console.error(error)
-        }
         if (isAuthenticated && !isLoading) {
+            console.log(isLoading, isAuthenticated)
+            try {
+                getUser()
+            } catch (error) {
+                console.error(error)
+            }
             if (user) {
                 console.log("user,", user)
                 const foundBussiness = businessAccounts.bussiness.find(bussines =>
-                    bussines.members.some(member => member.email === user.email)
+                    bussines.members.some(member => member.email === user?.email)
                 ) as Doc<"organization"> | undefined
                 // console.log(foundBussiness)
                 if (foundBussiness) {
                     setUser({ ...user, isMember: true, organization: foundBussiness })
-                    console.log(user)
+                    setMembresy(true)
                 } else {
                     setUser({ ...user, isMember: false })
+                    setMembresy(false)
                 }
             }
             localStorage.setItem("user", JSON.stringify(user));
+            console.log("user,", user)
         }
     }, [isLoading, isAuthenticated, user])
 

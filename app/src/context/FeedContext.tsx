@@ -30,26 +30,11 @@ export const usefeed = () => {
 type CategoryState = { color: string, name: string, value: string, variant: string }
 export function FeedStateProvider({ children }: { children: React.ReactNode }) {
   const [category, setCategory] = useState<CategoryState | null>(null)
-  const query = useQuery(api.post.getFeed, { filterbyCategory: category?.value || undefined, paginationOpts: { cursor: null, numItems: 10 } })
+  // const query = useQuery(api.post.getFeed, { filterbyCategory: category?.value || undefined, paginationOpts: { cursor: null, numItems: 10 } })
 
   const { results: posts, status, loadMore, isLoading } = usePaginatedQuery(api.post.getFeed, { filterbyCategory: category?.value || undefined }, { initialNumItems: 10, })
 
-  // useEffect(() => {
-  //     if(isAuthenticated && !isLoading) {
-  //         if(feed) {
-  //             console.log(feed)
-  //             const foundBussiness = businessAccounts.bussiness.find(bussines =>
-  //                 bussines.members.some(member => member.email === feed.email)
-  //             )
-  //             console.log(foundBussiness)
-  //             if(foundBussiness) {
-  //                 setfeed({...feed, isMember: true, organization: foundBussiness})
-  //                 console.log(feed)
-  //             } else {
-  //                 setfeed({...feed, isMember: false})}
-  //             }
-  //     }
-  // }, [isLoading, isAuthenticated])
+
 
 
   return <FeedStateContext.Provider value={{ category, setCategory, posts, status, loadMore, isLoading }}>{children}</FeedStateContext.Provider>

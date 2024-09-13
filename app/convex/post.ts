@@ -59,15 +59,21 @@ export const getFeed = query({
 
             if (!post.anonimo) {
                 const author = await ctx.db.get(post.authorId);
-                if (!author) { throw new Error("Author not found") }
+                if (!author) { 
+                    return { ...post, 
+                        author:{
+                        name: "Usuario eliminado",
+                        id: "ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
+                    }
+                }}
                 // Attach the author to the post object
-                return { ...post, author:{
+                return { ...post, anonimo: false, author: {
                     name: author?.settings?.useUserName ? author.username : author.displayName,
                     id: author.username || author.name,
                     ...(author.photoURL && { image: author.photoURL }),
                 },
-                 anonimo: false,
-                };
+                 
+                }
             }
 
             // For anonymous posts, return the post as is
@@ -222,7 +228,16 @@ export const get = query({
         if (!post) { throw new Error("Post not found") }
        
         const creator = await ctx.db.get(post.authorId);
-        if (!creator) { throw new Error("Author not found") }
+        if (!creator) { 
+            post = {...post, anonimo: false, author: {
+                    displayName: "Usuario eliminado",
+                    userName: "Usuarioeliminado",
+                    id:"ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
+                    link: `https://redsocialu.com/`,
+                }
+            } as justuser
+            return post as POST
+        }
 
         const business = (post.asBussiness && post.organizationId) ? await ctx.db.get(post.organizationId) : null;
         if (!business &&  (post.asBussiness && post.organizationId)) { throw new Error("Organization not found") }

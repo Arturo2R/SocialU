@@ -10,7 +10,7 @@ export const current = query({
   handler: async (ctx) => {
     return await getCurrentUser(ctx)
     // let userorganizationmemeber
-    
+
     // const org = await ctx.db.query("organization").collect();
     // if(user && org){ 
     //   userorganizationmemeber = org.find((o) => o.members.includes(user._id))
@@ -24,6 +24,8 @@ export const current = query({
   },
 });
 
+
+
 export const getSafeUser = query({
   args: { userId: v.id("user") },
   handler: async (ctx, args) => {
@@ -31,8 +33,8 @@ export const getSafeUser = query({
     if (!user) {
       throw new Error("User not found");
     }
-    
-    const { clerkid, _creationTime, firebaseid, settings,  ...usert } = user;
+
+    const { clerkid, _creationTime, firebaseid, settings, ...usert } = user;
     return usert
   },
 });
@@ -45,38 +47,38 @@ export const upsertFromClerk = internalMutation({
     const domain = em[1]
 
     const uni = await ctx.db.query("university").withIndex("byDomain", (q) => q.eq("domain", domain)).unique();
-    
+
     if (!uni) {
-        throw new Error("Invalid domain")
+      throw new Error("Invalid domain")
     }
-    
+
     const userAttributes = {
-        email: data.email_addresses[0].email_address,
-        clerkid: data.id ,
-        displayName: `${data.first_name} ${data.last_name}`,
-        username: username, 
-        university: uni._id,
-        name: data.first_name || undefined,
-        lastname: data.last_name || undefined,
-        settings: {
-          anonimoDefault: false,
-          useUserName: true,
-        },
-        ...(data.external_id && {firebaseid: data.external_id})
+      email: data.email_addresses[0].email_address,
+      clerkid: data.id,
+      displayName: `${data.first_name} ${data.last_name}`,
+      username: username,
+      university: uni._id,
+      name: data.first_name || undefined,
+      lastname: data.last_name || undefined,
+      settings: {
+        anonimoDefault: false,
+        useUserName: true,
+      },
+      ...(data.external_id && { firebaseid: data.external_id })
     };
 
     const user = await userByClerkId(ctx, data.id);
     if (user === null) {
-        await ctx.db.insert("user", userAttributes);
+      await ctx.db.insert("user", userAttributes);
     } else {
-        await ctx.db.patch(user._id, userAttributes);
+      await ctx.db.patch(user._id, userAttributes);
     }
   },
 });
 
 
 export const update = mutation({
-  args: { 
+  args: {
     data: v.object({
       anonimoDefault: v.boolean(),
       useUserName: v.boolean(),
@@ -88,7 +90,7 @@ export const update = mutation({
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
-    const {anonimoDefault, useUserName, ...rest} = args.data;
+    const { anonimoDefault, useUserName, ...rest } = args.data;
     let payload = {
       ...rest,
       settings: {
@@ -96,34 +98,32 @@ export const update = mutation({
         useUserName: useUserName,
       }
     };
-    
+
     await ctx.db.patch(user._id, payload);
   },
 });
 
-
-
 export const slugs = query({
   handler: async (ctx) => {
-      const users = await ctx.db.query("user").collect();
-      const organizations = await ctx.db.query("organization").collect();
-      return users.map((user) => user.username).concat(organizations.map((org) => org.name))
+    const users = await ctx.db.query("user").collect();
+    const organizations = await ctx.db.query("organization").collect();
+    return users.map((user) => user.username).concat(organizations.map((org) => org.name))
   }
 })
 
 export const getUserByUserName = query({
-  args: { slug: v.string()},
+  args: { slug: v.string() },
   handler: async (ctx, args) => {
-    const user = await ctx.db.query("user").filter((q)=>q.eq(q.field("username"), args.slug)).first();
+    const user = await ctx.db.query("user").filter((q) => q.eq(q.field("username"), args.slug)).first();
     if (!user) {
-      const org = await ctx.db.query("organization").filter((q)=>q.eq(q.field("name"), args.slug)).first();
+      const org = await ctx.db.query("organization").filter((q) => q.eq(q.field("name"), args.slug)).first();
       if (!org) {
         throw new Error("User not found");
       }
-      return {...org, type: "organization"}
+      return { ...org, type: "organization" }
     }
-    const { clerkid, _creationTime, firebaseid, settings,  ...usert } = user;
-    return {...usert, type: "user"}
+    const { clerkid, _creationTime, firebaseid, settings, ...usert } = user;
+    return { ...usert, type: "user" }
   }
 })
 
@@ -166,3 +166,4 @@ async function userByClerkId(ctx: QueryCtx, externalId: string) {
     .withIndex("byClerkId", (q) => q.eq("clerkid", externalId))
     .unique();
 }
+
