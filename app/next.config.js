@@ -68,10 +68,6 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
         destination: "https://us.i.posthog.com/:path*",
       },
       {
-        source: "/cvx/:path*",
-        destination: process.env.NEXT_PUBLIC_CONVEX_SITE_URL + "/:path*",
-      },
-      {
         source: "/dashboard",
         destination: "https://dashboard.convex.dev/t/arturo-rebolledo/socialu-472e8/mild-gecko-296/data"
       }
