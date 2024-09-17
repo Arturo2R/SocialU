@@ -20,7 +20,7 @@ import { useMutation } from "convex/react";
 import { useUser } from "../../../context/UserStateContext";
 import Protected from "@components/Protected";
 import { AuthorInfo } from "@components/AuthorInfo";
-import { getHtmlFromEdjs } from "@lib/parseedjs";
+// import { getHtmlFromEdjs } from "@lib/parseedjs";
 
 let conf = config();
 
@@ -84,7 +84,7 @@ const CrearPage = () => {
             content: message,
             tags: payload.tags,
             title: payload.title,
-            contentInHtml: getHtmlFromEdjs(payload.message, false).join(""),
+            // contentInHtml: getHtmlFromEdjs(payload.message, false).join(""),
             messageFormat: "EditorJS",
             renderMethod: message.includes("error") || message.includes("Error") ? "CustomEditorJSParser" : "DangerouslySetInnerHtml",
         }).then(() => setCreatingPost("loaded"))
