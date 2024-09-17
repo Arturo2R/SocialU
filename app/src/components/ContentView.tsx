@@ -1,5 +1,5 @@
 "use client"
-import { EditorParser, EditorRenderer } from "@mobtakr/editorjs-parser";
+// import { EditorParser, EditorRenderer } from "@mobtakr/editorjs-parser";
 import Output from 'editorjs-react-renderer';
 
 import { TypographyStylesProvider } from "@mantine/core";
@@ -24,20 +24,20 @@ const FileBlock = ({ data }: { data: any }) => {
 
 // const FileMap = (block: any) => <FileBlock data={block} />;
 
-const ContentView = (props: { content: string }) => {
-    const content = JSON.parse(props.content);
-    // console.log(content)
-    const parser = new EditorParser(content.blocks);
-    // parser.registerBlock('Attaches', FileMap)
+// const ContentView = (props: { content: string }) => {
+//     const content = JSON.parse(props.content);
+//     // console.log(content)
+//     const parser = new EditorParser(content.blocks);
+//     // parser.registerBlock('Attaches', FileMap)
 
-    const parsedBlocks = parser.parse();
+//     const parsedBlocks = parser.parse();
 
-    return (
-        <TypographyStylesProvider className="max-w-xl min-w-0 break-words whitespace-pre-line text-md">
-            <EditorRenderer parsedBlocks={parsedBlocks} />
-        </TypographyStylesProvider>
-    );
-};
+//     return (
+//         <TypographyStylesProvider className="max-w-xl min-w-0 break-words whitespace-pre-line text-md">
+//             <EditorRenderer parsedBlocks={parsedBlocks} />
+//         </TypographyStylesProvider>
+//     );
+// };
 
 export const ContentViewReact = (props: { content: string }) => {
     // console.log(props)
@@ -50,4 +50,4 @@ export const ContentViewReact = (props: { content: string }) => {
     )
 }
 
-export default ContentView;
+export default ContentViewReact;
