@@ -1,3 +1,4 @@
+'use client'
 import { Button, Group, Text } from "@mantine/core";
 import Link from "next/link";
 // import { useMediaQuery } from "@mantine/hooks";
@@ -5,6 +6,8 @@ import Link from "next/link";
 import React from "react";
 import { Send } from "tabler-icons-react";
 import { DEFAULT_COLOR } from "@lib/constants";
+
+// import { usePathname } from 'next/navigation'
 // import { DEFAULT_COLOR } from "../../constants";
 
 
@@ -28,37 +31,38 @@ import { DEFAULT_COLOR } from "@lib/constants";
 // }
 
 const AppFooter = () => {
+  // const pathname = usePathname()
   // const matches = useMediaQuery("(min-width: 700px)");
 
-    // return (
-    //   <div className="fixed bottom-0 left-0 z-50 w-full bg-[#F2F5FF] h-16 border-t border-[rgb(222, 226, 230)]  dark:border-gray-600">
-    //       <div className="grid h-full max-w-lg grid-cols-4 mx-auto">
-    //         {navs.map((nav, i) => (
-    //           <Tab key={i} {...nav} />
-    //         ))}
-    //       </div>
-    //   </div>
+  // return (
+  //   <div className="fixed bottom-0 left-0 z-50 w-full bg-[#F2F5FF] h-16 border-t border-[rgb(222, 226, 230)]  dark:border-gray-600">
+  //       <div className="grid h-full max-w-lg grid-cols-4 mx-auto">
+  //         {navs.map((nav, i) => (
+  //           <Tab key={i} {...nav} />
+  //         ))}
+  //       </div>
+  //   </div>
 
-    // );
+  // );
+  
+  return (
 
-      return (
+    <Group grow className="sm:hidden">
+      <Button
+        component={Link}
+        href="/crear"
+        fullWidth={true}
+        rightSection={<Send />}
+        variant="subtle"
+        color={DEFAULT_COLOR}
+        size="md"
+        title="Crear Post"
+      >
+        Crear Post
+      </Button>
+    </Group>
 
-            <Group grow className="sm:hidden">
-                <Button
-                  component={Link}
-                  href="/crear"
-                  fullWidth={true}
-                  rightSection={<Send />}
-                  variant="subtle"
-                  color={DEFAULT_COLOR}
-                  size="md"
-                  title="Crear Post"
-                >
-                  Crear Post
-                </Button>
-            </Group>
-
-      );
+  );
 };
 
 export default AppFooter;

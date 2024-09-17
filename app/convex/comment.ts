@@ -37,8 +37,9 @@ export const get = query({
           color: business?.color
         }
       } else if (comment?.anonimo === false) {
+        const useUsername = creator?.settings?.useUserName ?? true;
         return {
-          name: creator?.settings?.useUserName ? creator.username : creator?.name,
+          name: useUsername ? creator?.username : creator?.name,
           id: creator?.username || creator?.name,
           ...(creator?.photoURL && { image: creator.photoURL }),
         }
@@ -127,7 +128,7 @@ export const getCommentsForPost = query({
         } as author
       }
       return {
-        name: author?.settings?.useUserName ? author.username : author?.name,
+        name: (author?.settings?.useUserName ?? true) ? author.username : author?.displayName,
         id: author?.username || author?.name,
         ...(author?.photoURL && { image: author.photoURL }),
       } as author

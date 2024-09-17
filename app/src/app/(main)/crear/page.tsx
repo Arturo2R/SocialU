@@ -20,6 +20,7 @@ import { useMutation } from "convex/react";
 import { useUser } from "../../../context/UserStateContext";
 import Protected from "@components/Protected";
 import { AuthorInfo } from "@components/AuthorInfo";
+import { getHtmlFromEdjs } from "@lib/parseedjs";
 
 let conf = config();
 
@@ -30,62 +31,63 @@ const TextEditor: React.ComponentType<TextEditorProps> = dynamic(() => import("@
 
 const CrearPage = () => {
     // const user = useQuery(api.user.current)
-    const {user} = useUser()
+    const { user } = useUser()
     const router = useRouter()
-    
-    
-    const { register, handleSubmit,setValue, control, formState: { errors }, reset, watch } = hform({
+
+
+    const { register, handleSubmit, setValue, control, formState: { errors }, reset, watch } = hform({
         defaultValues: {
-          title: "",
-          message: "",
-          isEvent: false,
-          time: "", //
-          date: null,
-          image: "",
-          tags: [],
-          anonimo: user?.settings?.anonimoDefault || false,
-          asBussiness: false,
-        }
-      });
-    
+            title: "",
+            message: "",
+            isEvent: false,
+            time: "", //
+            date: null,
+            image: "",
+            tags: [],
+            anonimo: user?.settings?.anonimoDefault || false,
+            asBussiness: false,
+        },
+    });
+
     useEffect(() => {
         if (user?.settings) {
             setValue("anonimo", user.settings.anonimoDefault)
         }
-    }, [user]); 
-    
+    }, [user]);
+
     const [image, setImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const [imageData, setImageData] = useState<{width: number; height: number} | null>(null);
-    const [imageChecking, setImageChecking] = useState<"loading" | "loaded"|null>(null);
-    const [creatingPost, setCreatingPost] = useState<"loading" | "loaded"|null>(null);
-    const [editorState, setEditorState] = useState<TextEditorProps["editorState"]>()
+    const [imageData, setImageData] = useState<{ width: number; height: number } | null>(null);
+    const [imageChecking, setImageChecking] = useState<"loading" | "loaded" | null>(null);
+    const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | null>(null);
+    const [editorState, setEditorState] = useState<any>()
     // const [bussinessAccount, setBussinessAccount] = useState<Doc<"organization"> | null>(null);
     // const [hasBussinessAccount, setHasBussinessAccount] = useState<boolean>(false);
 
     useEffect(() => {
-        if(imageUrl){
+        if (imageUrl) {
             setValue("image", imageUrl)
-        } 
+        }
     }, [imageUrl])
 
     const createnewpost = useMutation(api.post.create)
-    
+
     const submitPost: SubmitHandler<Record<string, any>> = async (payload) => {
+        console.log(payload)
         setCreatingPost("loading")
         router.push("/")
+        const message = JSON.stringify(payload.message)
         createnewpost({
             anonimo: payload.anonimo,
             asBussiness: payload.asBussiness || false,
             image: payload.image,
-            content: payload.message,
+            content: message,
             tags: payload.tags,
             title: payload.title,
-            messageFormat: "Tiptap",
-            renderMethod: "CustomTiptapParser",
-            contentInHtml: editorState?.html,
-            contentInMarkdown: editorState?.markdown
-          }).then(()=>setCreatingPost("loaded"))
+            contentInHtml: getHtmlFromEdjs(payload.message, false).join(""),
+            messageFormat: "EditorJS",
+            renderMethod: message.includes("error") || message.includes("Error") ? "CustomEditorJSParser" : "DangerouslySetInnerHtml",
+        }).then(() => setCreatingPost("loaded"))
         reset()
         notifications.show({
             id: "created-post",
@@ -97,8 +99,6 @@ const CrearPage = () => {
             className: "my-notification-class",
             icon: <FileCheck />,
         });
-          
-          
     }
 
     return (
@@ -151,14 +151,14 @@ const CrearPage = () => {
                         />
                         {/* ts-ignore */}
                         <TextEditor
-                            setEditorState={setEditorState}
-                            editorState={editorState}
+                            data={editorState}
+                            setDataState={setEditorState}
+                            editorblock="editorjs"
                             control={control}
                             name="message"
-                            required
                             editable
-                            />
-                        <div className={user?.isMember ? "h-[150px]": "h-[75px]"}>
+                        />
+                        <div className={user?.isMember ? "h-[150px]" : "h-[75px]"}>
                             {(watch("asBussiness") === true && user?.isMember) && (
                                 <AuthorInfo
                                     isBussiness={true}
@@ -167,17 +167,17 @@ const CrearPage = () => {
                                     email={user.organization.url || `${user.organization.userName}@uninorte.edu.co`}
                                     image={user.organization.logo || undefined}
                                     icon
-                                    />
-                                )}
+                                />
+                            )}
                             {console.log(user, watch("asBussiness"))}
                             {(watch("anonimo") === false && user) && (
                                 <AuthorInfo
-                                isBussiness={false}
-                                link={user.userName}
-                                name={user.displayName}
-                                email={user.email}
-                                image={user.photoURL || "/profile.jpg"}
-                                icon
+                                    isBussiness={false}
+                                    link={user.userName}
+                                    name={user.displayName}
+                                    email={user.email}
+                                    image={user.photoURL || "/profile.jpg"}
+                                    icon
                                 />
                             )}
                         </div>
@@ -195,7 +195,7 @@ const CrearPage = () => {
                         <Switc
                             label="Anonimo"
                             control={control}
-                            def={user?.settings?.anonimoDefault|| false}
+                            def={user?.settings?.anonimoDefault || false}
                             name="anonimo"
                         />
                     </div>

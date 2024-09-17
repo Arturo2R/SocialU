@@ -2,11 +2,11 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { attachments } from "@lib/firebase";
 
 import posthog from "posthog-js";
+import { useMutation } from "convex/react";
+import { api } from "@backend/api";
 
 
-
-
-export const uploadImage = async (file: File) => {
+export const uploadFile = async (file: File): Promise<string> => {
     const imageRef = ref(attachments, file.name);
     try {
         const uploadResult = await uploadBytes(imageRef, file, {
@@ -17,6 +17,36 @@ export const uploadImage = async (file: File) => {
         console.log(url)
         return url
     } catch (error) {
+        console.error(error.message)
+        posthog.capture('upload_image_error', {
+            message: error.message,
+            fileName: file.name,
+        });
+        return "error"
+    }
+}
+
+export const uploadFileToConvex = async (file: File): Promise<string> => {
+    const generateUploadUrl = useMutation(api.post.generateUploadUrl)
+    const getUrl = useMutation(api.post.getFileUrl)
+    try {
+        // Step 1: Get a short-lived upload URL
+        const postUrl = await generateUploadUrl();
+        // Step 2: POST the file to the URL
+
+        const result = await fetch(postUrl, {
+            method: "POST",
+            headers: { "Content-Type": file.type },
+            body: file
+        }).then((res) => res.json());
+
+        const { storageId } = result;
+
+        // Step 3: Save the newly allocated storage id to the database
+        const url = await getUrl({ imageId: storageId });
+
+        return url || "nada"
+    } catch (error: any) {
         console.error(error.message)
         posthog.capture('upload_image_error', {
             message: error.message,

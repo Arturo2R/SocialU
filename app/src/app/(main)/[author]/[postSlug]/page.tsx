@@ -5,18 +5,19 @@
 //     getDoc, onSnapshot, orderBy, query
 //   } from "@firebase/firestore";
 import {
-Group,
-Image,
-Paper,
-// Stack,
-Text,
-Title,
-TypographyStylesProvider,
+    Group,
+    Image,
+    Paper,
+    // Stack,
+    Text,
+    Title,
+    TypographyStylesProvider,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 import NextImage from "next/image";
+import Blocks from 'editorjs-blocks-react-renderer';
 // import { AuthorInfo } from "@components/AuthorInfo";
 // import { CommentProps } from "@components/Comment/Comment";
 // import CommentWall from "@components/Comment/CommentWall";
@@ -43,6 +44,7 @@ import LoadingPost from "./loading";
 import { useQuery } from "convex-helpers/react/cache/hooks";
 // import { ViewPost } from "@components/TextEditor";
 import dynamic from "next/dynamic";
+import ContentView, { ContentViewReact } from "@components/ContentView";
 
 // import "@blocknote/mantine/style.css";
 
@@ -65,10 +67,9 @@ interface ViewPostProps {
 const ViewPost: React.ComponentType<ViewPostProps> = dynamic(() => import('@components/TextEditor').then(mod => mod.ViewPost), { ssr: false });
 
 
-const PostPage = ({ params }: { params: { postSlug: string } } ) => {
+const PostPage = ({ params }: { params: { postSlug: string } }) => {
     useAddView(params.postSlug)
-    const content =  useQuery(api.post.get, {slug: params.postSlug})
-    
+    const content = useQuery(api.post.get, { slug: params.postSlug })
 
     if (content === undefined) {
         return <LoadingPost />
@@ -77,43 +78,51 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
     return (
         <Paper classNames={{ root: styles.postPage }}>
             {content?.image ? (
-            <>
-                <BackButton id={content.slug} />
-                <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
-                {content.title && (
-                <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
-                )}
-            </>
+                <>
+                    <BackButton id={content.slug} />
+                    <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
+                    {content.title && (
+                        <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
+                    )}
+                </>
             ) : (
-            <div className="flex space-x-4">
-                <BackButton id={content?.slug} />
-                <Title order={1} mb="sm" className="min-w-0 break-words whitespace-pre-wrap hyphens-auto text-pretty" lang="es">
-                {content?.title || "     "}
-                </Title>
-            </div>
+                <div className="flex space-x-4">
+                    <BackButton id={content?.slug} />
+                    <Title order={1} mb="sm" className="min-w-0 break-words whitespace-pre-wrap hyphens-auto text-pretty" lang="es">
+                        {content?.title || "     "}
+                    </Title>
+                </div>
             )}
 
             <Group mb="xs">
-            {content?.categoryValue && (
-                <Tag label={content?.categoryValue} />
-            )}
-            {(content?.viewsCounter) && (
-                <Text className="italic text-stone-400">
-                {dayjs(content?._creationTime).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`}
-                </Text>
-            )}
+                {content?.categoryValue && (
+                    <Tag label={content?.categoryValue} />
+                )}
+                {(content?.viewsCounter) && (
+                    <Text className="italic text-stone-400">
+                        {dayjs(content?._creationTime).fromNow()}  •  {content.viewsCounter && `${content.viewsCounter} Vista${content.viewsCounter > 1 ? 's' : ''}`}
+                    </Text>
+                )}
             </Group>
 
             {(content?.content && (content?.renderMethod === "DangerouslySetInnerHtml")) && (
                 <TypographyStylesProvider>
-                    <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content.content.replace('<audio', '<audio controls').replace('<video', '<video controls') }}></div>
+                    <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content?.contentInHtml?.replace('<audio', '<audio controls').replace('<video', '<video controls') }}></div>
                 </TypographyStylesProvider>
             )}
-            {(content?.content && content?.renderMethod === "NonEditableTiptap") && (
+            {/* {(content?.content && content?.renderMethod === "NonEditableTiptap") && (
                 <ViewPost content={content.content as any[]} />
+            )} */}
+            {/* {(content?.content && content.renderMethod === "CustomEditorJSParser") && (
+                <TypographyStylesProvider className="max-w-xl min-w-0 break-words whitespace-pre-line text-md">
+                    <Blocks data={JSON.parse(String(content.content))} />
+                </TypographyStylesProvider>
+            )} */}
+            {(content?.content && content.renderMethod === "CustomEditorJSParser") && (
+                <ContentViewReact content={String(content.content)} />
             )}
             {(content?.content && (content.renderMethod === "none" || !content?.renderMethod)) && (
-            <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es">{content.content}</Text>
+                <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es">{content.content}</Text>
             )}
 
 
@@ -127,8 +136,8 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
                     icon
                 />
             )}
-          
-            {(content.asBussiness === true && content.organization ) && (
+
+            {(content.asBussiness === true && content.organization) && (
                 <AuthorInfo
                     isBussiness={true}
                     link={content.organization.link}
@@ -137,13 +146,13 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
                     image={content.organization.image || "/profile.jpg"}
                     icon
                 />
-            )} 
-            {(content?.anonimo && content.asBussiness === false) && (
-            <Text color={DEFAULT_COLOR} size="lg">
-                Anonimo
-            </Text>
             )}
-{/* 
+            {(content?.anonimo && content.asBussiness === false) && (
+                <Text color={DEFAULT_COLOR} size="lg">
+                    Anonimo
+                </Text>
+            )}
+            {/* 
             {content?.isEvent && (
             <div className="my-4">
                 <Title order={3}>Fecha</Title>
@@ -171,8 +180,8 @@ const PostPage = ({ params }: { params: { postSlug: string } } ) => {
 
             <div className="z-10 my-2">
 
-            <Title order={3} mb="sm" >Comentarios  • {content.commentsCounter || "0"}</Title>
-            <CommentWall postId={content._id} oldComments={[]}  />
+                <Title order={3} mb="sm" >Comentarios  • {content.commentsCounter || "0"}</Title>
+                <CommentWall postId={content._id} oldComments={[]} />
             </div>
 
         </Paper>

@@ -90,8 +90,8 @@ export const getFeed = query({
 
 export const create = mutation({
     args: {
-        renderMethod: v.optional(v.union(v.literal("DangerouslySetInnerHtml"),v.literal("NonEditableTiptap"),v.literal("none"), v.literal("CustomTiptapParser"))),
-        messageFormat: v.optional(v.union(v.literal("Markdown"),v.literal("HTML"),v.literal("Tiptap"))),
+        renderMethod: v.optional(v.union(v.literal("DangerouslySetInnerHtml"),v.literal("NonEditableTiptap"),v.literal("none"),v.literal("CustomEditorJSParser") , v.literal("CustomTiptapParser"))),
+        messageFormat: v.optional(v.union(v.literal("Markdown"),v.literal("HTML"),v.literal("Tiptap"), v.literal("EditorJS"))),
         title: v.optional(v.string()),
         anonimo: v.boolean(),
         asBussiness: v.boolean(),
@@ -123,6 +123,7 @@ export const create = mutation({
                 organizationId: business._id,
             } 
         }
+        console.log(`${user.name} creó el post ${slug}`)
         ctx.db.insert("post", post )
     }
 })

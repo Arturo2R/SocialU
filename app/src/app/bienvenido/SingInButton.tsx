@@ -79,7 +79,7 @@ const SignInButton = () => {
 
       return (
             // <Button fullWidth onClick={() => void iniciarSesion("microsoft-entra-id", { redirectTo: '/' })} mt="xl" color='orange'>
-            <Button fullWidth onClick={() => void handleSignIn("oauth_microsoft")} mt="xl" color='orange'>
+            <Button fullWidth onClick={() => handleSignIn("oauth_microsoft")} mt="xl" color='orange'>
                   Iniciar Sesión
             </Button>
       );

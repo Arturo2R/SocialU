@@ -16,6 +16,8 @@ import {
 import { DEFAULT_COLOR } from "@lib/constants";
 import { Tag } from "./Post/Tag";
 import convertAllAToSpan from '@lib/converToNonA';
+import ContentView, { ContentViewReact } from './ContentView';
+import Blocks from 'editorjs-blocks-react-renderer';
 
 // import dayjs from "dayjs";
 // import es from "dayjs/locale/es";
@@ -117,12 +119,13 @@ export const PostCard = ({
           expanded={expanded}
           onExpandedChange={setExpanded}
         >
-          {(renderMethod === "DangerouslySetInnerHtml")? (
+          {(renderMethod === "DangerouslySetInnerHtml") && (
             <TypographyStylesProvider>
               <div className="bn-container" dangerouslySetInnerHTML={{ __html: description.includes('<a') ? convertAllAToSpan(description.replace('<audio', '<audio controls')) : description.replace('<audio', '<audio controls') }}></div>
             </TypographyStylesProvider>
-          ) : (
-            <Text>{description}</Text>
+          )}
+          {renderMethod === "CustomEditorJSParser" && (
+            <ContentViewReact content={description} />
           )}
         </Spoiler>
         {author !== "anonimo" && (

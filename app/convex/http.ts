@@ -73,15 +73,15 @@ http.route({
   path: "/sendFile",
   method: "POST",
   handler: httpAction(async (ctx, request) => {
-    const useridentity = await ctx.auth.getUserIdentity()
-    if (!useridentity) {
-      return new Response(null, { status: 401 });
-    }
+    // const useridentity = await ctx.auth.getUserIdentity()
+    // if (!useridentity) {
+    //   return new Response(null, { status: 401 });
+    // }
 
     const blob = await request.blob();
     const storageId = await ctx.storage.store(blob);
 
-    const fileurl = ctx.storage.getUrl(storageId)
+    const fileurl = await ctx.storage.getUrl(storageId)
 
     return new Response(JSON.stringify({ storageId, fileurl }), {
       status: 200,
@@ -104,7 +104,7 @@ http.route({
 
 // Pre-flight request for /sendImage
 http.route({
-  path: "/sendImage",
+  path: "/sendFile",
   method: "OPTIONS",
   handler: httpAction(async (_, request) => {
     // Make sure the necessary headers are present

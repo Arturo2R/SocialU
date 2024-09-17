@@ -30,7 +30,7 @@ const CommentForm = (props: Props) => {
       asBussiness: false,
     },
   });
-
+  console.log(props.user)
   // useEffect(() => {
   //   form.setFieldValue('anonimo', form.values.asBussiness)
   // }
@@ -83,7 +83,7 @@ const CommentForm = (props: Props) => {
         />
         <UserInfoOnComment asBussiness={form.values.asBussiness} isAnonimus={form.values.anonimo}
           org={{ image: props.user?.organization.logo, name: props.user?.organization.name }}
-          user={{ image: props.user?.photoURL, name: props?.user?.settings?.useUserName ? props.user?.username : props.user?.displayName }}
+          user={{ image: props.user?.photoURL, name: (props?.user?.settings?.useUserName ?? true) ? props.user?.username : props.user?.displayName }}
         />
         {(props.user?.isMember || false) && (
           <Switch

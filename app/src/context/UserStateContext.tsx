@@ -39,25 +39,20 @@ export function UserStateProvider({ children }: { children: React.ReactNode }) {
     const [SuperUser, setUser] = useState<UserState["user"]>(null)
     const convex = useConvex()
     // let user: Doc<"user"> | null = null;
-    const [user, setuser] = useState<Doc<"user"> | null>(null)
+    // const [user, setuser] = useState<Doc<"user"> | null>(null)
     // const { isLoading, isAuthenticated } = useConvexAuth();
     const { isLoading, isAuthenticated } = useConvexAuth()
     const [isMember, setMembresy] = useState<boolean>(false)
-    // user = useQuery(api.user.current);
-    const getUser = async () => {
-        let usernow = await convex.query(api.user.current)
-        setuser(usernow)
-    }
+    // const getUser = async () => {
+    // let usernow = await convex.query(api.user.current)
+    //     setuser(usernow)
+    // }
+    let user: Doc<"user"> | null = null;
+    user = useQuery(api.user.current);
     useEffect(() => {
         if (isAuthenticated && !isLoading) {
             console.log(isLoading, isAuthenticated)
-            try {
-                getUser()
-            } catch (error) {
-                console.error(error)
-            }
             if (user) {
-                console.log("user,", user)
                 const foundBussiness = businessAccounts.bussiness.find(bussines =>
                     bussines.members.some(member => member.email === user?.email)
                 ) as Doc<"organization"> | undefined
@@ -71,9 +66,8 @@ export function UserStateProvider({ children }: { children: React.ReactNode }) {
                 }
             }
             localStorage.setItem("user", JSON.stringify(user));
-            console.log("user,", user)
         }
-    }, [isLoading, isAuthenticated, user])
+    }, [isAuthenticated, user])
 
 
     return <UserStateContext.Provider value={{ user: SuperUser, isLoading, isAuthenticated }}>{children}</UserStateContext.Provider>

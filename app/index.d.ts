@@ -3,7 +3,7 @@ import { Timestamp } from "@firebase/firestore";
 
 export {
   PostComment,
- };
+};
 
 declare global {
   interface Window {
@@ -64,10 +64,10 @@ declare global {
       bussinessDescription: string;
     };
     renderMethod?: renderMethod;
-    messageFormat: 'html'|'tiptapJSON' | 'text'; // Provide the strings types
+    messageFormat: 'html' | 'tiptapJSON' | 'text'; // Provide the strings types
   }
 
-  type renderMethod = 'DangerouslySetInnerHtml' | 'NonEditableTiptap' | 'none'; // Provide the strings types
+  type renderMethod = 'DangerouslySetInnerHtml' | 'NonEditableTiptap' | 'none' | "CustomEditorJSParser"; // Provide the strings types
 
   interface PostCardProps {
     author:

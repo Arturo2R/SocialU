@@ -1,1 +1,1 @@
-{ "dependencies": { "@mantine/modals": "^7.10.2", "convex": "1.16.0", "firebase-admin": "^12.3.0", "node-fetch": "2", "patch-package": "^8.0.0" } }
+{ "dependencies": { "@editorjs/editorjs": "^2.30.6", "@mantine/modals": "^7.10.2", "@mobtakr/editorjs-parser": "^0.2.1", "convex": "1.16.0", "editorjs-react-renderer": "^3.5.1", "firebase-admin": "^12.3.0", "node-fetch": "2", "patch-package": "^8.0.0", "react-editor-js": "1.10.0" } }
