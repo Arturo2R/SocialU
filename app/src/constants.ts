@@ -1,5 +1,5 @@
 export const API_URL = 'https://api.example.com';
-export const MAX_RESULTS = 1000;
+export const MAX_RESULTS = 250;
 export const MAX_SERVER_SIDE_RESULTS = 8;
 export const DEFAULT_TIMEOUT = 5000;
 export const MINIMUM_MESSAGE_LENGTH = 10;
