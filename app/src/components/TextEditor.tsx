@@ -1,39 +1,38 @@
 "use client"
 import { uploadFileToConvex } from "@hooks/image"
 
-import EditorJS from "@editorjs/editorjs";
-// import CheckList from "@editorjs/checklist";
-import Paragraph from "@editorjs/paragraph";
-// import CodeBox from "@bomdi/codebox";
-import Delimiter from "@editorjs/delimiter";
-import Attachments from "@editorjs/attaches";
-// import Embed from "@editorjs/embed";
-import ImageTool from "@editorjs/image";
-// import InlineCode from "@editorjs/inline-code";
-import Link from "@editorjs/link";
-import List from "@editorjs/list";
-// import Quote from "@editorjs/quote";
-// import SimpleImage from "@editorjs/simple-image";
-import Header from "@editorjs/header"
-import { memo, useEffect, useRef } from "react";
-import { Skeleton, TypographyStylesProvider } from "@mantine/core";
-import { useController } from "react-hook-form";
-// import { boolean } from "convex-helpers/validators";
+import { Skeleton, useMantineColorScheme } from "@mantine/core";
+import { es } from "./es"
 
-// import API from "../api/image" // Your server url
+// Add the missing 'emoji' property to the 'slash_menu' dictionary
+// es.slash_menu.emoji = {
+//   title: "Emoji",
+//   subtext: "Insert an emoji",
+//   aliases: ["emoji"],
+//   group: "Insert",
+// };
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
+
+import { set, useController } from "react-hook-form";
+import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "@lib/constants";
 
 export interface TextEditorProps {
-  data: any;
-  editorblock: string;
   name: string;
+  required?: boolean;
+  editable?: boolean;
   control: any;
-  editable: boolean;
-  setDataState: (data: any) => void;
+  setEditorState: React.Dispatch<React.SetStateAction<{ html: string; markdown: string, blocks: any[] } | undefined>>;
 }
 
+const editorConfig = {
+  defaultStyles: true,
+  dictionary: es,
+  enableBlockNoteExtensions: true,
+};
 
-
-const TextEditor = ({ data, editorblock, name, control, editable, setDataState }: TextEditorProps) => {
+const TextEditor = ({ editable, name, control, setEditorState }: TextEditorProps) => {
   const {
     field,
     formState,
@@ -41,160 +40,69 @@ const TextEditor = ({ data, editorblock, name, control, editable, setDataState }
   } = useController({
     name,
     control,
-    // rules: {
-    // required: "La descripcion es necesaria",
-    // minLength: { value: MINIMUM_MESSAGE_LENGTH * 2, message: `Muy poco contenido, metele más` },
-    // maxLength: { value: MAXIMUM_MESSAGE_LENGTH ** 20, message: `Nojoda te pasastes.` }
-    // },
+    rules: {
+      required: "La descripcion es necesaria",
+      // minLength: { value: MINIMUM_MESSAGE_LENGTH * 2, message: `Muy poco contenido, metele más` },
+      // maxLength: { value: MAXIMUM_MESSAGE_LENGTH ** 20, message: `Nojoda te pasastes.` }
+    },
   });
 
+  const { colorScheme } = useMantineColorScheme()
 
-  const EDITOR_JS_TOOLS: { [toolName: string]: any } = {
-    header: Header,
-    list: {
-      class: List,
-      inlineToolbar: true,
-    },
-    paragraph: {
-      class: Paragraph,
-      inlineToolbar: true,
-    },
-    image: {
-      class: ImageTool,
-      config: {
+  const theEditor = useCreateBlockNote({
+    ...editorConfig,
+    uploadFile: uploadFileToConvex,
+  });
 
-        uploader: {
-          uploadByFile(file: File) {
-            console.log("Uploading file:", file);
-            return fetch("https://mild-gecko-296.convex.site/sendFile", {
-              method: "POST",
-              body: file,
-              headers: {
-                "Content-Type": file.type,
-              }
-            })
-              .then((res) => {
-                if (!res.ok) {
-                  throw new Error(`HTTP errotr! status: ${res.status}`);
-                }
-                return res.json();
-              })
-              .then((data) => {
-                console.log("Server restponse:", data);
-                if (!data.fileurl) {
-                  throw new Error("Invalid response formatt");
-                }
-                return {
-                  success: 1,
-                  file: {
-                    url: data.fileurl,
-                    name: file.name,
-                    size: file.size,
-                  }
-                };
-              })
-              .catch((error) => {
-                console.log("Error uploading fileee:", error);
-                return {
-                  success: 0,
-                  file: {
-                    url: 'https://via.placeholder.com/158'
-                  }
-                };
-              });
-          },
-        }
-      },
-    },
-    Attaches: {
-      class: Attachments,
-      config: {
-        uploader: {
-          uploadByFile(file: File) {
-            console.log("Uploading file:", file);
-            return fetch("https://mild-gecko-296.convex.site/sendFile", {
-              method: "POST",
-              body: file,
-              headers: {
-                "Content-Type": file.type,
-              }
-            })
-              .then((res) => {
-                if (!res.ok) {
-                  throw new Error(`HTTP errotr! status: ${res.status}`);
-                }
-                return res.json();
-              })
-              .then((data) => {
-                console.log("Server restponse:", data);
-                if (!data.fileurl) {
-                  throw new Error("Invalid response formatt");
-                }
-                return {
-                  success: 1,
-                  file: {
-                    url: data.fileurl,
-                    name: file.name,
-                    size: file.size,
-                  }
-                };
-              })
-              .catch((error) => {
-                console.error("Error uploading fileee:", error);
-                return {
-                  success: 0,
-                  file: {
-                    url: 'https://via.placeholder.com/150'
-                  }
-                };
-              });
-          },
-        },
-        fieldName: "file",
-      },
-    },
-    // checkList: CheckList,
-    link: Link,
-    delimiter: Delimiter,
+  const onDocumentChange = async () => {
+    // Converts the editor's contents from Block objects to HTML and store to state.
+    const html = await theEditor.blocksToHTMLLossy(theEditor.document);
+    field.onChange(html);
   };
 
-  const ref = useRef<EditorJS | undefined>();
-  //Initialize editorjs
-  useEffect(() => {
-    //Initialize editorjs if we don't have a reference
-    if (!ref.current) {
-      const editor = new EditorJS({
-        holder: editorblock,
-        readOnly: !editable,
-        tools: EDITOR_JS_TOOLS,
-        minHeight: 128,
-        placeholder: 'Comparte lo que te tiene emocionao’...',
-        async onChange(api, event) {
-          // api.sanitizer.clean();
-          api.saver.save().then((outputData) => {
-            field.onChange(outputData);
-          })
+  const onFormSubmit = async () => {
+    // Converts the editor's contents from Block objects to HTML and store to state.
+    const blocks = theEditor.document;
+    // console.log(blocks);
+    const html = await theEditor.blocksToHTMLLossy(theEditor.document);
+    const markdown = await theEditor.blocksToMarkdownLossy(theEditor.document);
+    setEditorState({ html, markdown, blocks });
+    field.onChange(blocks);
+  }
 
-          // field.onChange(datachange);
-        },
-      });
-      ref.current = editor;
-    }
+  const onEditorChange = async () => {
+    field.onChange(theEditor);
+  }
 
-    //Add a return function to handle cleanup
-    return () => {
-      if (ref.current && ref.current.destroy) {
-        ref.current.destroy();
-      }
-    };
-  }, []);
+
+
   return (
-    <TypographyStylesProvider>
-      <div className="w-full min-h-32" id={editorblock} />
+    <div className="min-h-32" data-posthog-capture="no">
+      <BlockNoteView
+        editor={theEditor}
+        editable={editable || true}
+        onChange={onEditorChange}
+        theme={colorScheme === "dark" ? "dark" : "light"}
+      />
       {(error) && <span className="text-red-500">{error.message}</span>}
-    </TypographyStylesProvider>)
-};
+    </div>
+  );
+}
 
+export const ViewPost = ({ content }: { content: any[] }) => {
+  const editor = useCreateBlockNote({
+    ...editorConfig,
+    initialContent: content
+  });
+  const { colorScheme } = useMantineColorScheme()
+  return (
+    <BlockNoteView
+      editor={editor}
+      editable={false}
+      theme={colorScheme === "dark" ? "dark" : "light"}
+    />
+  )
+}
 
 export const EditorLoader = () => {
   return (
@@ -207,4 +115,4 @@ export const EditorLoader = () => {
   )
 }
 
-export default memo(TextEditor);
+export default TextEditor;

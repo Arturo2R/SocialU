@@ -16,7 +16,7 @@ export const uploadFile = async (file: File): Promise<string> => {
 
         console.log(url)
         return url
-    } catch (error) {
+    } catch (error: any) {
         console.error(error.message)
         posthog.capture('upload_image_error', {
             message: error.message,
@@ -27,32 +27,28 @@ export const uploadFile = async (file: File): Promise<string> => {
 }
 
 export const uploadFileToConvex = async (file: File): Promise<string> => {
-    const generateUploadUrl = useMutation(api.post.generateUploadUrl)
-    const getUrl = useMutation(api.post.getFileUrl)
+    console.log("AJAA y la imagen ", file)
     try {
-        // Step 1: Get a short-lived upload URL
-        const postUrl = await generateUploadUrl();
-        // Step 2: POST the file to the URL
+        console.log(file)
 
-        const result = await fetch(postUrl, {
+        const postUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL + "/sendFile";
+        console.log("postUrl", postUrl)
+
+        const response = await fetch(postUrl, {
             method: "POST",
             headers: { "Content-Type": file.type },
             body: file
-        }).then((res) => res.json());
+        })
+        const result = await response.json()
 
-        const { storageId } = result;
-
-        // Step 3: Save the newly allocated storage id to the database
-        const url = await getUrl({ imageId: storageId });
-
-        return url || "nada"
+        return result.fileurl
     } catch (error: any) {
         console.error(error.message)
         posthog.capture('upload_image_error', {
             message: error.message,
             fileName: file.name,
         });
-        return "error"
+        return "https://mild-gecko-296.convex.cloud/api/storage/1b96a220-8c22-4187-8505-65038900c812"
     }
 }
 

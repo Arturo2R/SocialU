@@ -45,6 +45,8 @@ import { useQuery } from "convex-helpers/react/cache/hooks";
 // import { ViewPost } from "@components/TextEditor";
 import dynamic from "next/dynamic";
 import ContentView, { ContentViewReact } from "@components/ContentView";
+import React from "react";
+import { BigLikeButton, LikesWall } from "@components/Like";
 
 // import "@blocknote/mantine/style.css";
 
@@ -64,7 +66,7 @@ interface ViewPostProps {
     content: any[]
 }
 
-const ViewPost: React.ComponentType<ViewPostProps> = dynamic(() => import('@components/TextEditor').then(mod => mod.ViewPost), { ssr: false });
+// const ViewPost: React.ComponentType<ViewPostProps> = dynamic(() => import('@components/TextEditor').then(mod => mod.ViewPost), { ssr: false });
 
 
 const PostPage = ({ params }: { params: { postSlug: string } }) => {
@@ -105,9 +107,9 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                 )}
             </Group>
 
-            {(content?.content && (content?.renderMethod === "DangerouslySetInnerHtml")) && (
+            {(content?.contentInHtml && (content?.renderMethod === "DangerouslySetInnerHtml")) && (
                 <TypographyStylesProvider>
-                    <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content?.contentInHtml?.replace('<audio', '<audio controls').replace('<video', '<video controls') }}></div>
+                    <div className="max-w-xl min-w-0 break-words whitespace-pre-line text-md bn-container" lang="es" dangerouslySetInnerHTML={{ __html: content.contentInHtml.replace('<audio', '<audio controls').replace('<video', '<video controls') }}></div>
                 </TypographyStylesProvider>
             )}
             {/* {(content?.content && content?.renderMethod === "NonEditableTiptap") && (
@@ -118,9 +120,9 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                     <Blocks data={JSON.parse(String(content.content))} />
                 </TypographyStylesProvider>
             )} */}
-            {(content?.content && content.renderMethod === "CustomEditorJSParser") && (
+            {/* {(content?.content && content.renderMethod === "CustomEditorJSParser") && (
                 <ContentViewReact content={String(content.content)} />
-            )}
+            )} */}
             {(content?.content && (content.renderMethod === "none" || !content?.renderMethod)) && (
                 <Text className="max-w-xl min-w-0 break-words whitespace-pre-line text-md " lang="es">{content.content}</Text>
             )}
@@ -131,7 +133,7 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                     isBussiness={false}
                     link={content.author.userName}
                     name={content.author.displayName}
-                    email={`${content.author.userName}@uninorte.edu.co`}
+                    email={`${content.author.userName || 'elman'}@uninorte.edu.co`}
                     image={content.author.image || "/profile.jpg"}
                     icon
                 />
@@ -177,6 +179,9 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
             {content?.date && (
             <Text className="mb-2 italic text-stone-400">Fecha:  {dayjs(content?.date?.getSeconds()).format("MMM D, YYYY")}</Text>
         )} */}
+            <div className="my-4">
+                <LikesWall likeText={content.likeText} postId={content._id} serverLiked={content.likedByTheUser} likes={content.likes || 0} dislikes={content.dislikes || 0} />
+            </div>
 
             <div className="z-10 my-2">
 

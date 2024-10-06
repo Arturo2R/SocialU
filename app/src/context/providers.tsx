@@ -6,6 +6,10 @@ import { PostHogProvider } from 'posthog-js/react'
 if (typeof window !== 'undefined') {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
     api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    autocapture: {
+      element_attribute_ignorelist: ['data-posthog-capture="no"'],
+      
+    },
     capture_pageleave: true,
     capture_pageview: false // Disable automatic pageview capture, as we capture manually
   })

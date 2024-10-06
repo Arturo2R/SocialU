@@ -4,12 +4,14 @@ import {nanoid} from "../src/lib/utils"
 import {snakeCase} from "lodash"
 import { filter } from "convex-helpers/server/filter";
 import { Doc, Id } from "./_generated/dataModel";
-import { getCurrentUserOrThrow } from "./user";
-import { internal } from "./_generated/api";
+import { getCurrentUser, getCurrentUserOrThrow } from "./user";
+import { api, internal } from "./_generated/api";
 import { literals } from "convex-helpers/validators";
 import schema from "./schema";
 import config from "../src/lib/config"; 
 import { paginationOptsValidator, SchemaDefinition } from "convex/server";
+
+
 
 const {categories} = config();
 let lascategories = categories.map((category) => category.value)
@@ -88,6 +90,7 @@ export const getFeed = query({
 })
 
 
+
 export const create = mutation({
     args: {
         renderMethod: v.optional(v.union(v.literal("DangerouslySetInnerHtml"),v.literal("NonEditableTiptap"),v.literal("none"),v.literal("CustomEditorJSParser") , v.literal("CustomTiptapParser"))),
@@ -103,15 +106,21 @@ export const create = mutation({
     }, 
     handler: async (ctx, args) => {
         const user = await getCurrentUserOrThrow(ctx);
-        const slug = snakeCase(args.title) || await nanoid(7);
+        const slug = args.title ? snakeCase(args.title) + nanoid(3) : await nanoid(7);
 
         let post = {
             ...args,
+            contentInHtml: args.contentInHtml?.replace("<img", "<img loading='lazy' fetchpriority='low'") || "",
             categoryValue: args.tags?.[0],
             commentsCounter: 0,
             viewsCounter: 0,
             slug,
             authorId: user._id,
+            likeText: {
+                positive: "Me gusta",
+                negative: "No me gusta"
+            }
+            // ...(args.anonimo && {authorAnonimousId: generateSHA256Hash(user._id, slug)}),
         } as Doc<"post">
 
         if (args.asBussiness) {
@@ -123,8 +132,11 @@ export const create = mutation({
                 organizationId: business._id,
             } 
         }
-        console.log(`${user.name} creó el post ${slug}`)
-        ctx.db.insert("post", post )
+        
+        
+        // console.log(`${user.name} creó el post ${slug}`)
+        const createdPost = await ctx.db.insert("post", post )
+        await ctx.scheduler.runAfter(10, internal.reaction.generate, {content: post.contentInMarkdown || "", title: post.title || "", postId: createdPost})
     }
 })
 
@@ -191,6 +203,9 @@ interface POST extends Doc<"post"> {
         link: string;
         image?: string;
     };
+    likes?: number;
+    dislikes?: number;
+    likedByTheUser: 'like' | 'dislike' | undefined;
 }
 
 /**
@@ -223,23 +238,44 @@ export const get = query({
             link: v.string(),
             image: v.optional(v.string()),
         })),
+        likes: v.optional(v.number()),
+        dislikes: v.optional(v.number()),
+        likedByTheUser: v.optional(literals("like", "dislike")),
     }),
     handler: async (ctx, args) => {
         let post = await ctx.db.query("post").filter(q=> q.eq(q.field("slug"), args.slug) ).first();
+        // const reactionCounter = await
         if (!post) { throw new Error("Post not found") }
-       
+        
+        
         const creator = await ctx.db.get(post.authorId);
-        if (!creator) { 
-            post = {...post, anonimo: false, author: {
-                    displayName: "Usuario eliminado",
-                    userName: "Usuarioeliminado",
-                    id:"ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
-                    link: `https://redsocialu.com/`,
+        const reactions = await ctx.db.query("reaction").filter(q=> q.eq(q.field("contentId"), post?._id)).collect();
+        const user = await getCurrentUser(ctx);     
+        
+        if(reactions) {
+            const likes = reactions.filter((reaction) => reaction.reaction_type === "like").length;
+            const dislikes = reactions.filter((reaction) => reaction.reaction_type === "dislike").length;
+
+            post = {...post, likes, dislikes} as POST
+            if(user) {
+                const likedByTheUser = reactions.find((reaction) => reaction.userId === user._id);
+                if (likedByTheUser) {
+                    post = {...post, likedByTheUser: likedByTheUser.reaction_type } as POST
                 }
-            } as justuser
-            return post as POST
+            }
         }
 
+
+        if (!creator) { 
+            post = {...post, anonimo: false, author: {
+                displayName: "Usuario eliminado",
+                userName: "Usuarioeliminado",
+                id:"ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
+                link: `https://redsocialu.com/`,
+            }
+        } as justuser
+        return post as POST
+    }
         const business = (post.asBussiness && post.organizationId) ? await ctx.db.get(post.organizationId) : null;
         if (!business &&  (post.asBussiness && post.organizationId)) { throw new Error("Organization not found") }
 
@@ -256,7 +292,6 @@ export const get = query({
             } as justuser
             
         }
-
 
         if (post && business && post.asBussiness === true) {
             post = {...post, asBussiness: true, organization: {

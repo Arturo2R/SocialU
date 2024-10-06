@@ -16,8 +16,8 @@ import {
 import { DEFAULT_COLOR } from "@lib/constants";
 import { Tag } from "./Post/Tag";
 import convertAllAToSpan from '@lib/converToNonA';
-import ContentView, { ContentViewReact } from './ContentView';
-import Blocks from 'editorjs-blocks-react-renderer';
+// import ContentView, { ContentViewReact } from './ContentView';
+// import Blocks from 'editorjs-blocks-react-renderer';
 
 // import dayjs from "dayjs";
 // import es from "dayjs/locale/es";
@@ -66,7 +66,9 @@ export const PostCard = ({
   return (
     <article className="max-w-sm" id={slug}>
       <Card
-        href={`/${author !== "anonimo" ? author.id : "anonimo"}/${slug}`}
+        href={{
+          pathname: `/${author !== "anonimo" ? author.id : "anonimo"}/${slug}`,
+        }}
         component={Link}
         className="X"
         radius="md"
@@ -124,9 +126,9 @@ export const PostCard = ({
               <div className="bn-container" dangerouslySetInnerHTML={{ __html: description.includes('<a') ? convertAllAToSpan(description.replace('<audio', '<audio controls')) : description.replace('<audio', '<audio controls') }}></div>
             </TypographyStylesProvider>
           )}
-          {renderMethod === "CustomEditorJSParser" && (
+          {/* {renderMethod === "CustomEditorJSParser" && (
             <ContentViewReact content={description} />
-          )}
+          )} */}
         </Spoiler>
         {author !== "anonimo" && (
           <Group gap="xs">

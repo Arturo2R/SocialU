@@ -32,6 +32,11 @@ export default defineSchema({
         categoryValue: v.optional(literals(...lascategories)),
         subComments: v.optional(v.array(v.id("comment"))),
         isOld: v.optional(v.boolean()),
+        authorAnonimousId: v.optional(v.string()),
+        likeText: v.object({
+            positive: v.string(),
+            negative: v.string(),
+        })
         // tempUser_deprecated: v.optional(v.object({
         //     name: v.string(),
         //     email: v.string(),
@@ -60,6 +65,7 @@ export default defineSchema({
         asOrganization: v.optional(v.boolean()),
         organizationId: v.optional(v.id("organization")),
         subComments: v.optional(v.array(v.id("comment"))),
+        authorAnonimousId: v.optional(v.string()),
     }).index("withPost", ["postId"]).index("by_author", ["authorId"]),
     reaction: defineTable({
         userId: v.id("user"),

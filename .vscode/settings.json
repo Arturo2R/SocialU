@@ -6,7 +6,7 @@
         "*/app/src/app/(main)/layout.tsx": "Main Layout",
         "*/app/src/app/(main)/configuracion/page.tsx": "Configuration",
         "*/app/src/app/(main)/crear/page.tsx": "Crear",
-        "*/app/src/app/(main)/[author]/[postSlug]/page.tsx": "PagePost",
+        "*/app/src/app/(main)/[author]/[postSlug]/page.tsx": "Post Page",
         "*/app/src/app/(main)/[author]/[postSlug]/loading.stories.tsx": "loading.story.tsx",
         "*/app/src/components/Layout/AppFooter.stories.tsx": "AppFooter.story.tsx",
         "*/app/convex": "backend"

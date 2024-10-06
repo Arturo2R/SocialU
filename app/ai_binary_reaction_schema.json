@@ -1,0 +1,20 @@
+{
+  "name": "binary_reaction",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "positive": {
+        "type": "string"
+      },
+      "negative": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "negative",
+      "postive"
+    ],
+    "additionalProperties": false
+  }
+}

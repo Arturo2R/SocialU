@@ -71,7 +71,7 @@ export const Feed = (props: {
           {(pageloaded ? posts : postee.page).map((post) => (
             <PostCard
               commentsQuantity={post.commentsCounter}
-              description={post.content}
+              description={post.renderMethod === "DangerouslySetInnerHtml" ? post.contentInHtml || post.content as string : post.content as string}
               key={post._id}
               title={post.title}
               viewsNumber={post.viewsCounter}

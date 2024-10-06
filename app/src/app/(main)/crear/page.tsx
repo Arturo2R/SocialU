@@ -20,6 +20,7 @@ import { useMutation } from "convex/react";
 import { useUser } from "../../../context/UserStateContext";
 import Protected from "@components/Protected";
 import { AuthorInfo } from "@components/AuthorInfo";
+import { BlockNoteEditor } from "@blocknote/core";
 // import { getHtmlFromEdjs } from "@lib/parseedjs";
 
 let conf = config();
@@ -60,7 +61,7 @@ const CrearPage = () => {
     const [imageData, setImageData] = useState<{ width: number; height: number } | null>(null);
     const [imageChecking, setImageChecking] = useState<"loading" | "loaded" | null>(null);
     const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | null>(null);
-    const [editorState, setEditorState] = useState<any>()
+    const [editorState, setEditorState] = useState<{ html: string; markdown: string; blocks: any[] } | undefined>()
     // const [bussinessAccount, setBussinessAccount] = useState<Doc<"organization"> | null>(null);
     // const [hasBussinessAccount, setHasBussinessAccount] = useState<boolean>(false);
 
@@ -73,20 +74,26 @@ const CrearPage = () => {
     const createnewpost = useMutation(api.post.create)
 
     const submitPost: SubmitHandler<Record<string, any>> = async (payload) => {
-        console.log(payload)
+        // console.log(payload)
         setCreatingPost("loading")
         router.push("/")
-        const message = JSON.stringify(payload.message)
+        const theEditor: BlockNoteEditor = payload.message
+        const blocks = theEditor.document;
+        // console.log(blocks);
+        const html = await theEditor.blocksToHTMLLossy(theEditor.document);
+        const markdown = await theEditor.blocksToMarkdownLossy(theEditor.document);
+
         createnewpost({
             anonimo: payload.anonimo,
             asBussiness: payload.asBussiness || false,
             image: payload.image,
-            content: message,
+            content: blocks,
             tags: payload.tags,
             title: payload.title,
-            // contentInHtml: getHtmlFromEdjs(payload.message, false).join(""),
-            messageFormat: "EditorJS",
-            renderMethod: message.includes("error") || message.includes("Error") ? "CustomEditorJSParser" : "DangerouslySetInnerHtml",
+            contentInHtml: html || "",
+            contentInMarkdown: markdown || "",
+            messageFormat: "Tiptap",
+            renderMethod: "DangerouslySetInnerHtml",
         }).then(() => setCreatingPost("loaded"))
         reset()
         notifications.show({
@@ -151,9 +158,7 @@ const CrearPage = () => {
                         />
                         {/* ts-ignore */}
                         <TextEditor
-                            data={editorState}
-                            setDataState={setEditorState}
-                            editorblock="editorjs"
+                            setEditorState={setEditorState}
                             control={control}
                             name="message"
                             editable

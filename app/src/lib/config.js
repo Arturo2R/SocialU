@@ -34,7 +34,5 @@ export default function () {
        { color: "#8000FF", name: "Parciales finales", value: "parciales_finales"},
     ],
     appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
-    
-
   }
 }

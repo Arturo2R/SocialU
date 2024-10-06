@@ -48,7 +48,7 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
   experimental: {
     scrollRestoration: true,
     instrumentationHook: true,
-    typedRoutes: true
+    // typedRoutes: true
   },
   typescript: {
     // !! WARN !!
