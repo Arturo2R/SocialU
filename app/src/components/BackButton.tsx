@@ -5,10 +5,10 @@ import React from 'react'
 import { ChevronLeft } from 'tabler-icons-react'
 
 type BackButtonProps = {
-    id:string
+  id: string
 }
 
-const BackButton = ({id}: BackButtonProps) => {
+const BackButton = ({ id }: BackButtonProps) => {
   // const router = useRouter()
   return (
     <Link href="/" scroll={false} replace>
@@ -17,9 +17,9 @@ const BackButton = ({id}: BackButtonProps) => {
         //scroll={false}
         // onClick={() => router.back()}
         // href={{
-          // pathname: `/`,
-          //query: { nrf: true },
-          // hash: id,
+        // pathname: `/`,
+        //query: { nrf: true },
+        // hash: id,
         //}}
         variant="light"
         color="gray"
@@ -29,8 +29,8 @@ const BackButton = ({id}: BackButtonProps) => {
         className="z-10"
         display="flow"
         mb="-44px" ml="10px" size="lg" radius="xl"
-        >
-          <ChevronLeft />
+      >
+        <ChevronLeft />
       </ActionIcon>
     </Link>
   )

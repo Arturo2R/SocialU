@@ -3,15 +3,15 @@ import type { Metadata } from "next";
 import React from 'react';
 
 // Authentication with clerk and db with Convex
-import {ConvexClientProvider} from "@context/ConvexClientProvider";
+import { ConvexClientProvider } from "@context/ConvexClientProvider";
 import { ConvexQueryCacheProvider } from "convex-helpers/react/cache/provider";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 
-
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 // Custom Data Provider
-import {UserStateProvider} from "@context/UserStateContext"
-import {FeedStateProvider} from "@context/FeedContext"
+import { UserStateProvider } from "@context/UserStateContext"
+import { FeedStateProvider } from "@context/FeedContext"
 
 // Posthog analytics for full app tracking and reports
 import { PHProvider } from "@context/providers";
@@ -21,7 +21,7 @@ import { PHProvider } from "@context/providers";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { ModalsProvider } from '@mantine/modals';
-import {theme} from "@lib/theme";
+import { theme } from "@lib/theme";
 
 // Styles from mantine, blocknote text editor and custom tailwind generated
 import '@mantine/notifications/styles.css';
@@ -76,22 +76,24 @@ export default function RootLayout({
           <ColorSchemeScript />
         </head>
         <body>
+          <SpeedInsights />
           <PHProvider>
             <ConvexClientProvider>
-              
-            <ConvexQueryCacheProvider>
-              <UserStateProvider>
-                <FeedStateProvider>
-                  <MantineProvider theme={theme}>
-                    <ModalsProvider>
+
+              <ConvexQueryCacheProvider>
+                <UserStateProvider>
+                  <FeedStateProvider>
+                    <MantineProvider theme={theme}>
+                      <ModalsProvider>
+
                         <PostHogPageView />
                         <Notifications />
-                            {children}
+                        {children}
                       </ModalsProvider>
-                  </MantineProvider>
-                </FeedStateProvider>
-              </UserStateProvider>
-            </ConvexQueryCacheProvider>
+                    </MantineProvider>
+                  </FeedStateProvider>
+                </UserStateProvider>
+              </ConvexQueryCacheProvider>
             </ConvexClientProvider>
           </PHProvider>
         </body>

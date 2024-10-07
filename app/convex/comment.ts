@@ -1,12 +1,14 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalAction, mutation, query } from "./_generated/server";
 import { Doc, Id } from "./_generated/dataModel";
 
 // import {PostComment} from "../index";
 import { getCurrentUserOrThrow } from "./user";
 import { WithoutSystemFields } from "convex/server";
+import { likes, reactionOfPost } from "./post";
+// import { generateSHA256Hash } from "../src/lib/utils";
 
-export interface PostComment extends Doc<"comment"> {
+export interface PostComment extends Doc<"comment">, likes {
   author: author | "anonimo";
   subcomments: (PostComment | null)[] | null;
 }
@@ -51,6 +53,25 @@ export const get = query({
   }
 })
 
+// export const generateAnonimousUserName = internalAction({
+//   args: {
+//     postId: v.id("post"),
+//     username: v.string(),
+//     postSlug: v.string(),
+//     authorId: v.id("user"),
+//   },
+//   handler: async (ctx, args) => {
+//     const post = await ctx.db.get(args.postId);
+//     if (!post) { throw new Error("Post not found") }
+//     const author = await ctx.db.get(args.authorId);
+//     if (!author) { throw new Error("User not found") }
+
+//     const anonimoName = `${author.username}_${post.slug}`;
+
+//     return anonimoName;
+//   }
+// })
+
 export const create = mutation({
   args: {
     content: v.string(),
@@ -61,6 +82,8 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     const author = await getCurrentUserOrThrow(ctx);
+    const post = await ctx.db.get(args.postId);
+    if (!post) { throw new Error("Post not found") }
 
     let payload = {
       authorId: author._id,
@@ -69,6 +92,7 @@ export const create = mutation({
       parentId: args.parentId,
       anonimo: args.anonimo,
       asOrganization: args.asOrganization,
+      // ...(args.anonimo && { organizationId: generateSHA256Hash(author.username, post?.slug) })
     } as WithoutSystemFields<Doc<"comment">>;
 
     if (args.asOrganization) {
@@ -82,12 +106,7 @@ export const create = mutation({
     }
 
     ctx.db.insert("comment", payload);
-
-    const post = await ctx.db.get(args.postId)
-    if (!post) { throw new Error("Post not found") }
     ctx.db.patch(post._id, { commentsCounter: post.commentsCounter + 1 })
-
-
   }
 })
 
@@ -133,17 +152,6 @@ export const getCommentsForPost = query({
         ...(author?.photoURL && { image: author.photoURL }),
       } as author
     };
-
-    // const comentarios = await comments.map(async (comment) => { 
-    //   const details = await getAuthorDetails(comment.authorId, comment.anonimo)
-    //   return {...comment, author: details} 
-    // });
-
-    // return Promise.all(comentarios)
-
-
-
-
     // Function to build nested comments
     const buildNestedComments = async (parentId: Id<"comment"> | undefined): Promise<PostComment[]> => {
       const nestedComments = comments
@@ -151,10 +159,12 @@ export const getCommentsForPost = query({
         .map(async comment => {
           const author = await getAuthorDetails(comment.authorId, comment.anonimo, comment.organizationId);
           const children = await buildNestedComments(comment._id);
+          const reactions = await reactionOfPost(ctx, comment._id);
           return {
             ...comment,
             author: author,
-            subcomments: children
+            subcomments: children,
+            ...reactions
           };
 
         });

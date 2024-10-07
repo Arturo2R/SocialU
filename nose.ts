@@ -1,7 +1,7 @@
 const mockFile = new File(["dummy content"], "example.png", { type: "image/png" });
 function uploadByFile(file: File) {
   console.log(file)
-  return fetch("https://mild-gecko-296.convex.site/sendFile", {
+  return fetch( process.env.NEXT_PUBLIC_CONVEX_SITE_URL + "/sendFile", {
     method: "POST",
     body: file,
     headers: {

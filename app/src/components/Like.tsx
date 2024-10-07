@@ -1,5 +1,6 @@
 import { api } from "@backend/api";
 import { Id } from "@backend/dataModel";
+import { Text } from "@mantine/core";
 import { useToggle } from "@mantine/hooks";
 import { IconThumbDown } from "@tabler/icons-react"
 import { IconThumbDownFilled } from "@tabler/icons-react"
@@ -19,7 +20,7 @@ interface LikeButtonProps {
 
 export const BigLikeButton = ({ likes, liked, onClick, positive, likeText }: LikeButtonProps) => {
     return (
-        <button type="button" onClick={onClick} className={clsx("flex flex-col items-center p-3 bg-transparent border rounded-lg max-w-[12rem]", { 'border-green-400 hover:bg-green-100 hover:shadow-md hover:shadow-green-200 shadow-none': positive, 'border-red-700 hover:bg-red-50 hover:shadow-red-300 hover:shadow-md shadow-none': !positive })}>
+        <button type="button" onClick={onClick} className={clsx("flex flex-col items-center p-3 bg-transparent border rounded-lg max-w-[12rem]", { 'border-green-400 hover:bg-green-300/15 dark:hover:bg-green-100/10 hover:shadow-md hover:shadow-green-200 shadow-none': positive, 'border-red-700 hover:bg-red-100/20 hover:shadow-red-300 dark:hover:bg-red-200/20 hover:shadow-md shadow-none': !positive })}>
             <div className={clsx("flex ", { 'items-end mb-2': positive, 'items-start mt-2': !positive })} >
                 {positive ?
                     (liked ? <IconThumbUpFilled className="text-green-400" size={32} stroke={1} /> : <IconThumbUp className="text-green-400" size={32} stroke={1} />) :
@@ -68,6 +69,42 @@ export const LikesWall = ({ postId, serverLiked, likes, dislikes, likeText }: Li
         <div className="grid-cols-2 grid gap-x-3 max-w-full sm:max-w-[21rem]">
             <BigLikeButton onClick={() => onLikeChange("liked")} likeText={likeText.positive} positive liked={value == "liked"} likes={likes} />
             <BigLikeButton onClick={() => onLikeChange("disliked")} likeText={likeText.negative} positive={false} liked={value == "disliked"} likes={dislikes} />
+        </div>
+    )
+}
+
+export interface likesBarInterface {
+    likes: number;
+    dislikes: number;
+    userLiked: 'like' | 'dislike' | undefined;
+    contentId?: Id<"post"> | Id<"comment">;
+    showIfZero?: boolean;
+}
+
+export const LikesBar = (props: likesBarInterface) => {
+    const reacto = useMutation(api.reaction.give)
+
+
+    const onLikeChange = (interaction: 'like' | 'dislike') => {
+        if (props.contentId) {
+            reacto({ content_type: 'post', postId: props.contentId, reaction_type: interaction });
+        }
+    }
+    return (
+        <div className="flex items-center space-x-2">
+            {((props.likes > 0) || props.showIfZero) && (
+                <div className="flex items-center" onClick={() => onLikeChange("like")} >
+                    {props.userLiked === "like" ? <IconThumbUpFilled className="text-green-400" size={props.showIfZero ? 24 : 16} stroke={1} /> : <IconThumbUp className="text-green-400" size={props.showIfZero ? 24 : 16} stroke={1} />}
+                    <Text size="xs" c="dimmed">{props.likes}</Text>
+                </div>
+
+            )}
+            {((props.dislikes > 0) || props.showIfZero) && (
+                <div className="flex items-center" onClick={() => onLikeChange("dislike")}>
+                    {props.userLiked === "dislike" ? <IconThumbDownFilled size={props.showIfZero ? 24 : 16} stroke={1} className="text-red-700" /> : <IconThumbDown size={props.showIfZero ? 24 : 16} stroke={1} className="text-red-700" />}
+                    <Text size="xs" c="dimmed">{props.dislikes}</Text>
+                </div>
+            )}
         </div>
     )
 }

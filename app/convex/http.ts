@@ -77,12 +77,12 @@ http.route({
     // if (!useridentity) {
     //   return new Response(null, { status: 401 });
     // }
-
+    // const filetype = request.headers.get("Content-Type");
     const blob = await request.blob();
     const storageId = await ctx.storage.store(blob);
 
     const fileurl = await ctx.storage.getUrl(storageId)
-
+    console.log("fileurl", fileurl)
     return new Response(JSON.stringify({ storageId, fileurl }), {
       status: 200,
       headers: new Headers({

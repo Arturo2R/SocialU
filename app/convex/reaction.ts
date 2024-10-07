@@ -56,7 +56,7 @@ export const generate = internalAction({
     },
     handler: async (ctx, args) => {
         // implementation goes here
-        const key = "sk-LWw35QVpsorVhGcsLwUC-pyaNDA8Vyt5-pvGbLMZiuT3BlbkFJl1Q7bSGoh3u090C45AliML70IRYHI9QkBcelwcKegA" // process.env.OPENAI_API_KEY
+        const key = process.env.OPENAI_API_KEY
         const openai = new OpenAI({ apiKey: key, });
 
         const response = await openai.chat.completions.create({

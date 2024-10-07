@@ -1,4 +1,4 @@
-import { action, mutation, query } from "./_generated/server";
+import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import {nanoid} from "../src/lib/utils"
 import {snakeCase} from "lodash"
@@ -10,7 +10,7 @@ import { literals } from "convex-helpers/validators";
 import schema from "./schema";
 import config from "../src/lib/config"; 
 import { paginationOptsValidator, SchemaDefinition } from "convex/server";
-
+// import {CohereClient} from "cohere-ai"
 
 
 const {categories} = config();
@@ -19,22 +19,38 @@ let lascategories = categories.map((category) => category.value)
 export const getFeed = query({
     args: {
         filterbyCategory: v.optional(literals(...lascategories)),
-        paginationOpts: paginationOptsValidator
+        paginationOpts: paginationOptsValidator,
+        search: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         let results
         // let posts
-
-        if (args.filterbyCategory ) {
-            results = await ctx.db
-                .query("post")
-                .withIndex("by_category", (q)=> q.eq("categoryValue", args.filterbyCategory  )  )
-                .order("desc").paginate(args.paginationOpts)
+        if(args.search) {
+            if (args.filterbyCategory) {
+                results = await ctx.db
+                    .query("post")
+                    .withSearchIndex("by_content", (q) => q.search("contentInMarkdown", args.search!).eq("categoryValue", args.filterbyCategory))
+                    .paginate(args.paginationOpts)
+            } else {
+                results = await ctx.db
+                    .query("post")
+                    .withSearchIndex("by_content", (q) => q.search("contentInMarkdown", args.search!))
+                    .paginate(args.paginationOpts)
+            }
         } else {
-            results = await ctx.db
-            .query("post")
-            .order("desc").paginate(args.paginationOpts)
+            if (args.filterbyCategory ) {
+                results = await ctx.db
+                    .query("post")
+                    .withIndex("by_category", (q)=> q.eq("categoryValue", args.filterbyCategory  )  )
+                    .order("desc").paginate(args.paginationOpts)
+                
+            } else {
+                results = await ctx.db
+                .query("post")
+                .order("desc").paginate(args.paginationOpts)
+            }
         }
+
         
 
         // if(args.filterbyCategory){
@@ -48,6 +64,10 @@ export const getFeed = query({
         // })
         
         const postsWithAuthors = await Promise.all(results.page.map(async (post) => {
+            
+            const reactions = await reactionOfPost(ctx, post._id)
+            post = {...post, ...reactions}
+
             // If the post is not anonymous, fetch the author
             if(post.asBussiness && post.organizationId){
                 const business = await ctx.db.get(post.organizationId);
@@ -136,7 +156,10 @@ export const create = mutation({
         
         // console.log(`${user.name} creó el post ${slug}`)
         const createdPost = await ctx.db.insert("post", post )
-        await ctx.scheduler.runAfter(10, internal.reaction.generate, {content: post.contentInMarkdown || "", title: post.title || "", postId: createdPost})
+        await Promise.all([
+            ctx.scheduler.runAfter(10, internal.reaction.generate, {content: post.contentInMarkdown || "", title: post.title || "", postId: createdPost}),
+            ctx.scheduler.runAfter(700, internal.post.createEmbedding, {content: post.contentInMarkdown || "", type: "document", store: true, postId: createdPost})
+        ])
     }
 })
 
@@ -249,21 +272,9 @@ export const get = query({
         
         
         const creator = await ctx.db.get(post.authorId);
-        const reactions = await ctx.db.query("reaction").filter(q=> q.eq(q.field("contentId"), post?._id)).collect();
-        const user = await getCurrentUser(ctx);     
-        
-        if(reactions) {
-            const likes = reactions.filter((reaction) => reaction.reaction_type === "like").length;
-            const dislikes = reactions.filter((reaction) => reaction.reaction_type === "dislike").length;
+        const reactions = await reactionOfPost(ctx, post._id)
 
-            post = {...post, likes, dislikes} as POST
-            if(user) {
-                const likedByTheUser = reactions.find((reaction) => reaction.userId === user._id);
-                if (likedByTheUser) {
-                    post = {...post, likedByTheUser: likedByTheUser.reaction_type } as POST
-                }
-            }
-        }
+        post = {...post, ...reactions}
 
 
         if (!creator) { 
@@ -336,6 +347,30 @@ export const getFileUrl = mutation({
     }
 })
 
+export type likes = {likes: number, dislikes: number, likedByTheUser?: "like" | "dislike" | undefined}
+
+
+export const reactionOfPost = async (ctx:QueryCtx, postId: Id<"post">| Id<"comment">) : Promise<likes>  => {
+    const reactions = await ctx.db.query("reaction").withIndex("byContentId", (q) => q.eq("contentId", postId)).collect();
+
+    const user = await getCurrentUser(ctx);
+    let payload : likes = {likes: 0, dislikes: 0}
+    
+    if(reactions) {
+        const likes = reactions.filter((reaction) => reaction.reaction_type === "like").length;
+        const dislikes = reactions.filter((reaction) => reaction.reaction_type === "dislike").length;
+
+        payload = {likes, dislikes}
+        if(user) {
+            const likedByTheUser = reactions.find((reaction) => reaction.userId === user._id);
+            if (likedByTheUser) {
+                payload = {...payload, likedByTheUser: likedByTheUser.reaction_type }
+            }
+        }
+    }
+    return payload
+}
+
 export const checkImage = action({
     args: {
         url: v.optional(v.string()),
@@ -381,7 +416,118 @@ export const checkImage = action({
             throw new Error("Un error mirando la imagen "+ error)
         }
         return !isImageAdult
+    }
+})
+
+
+
+export const search = internalAction({
+    args: {
+        search: v.string(),
     },
+    handler: async ( ctx, args): Promise<any> => {
+        const embedding = await ctx.runAction(internal.post.createEmbedding, {content: args.search, type: "query"})
+
+        const results = await ctx.vectorSearch("embeddings", "by_embedding", {
+            vector: embedding,
+            filter:  (q) => q.eq("artifactType", "post"),
+            limit: 12
+        })
+
+        const searchPosts: Array<Doc<"post">> = await ctx.runQuery(
+            internal.post.fetchResults,
+            { ids: results.map((result) => result._id) },
+          );
+
+        // console.log(`Embeddings: ${JSON.stringify(response.embeddings)}`);
+        return searchPosts
+    }
+})
+
+export const fetchResults = internalQuery({
+    args: { ids: v.array(v.id("embeddings")) },
+    handler: async (ctx, args) => {
+      const results: Array<Doc<"post">> = [];
+      for (const id of args.ids) {
+        const embed = await ctx.db.get(id)
+        if (embed === null) {
+          continue;
+        }
+        const doc = await ctx.db.get(embed.artifactId);
+        if (doc === null) {
+          continue;
+        }
+        results.push(doc as Doc<"post">);
+      }
+      return results;
+    },
+  });
+
+export const createEmbedding = internalAction({
+    args: {
+        content: v.string(),
+        type: literals("query", "document"),
+        store: v.optional(v.boolean()),
+        postId: v.optional(v.id("post")),
+    },
+    handler: async (ctx, args) => {
+        // With Cohere Deprecated now I will be using open source model jina ai embeddings 4 based on RoBERTa
+        // const cohere = new CohereClient({
+        //     token: process.env.COHERE_API_KEY, // This is your trial API key
+        //   });
+        // const response = await cohere.v2.embed({
+        //     model: "embed-multilingual-light-v3.0",
+        //     texts: [args.content || ""],
+        //     inputType: args.type === "query" ? "search_query" : "classification",
+        //     embeddingTypes: ["float"],
+        //     truncate: "NONE"
+        // });
+        // console.log("Creating embedding")
+        const url = 'https://api.jina.ai/v1/embeddings';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': process.env.JINA_API_KEY || "",
+        };
+        const data = {
+            model: 'jina-embeddings-v3',
+            task: args.type === "query" ? 'retrieval.query' : "retrieval.passage",
+            dimensions: 1024,
+            late_chunking: true,
+            embedding_type: 'float',
+            input: [args.content || ""]
+        };
+        // console.log(data)
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(data)
+        })
+        const response = await res.json();
+        // console.log(response)
+        if(!response.data[0].embedding) {
+            throw new Error("No embeddings generated")
+        }
+        if(args.store){
+            if (args.postId) {
+                await ctx.runMutation(internal.post.storeEmbedding, {postId: args.postId, embedding: response.data[0].embedding, type: "post"});
+            } else {
+                throw new Error("postId is undefined");
+            }
+        }
+        return response.data[0].embedding
+    }
+})
+
+export const storeEmbedding = internalMutation({
+    args: {
+        postId: v.id("post"),
+        embedding: v.array(v.float64()),
+        type: literals("post", "comment", "organization", "user", "scraped_pages"),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.insert("embeddings", { artifactId: args.postId,  embedding: args.embedding, artifactType: args.type})
+    }
 })
 
 

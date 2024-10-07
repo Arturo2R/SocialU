@@ -13,7 +13,7 @@ import FilterByTags from './FilterByTags';
 import { } from 'convex-helpers/react/cache/hooks';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 
-import { usefeed } from '../context/FeedContext';
+import { feedPost, usefeed } from '../context/FeedContext';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import PostCardLoading from './Post/PostCardLoading';
@@ -29,7 +29,7 @@ export const Feed = (props: {
 }) => {
   const [pageloaded, setPageLoaded] = useState(false)
 
-  const postee = usePreloadedQuery(props.preloadedPosts)
+  const postee = usePreloadedQuery(props.preloadedPosts).page as feedPost[]
   const { posts, status, loadMore, isLoading, category, setCategory } = usefeed()
 
   const breakpointColumnsObj = {
@@ -68,7 +68,7 @@ export const Feed = (props: {
           className={mansory.grid}
           columnClassName={mansory.column}
         >
-          {(pageloaded ? posts : postee.page).map((post) => (
+          {(pageloaded ? posts : postee).map((post) => (
             <PostCard
               commentsQuantity={post.commentsCounter}
               description={post.renderMethod === "DangerouslySetInnerHtml" ? post.contentInHtml || post.content as string : post.content as string}
@@ -83,6 +83,11 @@ export const Feed = (props: {
               image={post.image}
               author={post.asBussiness ? post.author : (post.anonimo ? "anonimo" : post.author)}
               imageData={post.imageData}
+              likesBar={{
+                userLiked: post.likedByTheUser,
+                likes: post.likes,
+                dislikes: post.dislikes,
+              }}
             />)
           )}
         </Masonry>

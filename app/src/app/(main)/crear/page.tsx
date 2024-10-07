@@ -80,7 +80,7 @@ const CrearPage = () => {
         const theEditor: BlockNoteEditor = payload.message
         const blocks = theEditor.document;
         // console.log(blocks);
-        const html = await theEditor.blocksToHTMLLossy(theEditor.document);
+        const html = await theEditor.blocksToFullHTML(theEditor.document);
         const markdown = await theEditor.blocksToMarkdownLossy(theEditor.document);
 
         createnewpost({

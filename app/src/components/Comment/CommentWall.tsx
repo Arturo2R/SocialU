@@ -53,6 +53,11 @@ const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) =>
               parentId={co.postId}
               subComments={co.subcomments}
               isAuthenticated={isAuthenticated}
+              reactions={{
+                likes: co.likes,
+                dislikes: co.dislikes,
+                likedByTheUser: co.likedByTheUser
+              }}
             />
           ))}
 

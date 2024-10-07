@@ -16,6 +16,7 @@ import {
 import { DEFAULT_COLOR } from "@lib/constants";
 import { Tag } from "./Post/Tag";
 import convertAllAToSpan from '@lib/converToNonA';
+import { LikesBar, likesBarInterface } from './Like';
 // import ContentView, { ContentViewReact } from './ContentView';
 // import Blocks from 'editorjs-blocks-react-renderer';
 
@@ -44,7 +45,7 @@ interface PostCardProps {
     color?: string;
     image: string;
   } | "anonimo";
-
+  likesBar: likesBarInterface;
 }
 
 
@@ -60,6 +61,7 @@ export const PostCard = ({
   priority,
   tags,
   viewsNumber,
+  likesBar,
 }: PostCardProps) => {
   const [expanded, setExpanded] = React.useState(false);
 
@@ -144,14 +146,16 @@ export const PostCard = ({
           </Group>
         )}
 
+        <Group>
+          {tags?.map((tag, index) => (
+            <Tag key={index} label={tag} />
+          ))}
+        </Group>
         <Group mt="xs" justify="space-between">
-          <Group>
-            {tags?.map((tag, index) => (
-              <Tag key={index} label={tag} />
-            ))}
-          </Group>
-          <Text size="xs" c="dimmed">{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>
-          <Text size="xs" c="dimmed">{viewsNumber} Vista{viewsNumber > 1 ? "s" : ""}</Text>
+          <LikesBar userLiked={likesBar.userLiked} likes={likesBar.likes} dislikes={likesBar.dislikes} />
+
+          {(commentsQuantity && commentsQuantity > 0) && <Text size="xs" c="dimmed">{commentsQuantity} Comentario{commentsQuantity > 1 ? "s" : ""}</Text>}
+          {(viewsNumber && viewsNumber > 0) && <Text size="xs" c="dimmed">{viewsNumber} Vista{viewsNumber > 1 ? "s" : ""}</Text>}
         </Group>
       </Card>
     </article>
