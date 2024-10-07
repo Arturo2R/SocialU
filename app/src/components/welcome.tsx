@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { X } from "tabler-icons-react";
 // import Image from 'next/image';
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 
 const useStyles = createStyles((theme) => ({
   wrapper: {

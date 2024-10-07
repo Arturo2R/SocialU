@@ -11,15 +11,14 @@ import {
   serverTimestamp,
   setDoc, updateDoc, where
 } from "firebase/firestore";
-import { nanoid } from "../utils";
+import { nanoid } from "@lib/utils";
 import { useState } from "react";
-import { auth, db } from "../firebase";
-import { MAX_RESULTS, PATH } from "../constants"
+import { auth, db } from "@lib/firebase";
+import { MAX_RESULTS, PATH } from "@lib/constants"
 import posthog from "posthog-js";
 
 
 
-interface configurationForm extends User, AppConfiguration { }
 
 export const useFirestore = () => {
   const [data, setData] = useState<Post[] | undefined>(undefined);

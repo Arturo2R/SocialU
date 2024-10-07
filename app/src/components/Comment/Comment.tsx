@@ -14,21 +14,31 @@ import es from "dayjs/locale/es";
 import relativeTime from "dayjs/plugin/relativeTime";
 // import { useToggle } from "@mantine/hooks";
 import { useState } from "react";
-import { DEFAULT_COLOR } from "../../constants";
-import MiniCommentForm from "./MiniCommentForm";
+import { DEFAULT_COLOR } from "@lib/constants";
 import CommentForm from "./CommentForm";
+import { Id } from "@backend/dataModel";
+import { PostComment } from "../../../index";
+import { UserObject } from "@context/UserStateContext";
+import Protected from "@components/Protected";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { LikesBar } from "@components/Like";
 
+// import { propsToAttributes } from "@blocknote/core";
 export interface CommentProps {
-  id: string;
-  parentId?: string;
-  postId: string;
-  postedAt: Date;
+  id: Id<"comment">;
+  parentId?: Id<"comment">;
+  postId: Id<"post">;
+  postedAt: number; // Number of date
   content: string;
-  author: { name: string; image: string, color?:string, } | "anonimo";
-  subComments?: subComments;
-  commentRoute: string;
+  author: { name: string; image: string, color?: string, } | "anonimo";
+  subComments?: PostComment[];
   old?: boolean;
+  anonimoDefault?: boolean;
   level?: number;
+  user?: UserObject;
+  isAuthenticated?: boolean;
+  reactions?: { likes: number; dislikes: number, likedByTheUser: 'like' | 'dislike' | undefined };
   //setRespondTo?: Dispatch<SetStateAction<string>>;
 }
 
@@ -38,97 +48,105 @@ export function Comment({
   author,
   old,
   postId,
-  parentId,
   subComments,
+  anonimoDefault,
   id,
-  commentRoute,
   level = 1,
- // setRespondTo
+  user,
+  isAuthenticated,
+  reactions,
+  // setRespondTo
 }: CommentProps) {
   // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
   const [opened, setOpen] = useState(false);
   const [subCommentsOpened, setSubCommentsOpened] = useState(true);
+  const router = useRouter();
   dayjs.extend(relativeTime);
   dayjs.locale(es);
   //handleRespondTo = () =>{ if (author?.name) setRespondTo(author?.name && author?.name)}
-  
+
   return (
-    <div  className="p-4 mt-2 border-l-[2px] pb-0 max-w-2xl border-l-gray-400/40" >
-      <Stack gap={7} onClick={()=>{
-      setSubCommentsOpened((o) => !o)
-    }
-    } >
-        <Text size="md" className="break-words whitespace-normal">{content}</Text>  
+    <div className="ps-4 mt-2 border-l-[2px] pb-0 max-w-2xl border-l-gray-400/40" >
+      <Stack gap={7} onClick={() => {
+        setSubCommentsOpened((o) => !o)
+      }
+      } >
+        <Text size="md" className="break-words whitespace-normal">{content}</Text>
         <Group justify="flex-start" gap="xs" onClick={
-            (e) => {
-              e.stopPropagation();
-            }
+          (e) => {
+            e.stopPropagation();
+          }
         }>
+          <LikesBar showIfZero dislikes={reactions?.dislikes || 0} likes={reactions?.likes || 0} userLiked={reactions?.likedByTheUser} contentId={id} />
           {author !== "anonimo" ? (
             <Avatar size={22} src={author.image} alt={author.name} radius="xl" />
-            ) : (
+          ) : (
             <Avatar size="xs" alt="Anónimo" radius="xl" />
           )}
-          
+
+          <Text size="sm" color="dimmed">
+            {author !== "anonimo" ? author.name : "Anónimo"}
+          </Text>
+          •
+          {postedAt && (
             <Text size="sm" color="dimmed">
-              {author !== "anonimo" ?  author.name : "Anónimo"}
+              {dayjs(postedAt).fromNow()}
             </Text>
-            •
-            {postedAt && (
-              <Text size="sm" color="dimmed">
-               {dayjs(old?postedAt?.toDate():postedAt).fromNow()}
-              </Text>
-            )}
-        {!old && (
-          <Anchor onClick={() => setOpen((o) => !o)} color={DEFAULT_COLOR} >
-          Responder
-        </Anchor>
-        )}
+          )}
+
+          <Anchor onClick={() => { console.log(isAuthenticated); isAuthenticated ? setOpen((o) => !o) : router.push("/bienvenido") }} c={DEFAULT_COLOR} >
+            Responder
+          </Anchor>
+
         </Group>
-        <Collapse in={opened} onClick={
+        {user && (
+          <Collapse in={opened} onClick={
             (e) => {
               e.stopPropagation();
             }
-        }>
-          <CommentForm postId={postId} commentId={id} respondto={commentRoute+".subComments."} closeCollapse={setOpen} />
-        </Collapse>  
+          }>
+            <CommentForm user={user} postId={postId} respondto={id} closeCollapse={setOpen} />
+          </Collapse>
+        )}
       </Stack>
 
-     <div className="ml-11">
+      <div className="ml-11">
         {/* <Anchor onClick={() => setOpen((o) => !o)} color={DEFAULT_COLOR}>
           Responder
         </Anchor>
     {/* 
         <MiniCommentForm opened={opened} postId={id} userNameToResponder={author === "anonimo" ? "Anónimo" : author.name} />
-    */}  
-    </div> 
-      
-       {subComments && (
+    */}
+      </div>
+
+      {subComments && (
         <Collapse in={subCommentsOpened} onClick={
           (e) => {
             e.stopPropagation();
           }
-      }>
-          <Stack >
-            { Object.values(subComments)
-              .sort((comment1, comment2)=>  new Date(comment2.postedAt).getTime() - new Date(comment1.postedAt).getTime())
+        }>
+          <Stack>
+            {Object.values(subComments)
+              .sort((comment1, comment2) => new Date(comment2.postedAt).getTime() - new Date(comment1.postedAt).getTime())
               .map((subco, index) => (
-              <Comment
-                postId={postId}
-                level={level+1}
-                commentRoute={commentRoute+".subComments."+subco.id}
-                id={subco.id}
-                parentId={subco.parentId}
-                key={index}
-                postedAt={subco.postedAt}
-                author={subco.author}
-                content={subco.content}
-                subComments={subco.subComments}
+                <Comment
+                  postId={postId}
+                  level={level + 1}
+                  id={subco._id}
+                  parentId={subco.parentId}
+                  key={index}
+                  postedAt={subco._creationTime}
+                  anonimoDefault={anonimoDefault}
+                  author={subco.author}
+                  content={subco.content}
+                  subComments={subco.subcomments}
+                  user={user}
+                  isAuthenticated={isAuthenticated}
                 />
-            ))}
+              ))}
           </Stack>
         </Collapse>
-      )} 
+      )}
     </div>
   );
 }

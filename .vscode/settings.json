@@ -1,0 +1,15 @@
+{
+    "workbench.editor.customLabels.enabled": true,
+    "workbench.editor.customLabels.patterns": {
+        "*/app/src/app/layout.tsx": "New APP",
+        "*/app/src/.pages/_app.tsx": "Old App pages",
+        "*/app/src/app/(main)/layout.tsx": "Main Layout",
+        "*/app/src/app/(main)/configuracion/page.tsx": "Configuration",
+        "*/app/src/app/(main)/crear/page.tsx": "Crear",
+        "*/app/src/app/(main)/[author]/[postSlug]/page.tsx": "Post Page",
+        "*/app/src/app/(main)/[author]/[postSlug]/loading.stories.tsx": "loading.story.tsx",
+        "*/app/src/components/Layout/AppFooter.stories.tsx": "AppFooter.story.tsx",
+        "*/app/convex": "backend"
+    },
+    "svg.preview.background": "editor"
+}

@@ -1,8 +1,8 @@
 import { AppShell, useMantineTheme } from "@mantine/core";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 // import Script from "next/script";
 import { ReactNode, } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@context/AuthContext";
 import AppFooter from "./AppFooter";
 import { AppHeader } from "./AppHeader";
 import AppNavbar from "./AppNavbar";
@@ -19,7 +19,7 @@ type LayoutProps = {
 
 function Layout({ children }: LayoutProps) {
   const [opened, { toggle }] = useDisclosure();
-  const router = useRouter();
+  // const router = useRouter();
   const { user, loginWithMicrosoft } = useAuth();
   const theme = useMantineTheme();
 
@@ -45,7 +45,7 @@ function Layout({ children }: LayoutProps) {
       {/* <AppShell.Aside hidden={router.pathname != "/"} >
         <FilterByTags />
       </AppShell.Aside> */}
-      <AppShell.Footer hiddenFrom="sm" hidden={router.pathname != "/"}><AppFooter /></AppShell.Footer>
+      <AppShell.Footer ><AppFooter /></AppShell.Footer>
       <AppShell.Navbar className={styles.nav} p="md">
         <AppNavbar />
       </AppShell.Navbar>

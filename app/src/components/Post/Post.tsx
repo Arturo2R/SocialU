@@ -20,8 +20,9 @@ import {
   TypographyStylesProvider,
 } from "@mantine/core";
 
-import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "../../constants";
+import { DEFAULT_COLOR, DEFAULT_GRADIENT } from "@lib/constants";
 import { Tag } from "./Tag";
+import ContentView from "@components/ContentView";
 
 // import dayjs from "dayjs";
 // import es from "dayjs/locale/es";
@@ -149,12 +150,13 @@ export const PostCard: FC<PostCardProps> = ({
           hideLabel="Menos"
           transitionDuration={120}
         >
-          {renderMethod === "DangerouslySetInnerHtml" ? (
+          {renderMethod === "DangerouslySetInnerHtml" && (
             <TypographyStylesProvider>
               <div className="bn-container" dangerouslySetInnerHTML={{ __html: description }}></div>
             </TypographyStylesProvider>
-          ) : (
-            <Text>{description}</Text>
+          )}
+          {renderMethod === "CustomEditorJSParser" && (
+            <ContentView content={String(description)} />
           )}
         </Spoiler>
         {event && (

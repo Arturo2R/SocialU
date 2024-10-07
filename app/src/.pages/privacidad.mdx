@@ -1,0 +1,67 @@
+import { MDXLayout as Page} from "@components/Layout/MDXLayout"
+export const meta = {
+    description: 'Privacidad',
+    slug: 'privacidad',
+    title: "Acuerdo De Privacidad",
+}
+
+# POLÍTICA DE PRIVACIDAD Y USO DE DATOS
+
+Fecha de entrada en vigencia: 5 de Febrero del 2023
+
+## 1. Introducción
+Bienvenido(a) a SocialU. Nos preocupamos por la privacidad y la seguridad de sus datos personales. Esta Política de Privacidad describe cómo recopilamos, utilizamos y compartimos sus datos cuando utiliza nuestra aplicación. Al acceder y utilizar la aplicación, acepta los términos descritos en esta política.
+
+## 2. Datos Recopilados
+a. **Datos de Identificación:** 
+- Al registrarse, solicitamos y almacenamos su correo institucional y nombre personal a través de Microsoft Identity Platform.
+
+b. **Datos Generados por el Usuario:**
+- Guardamos los datos generados por el usuario - durante la creación de publicaciones e interacciones en la plataforma.
+
+c. **Datos de Inicio de Sesión:**
+- Registramos datos de inicio de sesión en el dispositivo del usuario para facilitar el acceso seguro a la aplicación.
+
+d. **Datos de Uso:**
+- Utilizamos PostHog para registrar el uso de la aplicación, y estos datos anonimizados se almacenan en servidores ubicados en Europa.
+
+## 3. Almacenamiento y Procesamiento de Datos
+a. **Ubicación del Almacenamiento:**
+- Los datos proporcionados por los usuarios se almacenan de forma segura en Google Cloud Storage en la región `southamerica-east1`, ubicada en Sao Paulo, Brasil, para mayor cercanía a los usuarios.
+- Los datos de uso se almacenan de forma segura en Amazon Web Services en la región  `eu-central-1` ubicada en Frankfurt, Alemania.
+
+b. **Proveedor de Almacenamiento:**
+- Google se encarga del procesamiento y almacenamiento seguro de los datos generados por los usuarios para el funcionamiento de la aplicación.
+- Posthog se encarga de registrar y procesar los datos de analitica y uso de la aplicación.
+
+## 4. Uso de Datos y Propósito
+a. **Propósito Principal:**
+- Los datos se utilizan para brindar el servicio de comunicación entre estudiantes, para mejorar, la experiencia del usuario, facilitar el acceso a la plataforma y analizar el uso de la aplicación con el fin de realizar mejoras.
+
+b. **Análisis de Uso:**
+- PostHog se utiliza para analizar y mejorar la funcionalidad de la aplicación.
+
+## 5.Privacidad y Seguridad
+a. **Seguridad de Datos:**
+- Se implementan medidas de seguridad para proteger sus datos contra accesos no autorizados.
+
+b. **No Venta de Datos:**
+- Nunca venderemos los datos personales ni de uso de la plataforma a terceros por ningún motivo.
+
+## 6. Derechos del Usuario
+De acuerdo con las regulaciones de LDAP en Colombia, usted tiene los siguientes derechos:
+a. **Derecho a Modificar Datos:**
+- Puede modificar sus datos personales en cualquier momento a través de la configuración de la cuenta.
+
+b. **Derecho a Eliminar Datos:**
+- Puede solicitar la eliminación de sus datos personales de nuestra base de datos.
+
+## 7. Cambios en la Política de Privacidad
+Nos reservamos el derecho de modificar esta Política de Privacidad en cualquier momento. Cualquier cambio será notificado a través de la aplicación o por otros medios apropiados.
+Para cualquier pregunta o inquietud sobre nuestra Política de Privacidad, comuníquese con nosotros a través de arosenstielhl@uninorte.edu.co .
+
+**Última Actualización:** 5 de Agosto del 2024
+
+
+
+export default ({ children }) => <Page meta={meta} >{children}</Page>

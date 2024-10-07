@@ -2,7 +2,7 @@
 import { Collapse, Button, Group, Stack, Title, Text, Container } from '@mantine/core'
 import React, { useState } from 'react'
 
-import config from '../config'
+import config from '../lib/config'
 import { useDisclosure } from '@mantine/hooks'
 
 type Props = {}
@@ -10,8 +10,6 @@ type Props = {}
 const conf = config()
 
 const FilterByTags = ({ category, categorySetter }: { category: CategoryState | null, categorySetter: React.Dispatch<React.SetStateAction<CategoryState | null>> }) => {
-
-
 
     return (
         <div className='mb-[20px]'>
@@ -21,7 +19,6 @@ const FilterByTags = ({ category, categorySetter }: { category: CategoryState | 
             <Container visibleFrom='sm' fluid pl={0} pr={20}>
                 <DesktopFilterByTags categoryState={category} categorySetter={categorySetter} />
             </Container>
-
         </div>
     )
 }

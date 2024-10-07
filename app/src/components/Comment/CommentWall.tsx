@@ -1,57 +1,66 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { Comment, CommentProps } from "./Comment";
 import CommentForm from "./CommentForm";
-import { auth } from "../../firebase";
+import { auth } from "@lib/firebase";
 import { Paper, Text } from "@mantine/core";
 import Link from "next/link";
+import { Doc, Id } from "@backend/dataModel";
+import { Authenticated, Unauthenticated, useQuery } from "convex/react";
+import { api } from "@backend/api";
+import { useUser } from "@context/UserStateContext";
 // import { Transition } from "@mantine/core";
 
 type CommentWallProps = {
   comments?: Post["comentarios"];
-  postId: string;
+  postId: Id<"post">;
   setRespondTo?: Dispatch<SetStateAction<string>>;
   oldComments: CommentProps[];
 };
 
 
 
-const CommentWall = ({ comments, postId, setRespondTo, oldComments }: CommentWallProps) => {
+const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) => {
+  const comments = useQuery(api.comment.getCommentsForPost, { postId });
+  const { user, isAuthenticated } = useUser()
+  console.log(user?.isMember)
   return (
     <>
-     <CommentForm postId={postId}/>
+      <Authenticated>
+        <CommentForm postId={postId} user={user} />
+      </Authenticated>
+      <Unauthenticated>
+        <Paper component={Link} href="/bienvenido" p="lg" bg="#e2e8f0" variant="😀" radius="md" shadow="md">
+          <Text ta="center">
+            Para comentar debes iniciar sesión con tu cuenta universitaria
+          </Text>
+        </Paper>
+      </Unauthenticated>
       {comments &&
         Object.values(comments)
-        .sort((comment1, comment2)=>  new Date(comment2.postedAt).getTime() - new Date(comment1.postedAt).getTime())
-        .map((co, index) => (
-          <Comment
-            key={index}
-            postedAt={co.postedAt}
-            subComments={co.subComments}
-            content={co.content}
-            author={co.author}
-            commentRoute={co.id}
-            id={co.id}
-            postId={postId}
-            // setRespondTo={setRespondTo}
-            parentId={co.postId}
-          />
-        ))}
-        {oldComments &&
-        oldComments?.map((co, index) => (
-          <Comment
-            old={true}
-            key={index}
-            postedAt={co.postedAt}
-            subComments={co.subComments}
-            content={co.content}
-            author={co.author}
-            commentRoute={co.id}
-            id={co.id}
-            postId={co.postId}
-            // setRespondTo={setRespondTo}
-            parentId={co.postId}
-          />
-        ))}
+          .map((co, index) => (
+            <Comment
+              key={index}
+              anonimoDefault={user?.settings?.anonimoDefault}
+              postedAt={co._creationTime}
+              // subComments={co.subComments}
+              content={co.content}
+              author={co.author}
+              commentRoute={co._id}
+              id={co._id}
+              postId={postId}
+              user={user}
+              // setRespondTo={setRespondTo}
+              parentId={co.postId}
+              subComments={co.subcomments}
+              isAuthenticated={isAuthenticated}
+              reactions={{
+                likes: co.likes,
+                dislikes: co.dislikes,
+                likedByTheUser: co.likedByTheUser
+              }}
+            />
+          ))}
+
     </>
   );
   // } else {

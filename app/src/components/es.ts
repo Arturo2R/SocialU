@@ -6,6 +6,12 @@ export const es = {
       aliases: ["h", "encabezado1", "h1"],
       group: "Encabezados",
     },
+    emoji:{
+       title: "Emoji",
+       subtext: "Inserta un emoji",
+       aliases: ["emoji"],
+       group: "Insert",
+    },
     heading_2: {
       title: "Encabezado 2",
       subtext: "Usado para secciones clave",

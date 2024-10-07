@@ -1,0 +1,12 @@
+.postPage {
+    @media (max-width: 768px) {
+        padding: 0;
+        --paper-radius: 0;
+        --paper-shadow: none;
+    }
+
+    --paper-radius: var(--mantine-radius-md);
+    --paper-shadow: var(--mantine-shadow-sm);
+    padding: var(--mantine-spacing-md);
+    
+}

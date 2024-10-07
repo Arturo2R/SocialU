@@ -1,114 +1,121 @@
-import { ActionIcon, Paper, SegmentedControl, Switch, Text, Textarea } from "@mantine/core";
+import { ActionIcon, Avatar, Paper, SegmentedControl, Switch, Text, Textarea } from "@mantine/core";
 import React, { useEffect } from "react";
 import { Send } from "tabler-icons-react";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
-import { useFirestore } from "../../hooks/useFirestore";
-import { useAuth } from "../../context/AuthContext";
-import { DEFAULT_COLOR } from "../../constants";
-import { nanoid } from "../../utils";
-import Link from "next/link";
-import { auth } from "../../firebase";
+
+import { DEFAULT_COLOR } from "@lib/constants";
+import { nanoid } from "@lib/utils";
+
+import { useMutation } from "convex/react";
+import { api } from "@backend/api";
+import { Id } from "@backend/dataModel";
+import { UserObject } from "@context/UserStateContext";
+import { UserInfoOnComment } from "./UserInfoOnComment";
+
 
 type Props = {
-  postId: string;
-  respondto?: string
-  commentId?: string
+  postId: Id<"post">;
+  respondto?: Id<"comment">;
   closeCollapse?: Function
+  user: UserObject;
 };
 
 const CommentForm = (props: Props) => {
-  const { user, bussinessAccount, hasBussinessAccount } = useAuth()
-  // const [anonimo, setAnonimo] = useState<boolean>(user?.configuration?.anonimoDefault || false)
-  // const [asBussiness, setAsBussiness] = useState<boolean>(hasBussinessAccount)
-  
+
   const form = useForm({
     initialValues: {
       content: "",
-      anonimo: user?.configuration?.anonimoDefault || false,
+      anonimo: props.user?.settings?.anonimoDefault || false,
       postId: props.postId,
-      asBussiness: hasBussinessAccount,
+      asBussiness: false,
     },
   });
+  console.log(props.user)
+  // useEffect(() => {
+  //   form.setFieldValue('anonimo', form.values.asBussiness)
+  // }
+  //   , [form.values.asBussiness])
 
-  const { createComment, creating } = useFirestore();
+  const create = useMutation(api.comment.create)
 
-  const commentFormId = props.commentId || props.postId || nanoid()
 
-  useEffect(() => {
-    form.setFieldValue('anonimo', form.values.asBussiness)
-  }
-    , [form.values.asBussiness])
+  const commentFormId = nanoid();
 
   return (
-    <>
-    {auth.currentUser ? (
-      <form
-        className="flex gap-x-2"
-        onSubmit={form.onSubmit((values) => {
-          createComment(values, user, hasBussinessAccount, bussinessAccount, props.respondto);
-          if(props.closeCollapse){props?.closeCollapse(false)}
-          form.reset();
-        })}
-        name={"comment-form-"+ commentFormId}
-        id={"CommentForm-"+  commentFormId}
-      >
-        {/* <Group grow> */}
-        <div className="flex-1">
-          <Textarea
-            placeholder="Tu Comentario"
-            className="mb-1"
-            // label="Tu Comentario"
-            variant="filled"
-            name={"Comentario-"+  commentFormId}	
-            form={"CommentForm-"+  commentFormId}	
-            radius="md"
-            minRows={2}
-            autosize
-            required
-            {...form.getInputProps("content")}
-          />
-          {hasBussinessAccount && (
-            <Switch
-              mt="xs"
-              size="md"
-              color={bussinessAccount?.color || DEFAULT_COLOR}
-              label={"Comentar como " + bussinessAccount?.name}
-              {...form.getInputProps('asBussiness', { type: 'checkbox' })}
-            ></Switch>
-          )}
+    <form
+      className="flex gap-x-2"
+      onSubmit={form.onSubmit((values) => {
+        create({
+          anonimo: values.anonimo,
+          asOrganization: values.asBussiness,
+          content: values.content,
+          parentId: props.respondto || undefined,
+          postId: props.postId,
+        })
+        console.log("Creando; ",
+          {
+            anonimo: values.anonimo,
+            asOrganization: values.asBussiness,
+            content: values.content,
+            parentId: props.respondto || undefined,
+            postId: props.postId,
+          }
+        )
+        if (props.closeCollapse) { props?.closeCollapse(false) }
+        form.reset();
+      })}
+      name={"comment-form-" + commentFormId}
+      id={"CommentForm-" + commentFormId}
+    >
+      <div className="flex-1">
+        <Textarea
+          placeholder="Tu Comentario"
+          className="mb-1"
+          // label="Tu Comentario"
+          variant="filled"
+          name={"Comentario-" + commentFormId}
+          form={"CommentForm-" + commentFormId}
+          radius="md"
+          minRows={2}
+          autosize
+          required
+          {...form.getInputProps("content")}
+        />
+        <UserInfoOnComment asBussiness={form.values.asBussiness} isAnonimus={form.values.anonimo}
+          org={{ image: props.user?.organization.logo, name: props.user?.organization.name }}
+          user={{ image: props.user?.photoURL, name: (props?.user?.settings?.useUserName ?? true) ? props.user?.username : props.user?.displayName }}
+        />
+        {(props.user?.isMember || false) && (
           <Switch
             mt="xs"
-            color={DEFAULT_COLOR}
-            label="Enviar Anonimamente"
-            {...form.getInputProps('anonimo', { type: 'checkbox' })}
+            size="md"
+            color={props.user!.organization.color || DEFAULT_COLOR}
+            label={"Comentar como " + props.user!.organization.name}
+            {...form.getInputProps('asBussiness', { type: 'checkbox' })}
           ></Switch>
-        </div>
-        {/* <div className=""> */}
-
-        <ActionIcon
-          aria-label="Enviar Comentario"
-          component="button"
-          className="flex-none"
+        )}
+        <Switch
+          mt="xs"
           color={DEFAULT_COLOR}
-          size="xl"
-          radius="md"
-          variant="light"
-          type="submit"
-        >
-          <Send />
-        </ActionIcon>
-        {/* </div> */}
-        {/* </Group> */}
-      </form>
-  ):(
-    <Paper component={Link} href="/bienvenido" p="lg" bg="#e2e8f0" variant="😀" radius="md" shadow="md">
-      <Text ta="center">
-        Para comentar debes iniciar sesión con tu cuenta universitaria
-      </Text>
-    </Paper>
-  )}
-  </>
+          label="Enviar Anonimamente"
+          {...form.getInputProps('anonimo', { type: 'checkbox' })}
+        ></Switch>
+      </div>
+
+      <ActionIcon
+        aria-label="Enviar Comentario"
+        component="button"
+        className="flex-none"
+        color={DEFAULT_COLOR}
+        size="xl"
+        radius="md"
+        variant="light"
+        type="submit"
+      >
+        <Send />
+      </ActionIcon>
+
+    </form>
   );
 };
 

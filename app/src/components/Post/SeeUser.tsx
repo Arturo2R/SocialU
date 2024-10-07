@@ -1,7 +1,7 @@
 import { Anchor, Avatar, Group, Text } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
-import { DEFAULT_COLOR } from "../../constants";
+import { DEFAULT_COLOR } from "@lib/constants";
 // import { Url } from "url";
 
 type Props = {

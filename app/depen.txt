@@ -1,2 +1,0 @@
-yarn list v1.22.17
-Done in 0.92s.
