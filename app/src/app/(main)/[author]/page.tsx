@@ -4,14 +4,17 @@ import { Avatar, Text, Paper } from '@mantine/core';
 import { api } from '@backend/api';
 import { fetchQuery } from 'convex/nextjs';
 
-
 export const generateStaticParams = async () => {
     const slugs = await fetchQuery(api.user.slugs)
+    
+    if (!slugs || slugs.length === 0) {
+        return []
+    }
+
     return slugs.map((slug) => ({
         slug
     }))
 }
-
 export default async function UserInfoAction({ params }: { params: { author: string } }) {
     const author = await fetchQuery(api.user.getUserByUserName, {slug: params.author})
 
