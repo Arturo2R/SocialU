@@ -2,7 +2,7 @@ import { IconBellRinging, IconSend, IconSettings } from "@tabler/icons-react";
 import pk from "../package.json";
 export default function () {
   return {
-    domain: "redsocialu.com",
+    domain: "old.redsocialu.com",
     siteName: "SocialU",
     logo: "/logo.png",
     bussiness: {
