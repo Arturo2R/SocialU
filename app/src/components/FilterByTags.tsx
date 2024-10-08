@@ -49,7 +49,7 @@ function MobileFilterByTags({ category, categorySetter }: { category: CategorySt
                             Todas
                         </Button>
                     )}
-                    {conf.categories.map((c, index) => category?.value !== c.value && (
+                    {conf.categories.filter(t => t.active).map((c, index) => category?.value !== c.value && (
                         <Button
                             key={index} radius="md" size='md'
                             onClick={() => { categorySetter({ ...c, variant: "light" }); toggle() }}
@@ -69,7 +69,7 @@ const DesktopFilterByTags = ({ categoryState, categorySetter }: { categoryState:
     return (
         <Group gap="xs" grow>
             <Button radius="md" size='md' onClick={() => { categorySetter(null) }} variant={categoryState === null ? 'light' : 'outline'} color="gray" >Todas</Button>
-            {conf.categories.map((c, index) => (
+            {conf.categories.filter(t => t.active).map((c, index) => (
                 <Button key={index} radius="md" size='md' onClick={() => { categorySetter({ ...c, variant: "light" }) }} variant={categoryState?.value === c.value ? 'light' : 'outline'} color={c.color} >{c.name}</Button>
             ))}
         </Group>

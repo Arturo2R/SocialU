@@ -75,7 +75,7 @@ export const AppHeader = ({
           </Group>
         </>
       )}
-      {openedSearch && <Search close={handlers.close} />}
+      {openedSearch && <Search  close={handlers.close} />}
       {!openedSearch && (<Group >
         <Authenticated>
           <Group hiddenFrom="sm">
@@ -84,7 +84,7 @@ export const AppHeader = ({
             </ActionIcon>
           </Group>
           <Text className="hidden md:block">{user?.fullName}</Text>
-          <Avatar alt={`${user?.fullName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.imageUrl} />
+          <Avatar component={Link} href="/configuracion" alt={`${user?.fullName} image`} radius="xl" placeholder="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAQAAACROWYpAAAAHklEQVR42mNk+M9ANmAc1TyqeVTzqOZRzaOah7NmAJ7UHgH+uhixAAAAAElFTkSuQmCC" src={user?.imageUrl} />
           {/* <ColorSchemeToggle /> */}
         </Authenticated>
         <Unauthenticated>

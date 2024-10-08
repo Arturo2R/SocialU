@@ -150,7 +150,7 @@ const CrearPage = () => {
                                     // label="Etiquetas"
                                     variant="unstyled"
                                     placeholder="Categorias"
-                                    data={conf.categories.map(c => { return { label: c.name, value: c.value } })}
+                                    data={conf.categories.filter(t => t.active).map(c => { return { label: c.name, value: c.value } })}
                                     clearable
                                     hidePickedOptions
                                 />
@@ -158,6 +158,7 @@ const CrearPage = () => {
                         />
                         {/* ts-ignore */}
                         <TextEditor
+                            setImageLoading={setImageChecking}
                             setEditorState={setEditorState}
                             control={control}
                             name="message"

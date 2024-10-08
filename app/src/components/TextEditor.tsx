@@ -17,12 +17,18 @@ import "@blocknote/mantine/style.css";
 
 import { set, useController } from "react-hook-form";
 import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "@lib/constants";
+import { api } from "@backend/api";
+import { useAction } from "convex/react";
+import { modals } from "@mantine/modals";
+import { useState } from "react";
+import posthog from "posthog-js";
 
 export interface TextEditorProps {
   name: string;
   required?: boolean;
   editable?: boolean;
   control: any;
+  setImageLoading: React.Dispatch<React.SetStateAction<"loading" | "loaded" | null>>;
   setEditorState: React.Dispatch<React.SetStateAction<{ html: string; markdown: string, blocks: any[] } | undefined>>;
 }
 
@@ -32,7 +38,7 @@ const editorConfig = {
   enableBlockNoteExtensions: true,
 };
 
-const TextEditor = ({ editable, name, control, setEditorState }: TextEditorProps) => {
+const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }: TextEditorProps) => {
   const {
     field,
     formState,
@@ -47,11 +53,57 @@ const TextEditor = ({ editable, name, control, setEditorState }: TextEditorProps
     },
   });
 
+  const checkImage = useAction(api.post.checkImage)
+
   const { colorScheme } = useMantineColorScheme()
+
+  const openYouCantModal = () => modals.open({
+    title: "¡Que Pensabas!",
+    children: (
+      <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
+    )
+  })
+  const [file, setFile] = useState<File>()
 
   const theEditor = useCreateBlockNote({
     ...editorConfig,
-    uploadFile: uploadFileToConvex,
+    uploadFile: async (file) => {
+      setImageLoading('loading')
+      setFile(file);
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === "string") {
+            resolve(reader.result);
+          } else {
+            reject(new Error("File reading failed"));
+          }
+        };
+        reader.onerror = () => reject(new Error("File reading failed"));
+        reader.readAsDataURL(file);
+      });
+    },
+    resolveFileUrl: async (url) => {
+      const fileUploadedUrl =  await uploadFileToConvex(file!)
+      if (file?.type.startsWith("image/")) {
+        const isPornImage = await checkImage({inputType: "url", url: fileUploadedUrl});
+        if (isPornImage){
+          openYouCantModal()
+          posthog.capture("obscene_image", {
+            // email: user?.email,
+            image_url: fileUploadedUrl,
+          })
+          setImageLoading('loaded')
+          return ''
+        } else {
+          setImageLoading('loaded')
+          return url
+        }
+      } else {
+        setImageLoading('loaded')
+        return url
+      }
+    }
   });
 
   const onDocumentChange = async () => {

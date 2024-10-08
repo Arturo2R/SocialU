@@ -72,9 +72,9 @@ export default function ImageDropzone({
     if(url){
       setImageUrl(url)
 
-      const isValid = await checkImage({url, inputType: "url"});
-      console.log("que tan valido es", isValid)
-      if (!isValid){
+      const isPorn = await checkImage({url, inputType: "url"});
+      console.log("que tan valido es", isPorn)
+      if (isPorn){
         openYouCantModal()
         setImage(null); set64(null); setImageUrl(null);
         setImageLoading("loaded")

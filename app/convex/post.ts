@@ -415,7 +415,7 @@ export const checkImage = action({
             console.error("Un error mirando la imagen", error)
             throw new Error("Un error mirando la imagen "+ error)
         }
-        return !isImageAdult
+        return isImageAdult
     }
 })
 

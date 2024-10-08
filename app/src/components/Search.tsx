@@ -11,7 +11,7 @@ interface SeachInterface {
 export const Search = (props: SeachInterface) => {
     const [hovered, setHovered] = useState(false)
 
-    const { setSearch, searchValue } = usefeed()
+    const { setSearch, searchValue, category } = usefeed()
     const handlerClick = () => {
         setSearch('')
         if (props.close) {
@@ -28,7 +28,7 @@ export const Search = (props: SeachInterface) => {
                 onMouseOver={() => setHovered(true)}
                 onMouseOut={() => setHovered(false)}
                 variant={hovered ? "filled" : "default"}
-                placeholder="Busca eventos"
+                placeholder={`Busca ${category?.value || "posts"}`}
                 size="md" w="100%" radius="md"
                 leftSection={<SearchIcon />}
                 rightSectionPointerEvents="all"

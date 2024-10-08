@@ -49,7 +49,7 @@ export const upsertFromClerk = internalMutation({
     const uni = await ctx.db.query("university").withIndex("byDomain", (q) => q.eq("domain", domain)).unique();
 
     if (!uni) {
-      throw new Error("Invalid domain")
+      throw new Error("Invalid email domain, algo pasa con ")
     }
 
     const userAttributes = {
