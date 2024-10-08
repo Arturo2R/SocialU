@@ -83,7 +83,7 @@ export default function RootLayout({
               <ConvexQueryCacheProvider>
                 <UserStateProvider>
                   <FeedStateProvider>
-                    <MantineProvider theme={theme}>
+                    <MantineProvider theme={theme} defaultColorScheme="auto">
                       <ModalsProvider>
 
                         <PostHogPageView />

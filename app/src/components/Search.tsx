@@ -20,9 +20,11 @@ export const Search = (props: SeachInterface) => {
     }
 
     return (
-        <div className="w-full">
+        <form className="w-full">
             <Input
                 onChange={(event) => setSearch(event.currentTarget.value)}
+                // onReset={() => setSearch('')}
+                // value={searchValue}
                 onMouseOver={() => setHovered(true)}
                 onMouseOut={() => setHovered(false)}
                 variant={hovered ? "filled" : "default"}
@@ -34,10 +36,11 @@ export const Search = (props: SeachInterface) => {
                     <CloseButton
                         aria-label="Clear input"
                         onClick={() => handlerClick()}
+                        type="reset"
                         style={{ display: (searchValue || props.close) ? undefined : 'none' }}
                     />
                 }
             />
-        </div>
+        </form>
     )
 }
