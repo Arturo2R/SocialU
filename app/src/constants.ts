@@ -11,5 +11,5 @@ export const DEFAULT_LANGUAGE = 'es';
 export const DEFAULT_COLOR = 'blue.4';
 export const UNIVERSIDAD = "uninorte"
 export const DEFAULT_GRADIENT = { to: 'violet.9', from: DEFAULT_COLOR, deg: 90 }
-export const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_VERCEL_URL;
+export const appUrl = process.env.NEXT_PUBLIC_VERCEL_URL;
 export const POSTHOG_HOST_URL = `https://${appUrl}/ingest` || process.env.NEXT_PUBLIC_POSTHOG_HOST;
