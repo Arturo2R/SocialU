@@ -38,7 +38,7 @@ const Holi = (props: Props) => {
         onSubmit={form.onSubmit((values) => {
           const url = `${values.original_url}?utm_medium=${values.utm_medium}${values.utm_source ? '&utm_source='+values.utm_source:""}&utm_campaign=${values.utm_campaign}${values.utm_content ? '&utm_content='+values.utm_content:''}`
           kv.set(values.redirect_url, url)
-          setFinishedUrl('https://redsocialu.com/r/'+values.redirect_url)
+          setFinishedUrl('https://old.redsocialu.com/r/'+values.redirect_url)
         })}
       >
 
