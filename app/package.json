@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV='development' && next dev",
+    "deploy" : "bun run build",
     "build": "next build --no-lint",
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
