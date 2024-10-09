@@ -9,18 +9,12 @@ import schema from "./schema";
 export const current = query({
   handler: async (ctx) => {
     return await getCurrentUser(ctx)
-    // let userorganizationmemeber
+  },
+});
 
-    // const org = await ctx.db.query("organization").collect();
-    // if(user && org){ 
-    //   userorganizationmemeber = org.find((o) => o.members.includes(user._id))
-    // }
-
-    // if (userorganizationmemeber) {
-    //   return {...user, isMember: true, organization: org }
-    // }
-
-    // return {...user, isMember: false};
+export const currentLogged = query({
+  handler: async (ctx) => {
+    return await getCurrentUserOrThrow(ctx)
   },
 });
 
