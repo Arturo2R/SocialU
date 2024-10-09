@@ -53,7 +53,7 @@ export default function ImageDropzone(
     )
   })
 
-  
+
 
   const addImage = async (file: File) => {
     setImageLoading("loading")
@@ -154,6 +154,7 @@ export default function ImageDropzone(
               'image/*': [], // All images
               'video/*': [], // All videos
             }}
+            loading={(status && status === "loading")}
 
           >
             <Group justify="center" gap="xl" mih={70} style={{ pointerEvents: 'none' }}>
@@ -185,7 +186,7 @@ export default function ImageDropzone(
                 </Text>
               </div>
             </Group>
-            {(progress && status === "loading" && progress > 0) && (
+            {(progress && (status === "loading") && (progress > 0)) && (
               <>
                 <Progress color="orange" size="xl" value={progress} />
                 <Text size="xs" c="dimmed" className="text-center">No salgas de la aplicación</Text>

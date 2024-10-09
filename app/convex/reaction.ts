@@ -76,7 +76,7 @@ export const generate = internalAction({
                     "content": [
                         {
                             "type": "text",
-                            "text": args.content
+                            "text": args.title ? `titulo: ${args.title}, contenido: ${args.content}` : args.content
                         }
                     ]
                 }

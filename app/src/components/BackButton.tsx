@@ -5,7 +5,7 @@ import React from 'react'
 import { ChevronLeft } from 'tabler-icons-react'
 
 type BackButtonProps = {
-  id: string
+  id?: string
 }
 
 const BackButton = ({ id }: BackButtonProps) => {
