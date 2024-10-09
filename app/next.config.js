@@ -45,7 +45,7 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
       port: ''
     }, {
       protocol: 'https',
-      hostname: 'https://hallowed-hound-764.convex.cloud',
+      hostname: 'hallowed-hound-764.convex.cloud',
       port: ''
     }]
   },
