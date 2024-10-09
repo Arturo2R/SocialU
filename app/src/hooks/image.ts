@@ -42,10 +42,10 @@ export const uploadFileToConvex = async (file: File): Promise<string> => {
             body: file
         })
         const result = await response.json()
-
+        console.log("result", result)
         return result.fileurl
     } catch (error: any) {
-        console.error(error.message)
+        console.error(error)
         posthog.capture('upload_image_error', {
             message: error.message || "no hay mensaje",
             fileName: file?.name || "nada",
@@ -71,7 +71,7 @@ export const useUploadVideoToMux = (): { upload: (file: File) => Promise<void>, 
             endpoint: uploadUrl,
             file,
             chunkSize: 1024 * 5,
-            
+
         })
 
         upload.on('error', (error) => {

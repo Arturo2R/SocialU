@@ -20,7 +20,7 @@ import { MAXIMUM_MESSAGE_LENGTH, MINIMUM_MESSAGE_LENGTH } from "@lib/constants";
 import { api } from "@backend/api";
 import { useAction } from "convex/react";
 import { modals } from "@mantine/modals";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import posthog from "posthog-js";
 
 import { useColorScheme } from '@mantine/hooks';
@@ -64,32 +64,14 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
       <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
     )
   })
-  const [contentFile, setFile] = useState<File>()
+  const fileRef = useRef<File | null>(null)
 
   const theEditor = useCreateBlockNote({
     ...editorConfig,
     uploadFile: async (file) => {
       setImageLoading('loading')
-      setFile(file);
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (typeof reader.result === "string") {
-            resolve(reader.result);
-          } else {
-            reject(new Error("File reading failed"));
-          }
-        };
-        reader.onerror = () => reject(new Error("File reading failed"));
-        reader.readAsDataURL(file);
-      });
-    },
-    resolveFileUrl: async (url) => {
-      console.log("resolving url")
-      console.log(contentFile)
-      const fileUploadedUrl = await uploadFileToConvex(contentFile!)
-      console.log(fileUploadedUrl)
-      if (contentFile?.type.startsWith("image/")) {
+      const fileUploadedUrl = await uploadFileToConvex(file!)
+      if (file?.type.startsWith("image/")) {
         const isPornImage = await checkImage({ inputType: "url", url: fileUploadedUrl });
         if (isPornImage) {
           openYouCantModal()
@@ -107,8 +89,7 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
         setImageLoading('loaded')
         return fileUploadedUrl
       }
-    }
-  });
+    }});
 
   const onDocumentChange = async () => {
     // Converts the editor's contents from Block objects to HTML and store to state.
@@ -150,12 +131,12 @@ export const ViewPost = ({ content }: { content: any[] }) => {
     ...editorConfig,
     initialContent: content
   });
-  const { colorScheme } = useMantineColorScheme()
+  const colorScheme = useColorScheme()
   return (
     <BlockNoteView
       editor={editor}
       editable={false}
-      theme={colorScheme === "dark" ? "dark" : "light"}
+      theme={colorScheme}
     />
   )
 }
