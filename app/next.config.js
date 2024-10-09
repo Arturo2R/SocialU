@@ -37,11 +37,15 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
   images: {
     remotePatterns: [{
       protocol: 'https',
-      hostname: 'firebasestorage.googleapis.com',
+      hostname: 'image.mux.com',
       port: ''
     }, {
       protocol: 'https',
       hostname: 'mild-gecko-296.convex.cloud',
+      port: ''
+    }, {
+      protocol: 'https',
+      hostname: 'https://hallowed-hound-764.convex.cloud',
       port: ''
     }]
   },

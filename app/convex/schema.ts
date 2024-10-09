@@ -35,6 +35,8 @@ export default defineSchema({
             positive: v.string(),
             negative: v.string(),
         }),
+        video: v.optional(v.string()), // this is not a url instead the mux playback id, the thubnails and gif preview can be created from this
+        videoMetadata: v.optional(v.object({})), 
         embedding: v.optional(v.array(v.float64())), // Cohere Embed 3 Model embeddings
         //fields: v.optional(v.any()),
     }).index("by_popularity", ["viewsCounter", "commentsCounter"])

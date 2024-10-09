@@ -46,7 +46,7 @@ function MobileFilterByTags({ category, categorySetter }: { category: CategorySt
                             onClick={() => { categorySetter(null); toggle() }}
                             variant='light' color="gray"
                         >
-                            Todas
+                            Todo
                         </Button>
                     )}
                     {conf.categories.filter(t => t.active).map((c, index) => category?.value !== c.value && (

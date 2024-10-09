@@ -46,7 +46,8 @@ import { useQuery } from "convex-helpers/react/cache/hooks";
 import dynamic from "next/dynamic";
 import ContentView, { ContentViewReact } from "@components/ContentView";
 import React from "react";
-import { BigLikeButton, LikesWall } from "@components/Like";
+import { LikesWall } from "@components/Like";
+import { VideoPlayer } from "@components/VideoPlayer";
 
 // import "@blocknote/mantine/style.css";
 
@@ -79,6 +80,12 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
 
     return (
         <Paper classNames={{ root: styles.postPage }}>
+            {content.video && (
+                <>
+                    <VideoPlayer playbackId={content.video} title={content.title} />
+                    
+                </>
+            )}
             {content?.image ? (
                 <>
                     <BackButton id={content.slug} />
@@ -95,6 +102,7 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                     </Title>
                 </div>
             )}
+
 
             <Group mb="xs">
                 {content?.categoryValue && (

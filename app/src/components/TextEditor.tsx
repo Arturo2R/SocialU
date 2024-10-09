@@ -1,7 +1,7 @@
 "use client"
 import { uploadFileToConvex } from "@hooks/image"
 
-import { Skeleton, useMantineColorScheme } from "@mantine/core";
+import { Skeleton } from "@mantine/core";
 import { es } from "./es"
 
 // Add the missing 'emoji' property to the 'slash_menu' dictionary
@@ -23,6 +23,7 @@ import { modals } from "@mantine/modals";
 import { useState } from "react";
 import posthog from "posthog-js";
 
+import { useColorScheme } from '@mantine/hooks';
 export interface TextEditorProps {
   name: string;
   required?: boolean;
@@ -55,7 +56,7 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
 
   const checkImage = useAction(api.post.checkImage)
 
-  const { colorScheme } = useMantineColorScheme()
+  const colorScheme = useColorScheme();
 
   const openYouCantModal = () => modals.open({
     title: "¡Que Pensabas!",
@@ -63,7 +64,7 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
       <h1 className="text-2xl">No Puedes Subir Porno En Esta <b className="text-orange-600">Red Social</b></h1>
     )
   })
-  const [file, setFile] = useState<File>()
+  const [contentFile, setFile] = useState<File>()
 
   const theEditor = useCreateBlockNote({
     ...editorConfig,
@@ -84,10 +85,13 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
       });
     },
     resolveFileUrl: async (url) => {
-      const fileUploadedUrl =  await uploadFileToConvex(file!)
-      if (file?.type.startsWith("image/")) {
-        const isPornImage = await checkImage({inputType: "url", url: fileUploadedUrl});
-        if (isPornImage){
+      console.log("resolving url")
+      console.log(contentFile)
+      const fileUploadedUrl = await uploadFileToConvex(contentFile!)
+      console.log(fileUploadedUrl)
+      if (contentFile?.type.startsWith("image/")) {
+        const isPornImage = await checkImage({ inputType: "url", url: fileUploadedUrl });
+        if (isPornImage) {
           openYouCantModal()
           posthog.capture("obscene_image", {
             // email: user?.email,
@@ -97,11 +101,11 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
           return ''
         } else {
           setImageLoading('loaded')
-          return url
+          return fileUploadedUrl
         }
       } else {
         setImageLoading('loaded')
-        return url
+        return fileUploadedUrl
       }
     }
   });
@@ -134,7 +138,7 @@ const TextEditor = ({ editable, name, control, setEditorState, setImageLoading }
         editor={theEditor}
         editable={editable || true}
         onChange={onEditorChange}
-        theme={colorScheme === "dark" ? "dark" : "light"}
+        theme={colorScheme}
       />
       {(error) && <span className="text-red-500">{error.message}</span>}
     </div>

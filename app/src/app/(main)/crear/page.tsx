@@ -21,6 +21,7 @@ import { useUser } from "../../../context/UserStateContext";
 import Protected from "@components/Protected";
 import { AuthorInfo } from "@components/AuthorInfo";
 import { BlockNoteEditor } from "@blocknote/core";
+import { Load, useUploadVideoToMux } from "@hooks/image";
 // import { getHtmlFromEdjs } from "@lib/parseedjs";
 
 let conf = config();
@@ -50,6 +51,8 @@ const CrearPage = () => {
         },
     });
 
+    const { status, upload, videoUrl, progress } = useUploadVideoToMux()
+
     useEffect(() => {
         if (user?.settings) {
             setValue("anonimo", user.settings.anonimoDefault)
@@ -59,8 +62,8 @@ const CrearPage = () => {
     const [image, setImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [imageData, setImageData] = useState<{ width: number; height: number } | null>(null);
-    const [imageChecking, setImageChecking] = useState<"loading" | "loaded" | null>(null);
-    const [creatingPost, setCreatingPost] = useState<"loading" | "loaded" | null>(null);
+    const [imageChecking, setImageChecking] = useState<Load>(null);
+    const [creatingPost, setCreatingPost] = useState<Load>(null);
     const [editorState, setEditorState] = useState<{ html: string; markdown: string; blocks: any[] } | undefined>()
     // const [bussinessAccount, setBussinessAccount] = useState<Doc<"organization"> | null>(null);
     // const [hasBussinessAccount, setHasBussinessAccount] = useState<boolean>(false);
@@ -82,7 +85,7 @@ const CrearPage = () => {
         // console.log(blocks);
         const html = await theEditor.blocksToFullHTML(theEditor.document);
         const markdown = await theEditor.blocksToMarkdownLossy(theEditor.document);
-
+        console.log("videourl", videoUrl)
         createnewpost({
             anonimo: payload.anonimo,
             asBussiness: payload.asBussiness || false,
@@ -94,6 +97,7 @@ const CrearPage = () => {
             contentInMarkdown: markdown || "",
             messageFormat: "Tiptap",
             renderMethod: "DangerouslySetInnerHtml",
+            ...(videoUrl && { video: videoUrl }),
         }).then(() => setCreatingPost("loaded"))
         reset()
         notifications.show({
@@ -123,6 +127,10 @@ const CrearPage = () => {
                             image={image}
                             setImage={setImage}
                             setImageData={setImageData}
+                            status={status}
+                            upload={upload}
+                            videoUrl={videoUrl}
+                            progress={progress}
                         />
                         <Textarea  // Titulo
                             variant="unstyled"

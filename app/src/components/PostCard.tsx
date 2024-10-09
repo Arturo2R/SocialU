@@ -17,6 +17,8 @@ import { DEFAULT_COLOR } from "@lib/constants";
 import { Tag } from "./Post/Tag";
 import convertAllAToSpan from '@lib/converToNonA';
 import { LikesBar, likesBarInterface } from './Like';
+import { PlayButton } from '@vidstack/react';
+import { PlayerPlay } from 'tabler-icons-react';
 // import ContentView, { ContentViewReact } from './ContentView';
 // import Blocks from 'editorjs-blocks-react-renderer';
 
@@ -46,6 +48,7 @@ interface PostCardProps {
     image: string;
   } | "anonimo";
   likesBar: likesBarInterface;
+  videoId?: string;
 }
 
 
@@ -62,8 +65,11 @@ export const PostCard = ({
   tags,
   viewsNumber,
   likesBar,
+  videoId
 }: PostCardProps) => {
   const [expanded, setExpanded] = React.useState(false);
+
+  const gif = false
 
   return (
     <article className="max-w-sm" id={slug}>
@@ -77,8 +83,8 @@ export const PostCard = ({
         withBorder
         p="xs"
       >
-        {image && (
-          <Card.Section style={{ display: "block", margin: "-10px -10px 10px -10px" }}>
+        {(image || videoId) && (
+          <Card.Section style={{ display: "block", position: "relative", margin: "-10px -10px 10px -10px" }}>
             <Image
               sizes="(max-width: 500px) 100vw, (max-width: 768px) 50vw, (max-width: 900px) 40vw, 35vw"
               loading={priority ? "eager" : "lazy"}
@@ -89,7 +95,7 @@ export const PostCard = ({
               priority={priority}
               className="w-full"
               quality={70}
-              src={image}
+              src={videoId ? `https://image.mux.com/${videoId}/${gif ? "animated.gif" : "thumbnail.png"}?width=380&height=240&${gif ? "fps=7" : ""}` || '/girl.jpg' : image || '/girl.jpg'}
             // style="margin: -10px -10px 10px -10px; display:block"
             // style={{ margin: "-10px -10px 10px -10px", display: "block"}}
             // priority={key === 1||2||3||4 ? true:false }
@@ -102,6 +108,9 @@ export const PostCard = ({
             //   height: "auto"
             // }} 
             />
+            {videoId && (
+              <PlayerPlay size={48} stroke-width="3" className="absolute [transform:translate(-50%,_-50%)] top-1/2 left-1/2 " />
+            )}
           </Card.Section>
         )}
         {/* <Badge>{category}</Badge> */}

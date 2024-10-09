@@ -28,7 +28,7 @@ const BackButton = ({ id }: BackButtonProps) => {
         }}
         className="z-10"
         display="flow"
-        mb="-44px" ml="10px" size="lg" radius="xl"
+        mb="-44px" ml="10px" size="xl" radius="xl"
       >
         <ChevronLeft />
       </ActionIcon>

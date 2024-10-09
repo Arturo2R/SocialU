@@ -123,11 +123,12 @@ export const create = mutation({
         tags: v.optional(v.array(v.string())),
         contentInHtml: v.optional(v.string()),
         contentInMarkdown: v.optional(v.string()),
+        video: v.optional(v.string()),  
+        videoMetadata: v.optional(v.object({})),
     }, 
     handler: async (ctx, args) => {
         const user = await getCurrentUserOrThrow(ctx);
         const slug = args.title ? snakeCase(args.title) + nanoid(3) : await nanoid(7);
-
         let post = {
             ...args,
             contentInHtml: args.contentInHtml?.replace("<img", "<img loading='lazy' fetchpriority='low'") || "",
@@ -142,7 +143,6 @@ export const create = mutation({
             }
             // ...(args.anonimo && {authorAnonimousId: generateSHA256Hash(user._id, slug)}),
         } as Doc<"post">
-
         if (args.asBussiness) {
             const bussinessId = await ctx.db.query("organization").collect()
             const business = bussinessId.find((bussiness) => bussiness.members.includes(user._id));
@@ -152,8 +152,6 @@ export const create = mutation({
                 organizationId: business._id,
             } 
         }
-        
-        
         // console.log(`${user.name} creó el post ${slug}`)
         const createdPost = await ctx.db.insert("post", post )
         await Promise.all([
@@ -529,6 +527,8 @@ export const storeEmbedding = internalMutation({
         await ctx.db.insert("embeddings", { artifactId: args.postId,  embedding: args.embedding, artifactType: args.type})
     }
 })
+
+
 
 
 

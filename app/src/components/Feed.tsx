@@ -81,13 +81,14 @@ export const Feed = (props: {
               postId={post._id}
               renderMethod={post.renderMethod}
               image={post.image}
-              author={post.asBussiness ? post.author : (post.anonimo ? "anonimo" : post.author)}
+              author={post.asBussiness ? post.author! : (post.anonimo ? "anonimo" : post.author!)}
               imageData={post.imageData}
               likesBar={{
                 userLiked: post.likedByTheUser,
                 likes: post.likes,
                 dislikes: post.dislikes,
               }}
+              videoId={post.video}
             />)
           )}
         </Masonry>

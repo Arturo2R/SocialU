@@ -2,9 +2,11 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { attachments } from "@lib/firebase";
 
 import posthog from "posthog-js";
-import { useMutation } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "@backend/api";
 
+import * as UpChunk from '@mux/upchunk';
+import { useState } from "react";
 
 export const uploadFile = async (file: File): Promise<string> => {
     const imageRef = ref(attachments, file.name);
@@ -45,11 +47,57 @@ export const uploadFileToConvex = async (file: File): Promise<string> => {
     } catch (error: any) {
         console.error(error.message)
         posthog.capture('upload_image_error', {
-            message: error.message,
-            fileName: file.name,
+            message: error.message || "no hay mensaje",
+            fileName: file?.name || "nada",
         });
         return "https://mild-gecko-296.convex.cloud/api/storage/1b96a220-8c22-4187-8505-65038900c812"
     }
+}
+
+export type Load = "loading" | "loaded" | "error" | null
+
+export const useUploadVideoToMux = (): { upload: (file: File) => Promise<void>, videoUrl: string, progress?: number, status: Load, } => {
+    const [uploadProgress, setUploadProgress] = useState<number>(0)
+    const [uploadStatus, setUploadStatus] = useState<Load>(null)
+    const [url, setUrl] = useState<string>("")
+    const generateUploadVideoUrl = useAction(api.media.generateUploadVideoUrl);
+    const getVideoUrl = useAction(api.media.getUploadedVideoUrl);
+
+    const uploadYa = async (file: File) => {
+        setUploadStatus("loading")
+        const { mux_asset_id, url: uploadUrl, videoId } = await generateUploadVideoUrl({})
+        console.log("mux_asset_id", mux_asset_id, "url", url, "videoId", videoId)
+        const upload = UpChunk.createUpload({
+            endpoint: uploadUrl,
+            file,
+            chunkSize: 1024 * 5,
+            
+        })
+
+        upload.on('error', (error) => {
+            setUploadStatus("error")
+            console.error('Upload failed:', error)
+            posthog.capture('upload_video_error', {
+                message: error.detail || "no hay mensaje",
+                fileName: file.name,
+            });
+        })
+
+        upload.on('progress', (progress) => {
+            setUploadProgress(progress.detail)
+            console.log('Upload progress:', progress.detail)
+            setUploadStatus("loading")
+        })
+
+        upload.on('success', async () => {
+            let urela = await getVideoUrl({ uploadId: mux_asset_id })
+            setUrl(urela!)
+            setUploadStatus("loaded")
+            console.log('Upload complete')
+        })
+
+    }
+    return { upload: uploadYa, videoUrl: url, progress: uploadProgress, status: uploadStatus, }
 }
 
 export const getBase64Image = async (file: File) => {
