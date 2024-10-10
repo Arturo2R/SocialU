@@ -28,11 +28,11 @@ export const generateUploadVideoUrl = action({
                 "input": [{
                     "url": "https://hallowed-hound-764.convex.cloud/api/storage/e23b65af-a823-4ea0-b5ba-691af1714e2f",
                     "overlay_settings": {
-                        "vertical_align": "top",
-                        "vertical_margin": "10%",
-                        "horizontal_align": "left",
-                        "horizontal_margin": "10%",
-                        "width": "80px",
+                        "vertical_align": "bottom",
+                        "vertical_margin": "5%",
+                        "horizontal_align": "right",
+                        "horizontal_margin": "5%",
+                        "width": "14%",
                         "opacity": "90%"
                     }
                 }]
