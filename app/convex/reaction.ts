@@ -114,6 +114,19 @@ export const generate = internalAction({
         });
 
         const likestext = JSON.parse(response.choices[0].message.content as string)
+        
+        // const inputCostInDollars = chatCompletion.usage.prompt_tokens * selectedModel.token_input_cost
+        // const outputCostInDollars = chatCompletion.usage.completion_tokens * selectedModel.token_output_cost
+        // posthog.capture('chat_completion', {
+        //     model: chatCompletion.model,
+        //     prompt: userInput,
+        //     prompt_tokens: chatCompletion.usage.prompt_tokens,
+        //     completion_tokens: chatCompletion.usage.completion_tokens,
+        //     total_tokens: chatCompletion.usage.total_tokens,
+        //     input_cost_in_dollars: inputCostInDollars,
+        //     output_cost_in_dollars: outputCostInDollars,
+        //     total_cost_in_dollars: inputCostInDollars + outputCostInDollars
+        // })
 
         if (args.postId) {
             await ctx.runMutation(internal.reaction.updateReactionText, { postId: args.postId, text: likestext });

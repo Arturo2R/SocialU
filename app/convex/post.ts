@@ -1,5 +1,5 @@
 import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx } from "./_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import {nanoid} from "../src/lib/utils"
 import {snakeCase} from "lodash"
 import { filter } from "convex-helpers/server/filter";
@@ -260,6 +260,7 @@ export const get = query({
     }),
     handler: async (ctx, args) => {
         let post = await ctx.db.query("post").filter(q=> q.eq(q.field("slug"), args.slug) ).first();
+        if (!post) { throw new ConvexError("Post not found") }
         // const reactionCounter = await
         if (!post) { throw new Error("Post not found") }
        

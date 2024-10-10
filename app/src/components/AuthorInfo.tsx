@@ -4,7 +4,7 @@ import { ChevronRight } from 'tabler-icons-react';
 import classes from './UserButton.module.css';
 
 interface AuthorInfoProps {
-  image: string;
+  image?: string;
   name: string;
   email: string;
   icon?: React.ReactNode;

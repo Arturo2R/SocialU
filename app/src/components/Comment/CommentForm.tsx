@@ -11,6 +11,7 @@ import { api } from "@backend/api";
 import { Id } from "@backend/dataModel";
 import { UserObject } from "@context/UserStateContext";
 import { UserInfoOnComment } from "./UserInfoOnComment";
+import posthog from "posthog-js";
 
 
 type Props = {
@@ -63,6 +64,10 @@ const CommentForm = (props: Props) => {
         )
         if (props.closeCollapse) { props?.closeCollapse(false) }
         form.reset();
+        posthog.capture('comment_created', {
+          asOrganization: values.asBussiness,
+          anonimo: values.anonimo,
+        })
       })}
       name={"comment-form-" + commentFormId}
       id={"CommentForm-" + commentFormId}

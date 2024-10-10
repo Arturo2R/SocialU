@@ -42,7 +42,6 @@ interface PostCardProps {
   title?: string;
   imageData?: { width: number; height: number };
   author: {
-    id?: string;
     userName: string;
     displayName: string;
     color?: string;
@@ -77,7 +76,7 @@ export const PostCard = ({
     <article className="max-w-sm" id={slug}>
       <Card
         href={{
-          pathname: `/${author !== "anonimo" ? author.id : "anonimo"}/${slug}`,
+          pathname: `/${author !== "anonimo" ? author.username : "anonimo"}/${slug}`,
         }}
         component={Link}
         className="X"

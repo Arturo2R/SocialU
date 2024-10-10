@@ -154,7 +154,7 @@ export default function ImageDropzone(
               'image/*': [], // All images
               'video/*': [], // All videos
             }}
-            loading={(status && status === "loading")}
+            loading={(status && status === "loading") || false}
 
           >
             <Group justify="center" gap="xl" mih={70} style={{ pointerEvents: 'none' }}>

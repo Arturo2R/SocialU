@@ -21,7 +21,10 @@ import { useUser } from "../../../context/UserStateContext";
 import Protected from "@components/Protected";
 import { AuthorInfo } from "@components/AuthorInfo";
 import { BlockNoteEditor } from "@blocknote/core";
-import { Load, useUploadVideoToMux } from "@hooks/image";
+import { useUploadVideoToMux } from "@hooks/image";
+import posthog from "posthog-js";
+
+type Load = "loading" | "loaded" | null;
 // import { getHtmlFromEdjs } from "@lib/parseedjs";
 
 let conf = config();
@@ -110,6 +113,11 @@ const CrearPage = () => {
             className: "my-notification-class",
             icon: <FileCheck />,
         });
+        posthog.capture("post_created", {
+            tags: payload.tags,
+            anonimo: payload.anonimo,
+            asBussiness: payload.asBussiness,
+        })
     }
 
     return (
@@ -178,7 +186,7 @@ const CrearPage = () => {
                                     isBussiness={true}
                                     link={user.organization.url}
                                     name={user.organization.name}
-                                    email={user.organization.url || `${user.organization.userName}@uninorte.edu.co`}
+                                    email={user.organization.url || `${user.organization.name}@uninorte.edu.co`}
                                     image={user.organization.logo || undefined}
                                     icon
                                 />
@@ -187,8 +195,8 @@ const CrearPage = () => {
                             {(watch("anonimo") === false && user) && (
                                 <AuthorInfo
                                     isBussiness={false}
-                                    link={user.userName}
-                                    name={user.displayName}
+                                    link={user.username}
+                                    name={user.displayName || user.username}
                                     email={user.email}
                                     image={user.photoURL || "/profile.jpg"}
                                     icon

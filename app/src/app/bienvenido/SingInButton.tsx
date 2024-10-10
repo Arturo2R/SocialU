@@ -3,6 +3,7 @@ import { useAuth, useSignIn, useSignUp } from '@clerk/clerk-react';
 import { Button } from '@mantine/core';
 // import { useAuthActions } from '@convex-dev/auth/react';
 import { OAuthStrategy } from '@clerk/types';
+import posthog from 'posthog-js';
 
 const SignInButton = () => {
       // const { signIn: iniciarSesion } = useAuthActions()
@@ -32,11 +33,15 @@ const SignInButton = () => {
     
         if (userExistsButNeedsToSignIn) {
           const res = await signIn.create({ transfer: true });
-    
+          
           if (res.status === 'complete') {
             setActive({
               session: res.createdSessionId,
             });
+            posthog.identify(res.id || undefined, {
+              name: res.userData.firstName + ' ' + res.userData.lastName,
+              clerkId: res.id,
+            } )
           }
         }
     
@@ -55,6 +60,11 @@ const SignInButton = () => {
             setActive({
               session: res.createdSessionId,
             });
+            posthog.identify(res.createdUserId || undefined, {
+              email: res.emailAddress,
+              name: res.firstName + ' ' + res.lastName,
+              clerkId: res.createdUserId,
+            } )
           }
         } else {
           // If the user has an account in your application
