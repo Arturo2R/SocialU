@@ -29,7 +29,7 @@
     "prestart": "echo 'Todo listo papa. Iniciando el server con toda 💪💥🤯'",
     "postinstall": "echo 'Instalado todo papa 🤙'",
     "backend:prod": "bunx convex prod",
-    "deploy": "bunx convex deploy --cmd='bun run apispec && run build'",
+    "deploy": "bunx convex deploy --cmd='bun run apispec && bun run build'",
     "build": "next build --no-lint",
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
