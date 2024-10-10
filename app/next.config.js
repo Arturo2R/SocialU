@@ -43,11 +43,11 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
       protocol: 'https',
       hostname: 'mild-gecko-296.convex.site',
       port: ''
-    },{
+    }, {
       protocol: 'https',
       hostname: 'mild-gecko-296.convex.cloud',
       port: ''
-    },  
+    },
     {
       protocol: 'https',
       hostname: 'hallowed-hound-764.convex.cloud',
@@ -78,7 +78,10 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
       },
       {
         source: "/dashboard",
-        destination: "https://dashboard.convex.dev/t/arturo-rebolledo/socialu-472e8/mild-gecko-296/data"
+        destination: "https://dashboard.convex.dev/t/arturo-rebolledo/socialu-472e8/hallowed-hound-764/data?table=post"
+      }, {
+        source: "/api2/:path*",
+        destination: "https://hallowed-hound-764.convex.site/:path*"
       }
     ];
   },
@@ -88,8 +91,13 @@ const nextConfigg = withBundleAnalyzer(withPWA(withMDX({
       source: '/:path*',
       headers: [{
         key: 'Referrer-Policy',
-        value: 'strict-origin-when-cross-origin'
-      }]
+          value: 'no-referrer-when-downgrade',
+        },
+        {
+          key: 'Permissions-Policy',
+          value: 'geolocation=(self), microphone=()',
+        },
+      ]
     }];
   }
 })));
