@@ -7,6 +7,7 @@ import { IconThumbDownFilled } from "@tabler/icons-react"
 import { IconThumbUp, IconThumbUpFilled } from "@tabler/icons-react"
 import clsx from "clsx";
 import { useMutation } from "convex/react";
+import { i } from "node_modules/@clerk/clerk-react/dist/controlComponents-B9SlJ0L1.mjs";
 import { useEffect, useState } from "react";
 import { map } from "svix/dist/openapi/rxjsStub";
 
@@ -58,17 +59,33 @@ export const LikesWall = ({ postId, serverLiked, likes, dislikes, likeText }: Li
     }
         , [])
 
+    const [likesCounter, setLikesCounter] = useState<number>(0)
+    const [dislikesCounter, setDislikesCounter] = useState<number>(0)
+
+    useEffect(() => {
+        setLikesCounter(likes)
+    }, [likes])
+
+    useEffect(() => {
+        setDislikesCounter(dislikes)
+    }, [dislikes])
+
     const reacto = useMutation(api.reaction.give)
 
     const onLikeChange = (interaction: 'liked' | 'disliked') => {
         reacto({ content_type: 'post', postId: postId, reaction_type: reactiongetted.get(interaction)! });
         value === interaction ? toggle('none') : toggle(interaction);
+        if (value === interaction) {
+            interaction === 'liked' ? setLikesCounter(likes - 1) : setDislikesCounter(dislikes - 1)
+        } else {
+            interaction === 'liked' ? setLikesCounter(likes + 1) : setDislikesCounter(dislikes + 1)
+        }
     }
 
     return (
         <div className="grid-cols-2 grid gap-x-3 max-w-full sm:max-w-[21rem]">
-            <BigLikeButton onClick={() => onLikeChange("liked")} likeText={likeText.positive} positive liked={value == "liked"} likes={likes} />
-            <BigLikeButton onClick={() => onLikeChange("disliked")} likeText={likeText.negative} positive={false} liked={value == "disliked"} likes={dislikes} />
+            <BigLikeButton onClick={() => onLikeChange("liked")} likeText={likeText.positive} positive liked={value == "liked"} likes={likesCounter} />
+            <BigLikeButton onClick={() => onLikeChange("disliked")} likeText={likeText.negative} positive={false} liked={value == "disliked"} likes={dislikesCounter} />
         </div>
     )
 }

@@ -42,10 +42,12 @@ interface PostCardProps {
   title?: string;
   imageData?: { width: number; height: number };
   author: {
-    id: string;
-    name: string;
+    id?: string;
+    userName: string;
+    displayName: string;
     color?: string;
-    image: string;
+    link: string;
+    image?: string;
   } | "anonimo";
   likesBar: likesBarInterface;
   videoId?: string;
@@ -151,7 +153,7 @@ export const PostCard = ({
                 size="sm"
               />
             )}
-            <Text c={author?.color || DEFAULT_COLOR} fw={author.color ? 700 : 400}>{author?.name}</Text>
+            <Text c={author?.color || DEFAULT_COLOR} fw={author.color ? 700 : 400}>{author?.displayName}</Text>
           </Group>
         )}
 

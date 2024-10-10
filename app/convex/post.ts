@@ -10,8 +10,30 @@ import { literals } from "convex-helpers/validators";
 import schema from "./schema";
 import config from "../src/lib/config"; 
 import { paginationOptsValidator, SchemaDefinition } from "convex/server";
+import { link } from "fs";
 // import {CohereClient} from "cohere-ai"
 
+export type likes = {likes: number, dislikes: number, likedByTheUser?: "like" | "dislike" | undefined}
+
+export interface POST extends Doc<"post"> {
+    organization?: {
+        displayName: string;
+        userName: string;
+        id: Id<"organization">;
+        link: string;
+        image?: string;
+        color: string;
+    };
+    author?: {
+        displayName: string;
+        userName: string;
+        link: string;
+        image?: string;
+    };
+    likes?: number;
+    dislikes?: number;
+    likedByTheUser: 'like' | 'dislike' | undefined;
+}
 
 const {categories} = config();
 let lascategories = categories.map((category) => category.value)
@@ -51,55 +73,10 @@ export const getFeed = query({
             }
         }
 
-        
-
-        // if(args.filterbyCategory){
-        //      posts = results.page.filter((post) => post.tags?.includes(args.filterbyCategory || "") || false)
-        // }
-
-        // let allposts = posts.map((post) => {
-        //     const author = post.anonimo ? null : ctx.db.get(post.authorId)
-        //     const business = (post.asBussiness && post.organizationId)? ctx.db.get(post.organizationId) : null;
-        //     return {...post, author: (author ?? business)}
-        // })
-        
         const postsWithAuthors = await Promise.all(results.page.map(async (post) => {
-            
-            const reactions = await reactionOfPost(ctx, post._id)
-            post = {...post, ...reactions}
-
-            // If the post is not anonymous, fetch the author
-            if(post.asBussiness && post.organizationId){
-                const business = await ctx.db.get(post.organizationId);
-                return { ...post, author: {
-                    name: business?.name,
-                    id: business?._id,
-                    image: business?.logo,
-                    color: business?.color
-                } };
-            }
-
-            if (!post.anonimo) {
-                const author = await ctx.db.get(post.authorId);
-                if (!author) { 
-                    return { ...post, 
-                        author:{
-                        name: "Usuario eliminado",
-                        id: "ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
-                    }
-                }}
-                // Attach the author to the post object
-                return { ...post, anonimo: false, author: {
-                    name: author?.settings?.useUserName ? author.username : author.displayName,
-                    id: author.username || author.name,
-                    ...(author.photoURL && { image: author.photoURL }),
-                },
-                 
-                }
-            }
-
+            const PosT = await preparePost(ctx, post)
             // For anonymous posts, return the post as is
-            return post;
+            return PosT;
         }));
 
         return {
@@ -109,6 +86,70 @@ export const getFeed = query({
     }
 })
 
+
+export const reactionOfPost = async (ctx:QueryCtx, postId: Id<"post">| Id<"comment">) : Promise<likes>  => {
+    const reactions = await ctx.db.query("reaction").withIndex("byContentId", (q) => q.eq("contentId", postId)).collect();
+
+    const user = await getCurrentUser(ctx);
+    let payload : likes = {likes: 0, dislikes: 0}
+    
+    if(reactions) {
+        const likes = reactions.filter((reaction) => reaction.reaction_type === "like").length;
+        const dislikes = reactions.filter((reaction) => reaction.reaction_type === "dislike").length;
+
+        payload = {likes, dislikes}
+        if(user) {
+            const likedByTheUser = reactions.find((reaction) => reaction.userId === user._id);
+            if (likedByTheUser) {
+                payload = {...payload, likedByTheUser: likedByTheUser.reaction_type }
+            }
+        }
+    }
+    return payload
+}
+
+
+export const preparePost = async (ctx: QueryCtx, rawpost: Doc<"post">) => {
+    const reactions = await reactionOfPost(ctx, rawpost._id)
+    const authorId = rawpost.authorId
+    let post : POST = {...rawpost, ...reactions, authorId: "nonull"} as POST
+
+    if(post.asBussiness && post.organizationId){
+        const business = await ctx.db.get(post.organizationId);
+        if (!business) { throw new Error("Organization not found") }
+
+        post = { ...post, asBussiness: true, organization: {
+            displayName: business.name,
+            userName: business.name,
+            id: business._id,
+            image: business.logo,
+            color: business.color,
+            link: business.url
+        }};
+    }
+
+    if (!post.anonimo) {
+        const author = await ctx.db.get(authorId);
+        if (!author) { 
+            post = { ...post, anonimo: false, author: {
+                displayName: "Usuario eliminado",
+                userName: "Usuarioeliminado",
+                link: `https://redsocialu.com/`,
+            }}
+        } else {
+            post = { ...post, anonimo: false, author: {
+                displayName: author.settings?.useUserName ? author.username : author.displayName || author.username,
+                userName: author.username,
+                link: `https://redsocialu.com/${author.username}`,
+                ...(author.photoURL && { image: author.photoURL }),
+            }}
+        }
+    }
+
+
+    return post
+
+}
 
 
 export const create = mutation({
@@ -182,52 +223,6 @@ export const slugs = query({
     }
 })
 
-interface userorg extends Doc<"post">  {
-
-    organization: {
-        displayName: string;
-        userName: string;
-        id: Id<"organization">;
-        link: string;
-        image?: string;
-        color: string;
-    };
-}
-
-interface justuser extends Doc<"post">  {
-    author: {
-        displayName: string;
-        userName: string;
-        id: Id<"user">;
-        link: string;
-        image?: string;
-    };
-}
-interface anonimo extends Doc<"post">  {
-    anonimo: true,
-    author: "anonimo"
-}
-
-interface POST extends Doc<"post"> {
-    organization?: {
-        displayName: string;
-        userName: string;
-        id: Id<"organization">;
-        link: string;
-        image?: string;
-        color: string;
-    };
-    author?: {
-        displayName: string;
-        userName: string;
-        id: Id<"user">;
-        link: string;
-        image?: string;
-    };
-    likes?: number;
-    dislikes?: number;
-    likedByTheUser: 'like' | 'dislike' | undefined;
-}
 
 /**
  * Retrieves a post based on the provided slug.
@@ -252,10 +247,10 @@ export const get = query({
             image: v.optional(v.string()),
             color: v.string(),
         })),
+        authorId: v.string(),
         author: v.optional(v.object({
             displayName: v.string(),
             userName: v.string(),
-            id: v.id("user"),
             link: v.string(),
             image: v.optional(v.string()),
         })),
@@ -267,54 +262,10 @@ export const get = query({
         let post = await ctx.db.query("post").filter(q=> q.eq(q.field("slug"), args.slug) ).first();
         // const reactionCounter = await
         if (!post) { throw new Error("Post not found") }
-        
-        
-        const creator = await ctx.db.get(post.authorId);
-        const reactions = await reactionOfPost(ctx, post._id)
+       
+        const PosT = await preparePost(ctx, post)
 
-        post = {...post, ...reactions}
-
-
-        if (!creator) { 
-            post = {...post, anonimo: false, author: {
-                displayName: "Usuario eliminado",
-                userName: "Usuarioeliminado",
-                id:"ks7b67dbk7wfdhvk3rw73f6c2h70nrsb",
-                link: `https://redsocialu.com/`,
-            }
-        } as justuser
-        return post as POST
-    }
-        const business = (post.asBussiness && post.organizationId) ? await ctx.db.get(post.organizationId) : null;
-        if (!business &&  (post.asBussiness && post.organizationId)) { throw new Error("Organization not found") }
-
-        if (post.anonimo === true)  {
-            post = post
-        } else {
-            post = {...post, anonimo: false, author: {
-                displayName: creator.settings?.useUserName ? creator.username : creator.displayName || creator.username,
-                userName: creator.username,
-                id: creator._id,
-                link: `https://redsocialu.com/${creator.username}`,
-                ...(creator.photoURL && { image: creator.photoURL }),
-                }
-            } as justuser
-            
-        }
-
-        if (post && business && post.asBussiness === true) {
-            post = {...post, asBussiness: true, organization: {
-                displayName: business.name, // Vanity Name
-                userName: business.name, // Serius db name
-                id: business._id,
-                image: business.logo,
-                color: business.color,
-                link: business.url
-                    }
-                } as userorg
-        }
-
-        return post as POST
+        return PosT 
 }})
 
 export const addView = mutation({
@@ -345,29 +296,7 @@ export const getFileUrl = mutation({
     }
 })
 
-export type likes = {likes: number, dislikes: number, likedByTheUser?: "like" | "dislike" | undefined}
 
-
-export const reactionOfPost = async (ctx:QueryCtx, postId: Id<"post">| Id<"comment">) : Promise<likes>  => {
-    const reactions = await ctx.db.query("reaction").withIndex("byContentId", (q) => q.eq("contentId", postId)).collect();
-
-    const user = await getCurrentUser(ctx);
-    let payload : likes = {likes: 0, dislikes: 0}
-    
-    if(reactions) {
-        const likes = reactions.filter((reaction) => reaction.reaction_type === "like").length;
-        const dislikes = reactions.filter((reaction) => reaction.reaction_type === "dislike").length;
-
-        payload = {likes, dislikes}
-        if(user) {
-            const likedByTheUser = reactions.find((reaction) => reaction.userId === user._id);
-            if (likedByTheUser) {
-                payload = {...payload, likedByTheUser: likedByTheUser.reaction_type }
-            }
-        }
-    }
-    return payload
-}
 
 export const checkImage = action({
     args: {

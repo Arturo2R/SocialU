@@ -5,15 +5,15 @@ import { api } from "../../convex/_generated/api";
 import { useStablePaginatedQuery } from "@hooks/useStablePaginatedQuery";
 import React from "react";
 
-import { likes } from "convex/post";
+import { likes, POST } from "convex/post";
 import { useDebouncedState } from "@mantine/hooks";
 
-export type feedPost = Doc<"post"> & likes
+// export type feedPost = Doc<"post"> & likes
 
 interface FeedContext {
   category: CategoryState | null;
   setCategory: React.Dispatch<React.SetStateAction<CategoryState | null>>;
-  posts: feedPost[];
+  posts: POST[];
   status: "LoadingFirstPage" | "LoadingMore" | "CanLoadMore" | "Exhausted";
   loadMore: (numItems: number) => void;
   isLoading: boolean;

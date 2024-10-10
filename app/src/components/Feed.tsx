@@ -13,7 +13,7 @@ import FilterByTags from './FilterByTags';
 import { } from 'convex-helpers/react/cache/hooks';
 import { Preloaded, usePreloadedQuery } from 'convex/react';
 
-import { feedPost, usefeed } from '../context/FeedContext';
+import { usefeed } from '../context/FeedContext';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import PostCardLoading from './Post/PostCardLoading';
@@ -29,7 +29,7 @@ export const Feed = (props: {
 }) => {
   const [pageloaded, setPageLoaded] = useState(false)
 
-  const postee = usePreloadedQuery(props.preloadedPosts).page as feedPost[]
+  const postee = usePreloadedQuery(props.preloadedPosts).page
   const { posts, status, loadMore, isLoading, category, setCategory } = usefeed()
 
   const breakpointColumnsObj = {
@@ -81,12 +81,12 @@ export const Feed = (props: {
               postId={post._id}
               renderMethod={post.renderMethod}
               image={post.image}
-              author={post.asBussiness ? post.author! : (post.anonimo ? "anonimo" : post.author!)}
+              author={post.asBussiness ? post.organization || "anonimo" : (post.anonimo ? "anonimo" : post.author || "anonimo")}
               imageData={post.imageData}
               likesBar={{
                 userLiked: post.likedByTheUser,
-                likes: post.likes,
-                dislikes: post.dislikes,
+                likes: post.likes || 0,
+                dislikes: post.dislikes || 0,
               }}
               videoId={post.video}
             />)

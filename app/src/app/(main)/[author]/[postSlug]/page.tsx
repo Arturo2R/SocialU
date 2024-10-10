@@ -48,6 +48,7 @@ import ContentView, { ContentViewReact } from "@components/ContentView";
 import React from "react";
 import { LikesWall } from "@components/Like";
 import { VideoPlayer } from "@components/VideoPlayer";
+import { usefeed } from "@context/FeedContext";
 
 // import "@blocknote/mantine/style.css";
 
@@ -72,7 +73,12 @@ interface ViewPostProps {
 
 const PostPage = ({ params }: { params: { postSlug: string } }) => {
     useAddView(params.postSlug)
-    const content = useQuery(api.post.get, { slug: params.postSlug })
+    const { posts, isLoading } = usefeed()
+    let feedpost = posts.find(p => p.slug === params.postSlug)
+
+    const querypost = useQuery(api.post.get, !feedpost || isLoading ? { slug: params.postSlug } : "skip")
+    const content = !feedpost || isLoading ? querypost : feedpost
+    // const content = useQuery(api.post.get, { slug: params.postSlug })
 
     if (content === undefined) {
         return <LoadingPost />
@@ -83,12 +89,12 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
             {content.video && (
                 <>
                     <VideoPlayer playbackId={content.video} title={content.title} />
-                    
+
                 </>
             )}
             {content?.image ? (
                 <>
-                    <BackButton id={content.slug} />
+                    <BackButton />
                     <Image priority component={NextImage} alt="Nose" width={content?.imageData?.width || 800} height={content?.imageData?.height || 400} className="mb-4" radius="lg" sizes="(max-width: 768px) 100vw, 60vw" src={content.image} />
                     {content.title && (
                         <Title order={2} className="min-w-0 mb-2 text-3xl break-words hyphens-auto text-pretty" lang="es">{content?.title}</Title>
@@ -96,7 +102,7 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                 </>
             ) : (
                 <div className="flex space-x-4">
-                    <BackButton id={content?.slug} />
+                    <BackButton />
                     <Title order={1} mb="sm" className="min-w-0 break-words whitespace-pre-wrap hyphens-auto text-pretty" lang="es">
                         {content?.title || "     "}
                     </Title>
