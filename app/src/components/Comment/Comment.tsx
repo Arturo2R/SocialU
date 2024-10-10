@@ -27,11 +27,12 @@ import { LikesBar } from "@components/Like";
 // import { propsToAttributes } from "@blocknote/core";
 export interface CommentProps {
   id: Id<"comment">;
-  parentId?: Id<"comment">;
+  parentId?: Id<"comment"> | Id<"post">;
   postId: Id<"post">;
   postedAt: number; // Number of date
   content: string;
   author: { name: string; image: string, color?: string, } | "anonimo";
+  username: string;
   subComments?: PostComment[];
   old?: boolean;
   anonimoDefault?: boolean;
@@ -55,6 +56,7 @@ export function Comment({
   user,
   isAuthenticated,
   reactions,
+  username
   // setRespondTo
 }: CommentProps) {
   // const [reply, toggle] = useToggle("closed", ["closed", "open"]);
@@ -85,7 +87,7 @@ export function Comment({
           )}
 
           <Text size="sm" color="dimmed">
-            {author !== "anonimo" ? author.name : "Anónimo"}
+            {username}
           </Text>
           •
           {postedAt && (
@@ -134,6 +136,7 @@ export function Comment({
                   level={level + 1}
                   id={subco._id}
                   parentId={subco.parentId}
+                  username={subco.anonimo ? subco.authorAnonimousId || "Anónimo" : subco.author.name! || "juancho"}
                   key={index}
                   postedAt={subco._creationTime}
                   anonimoDefault={anonimoDefault}

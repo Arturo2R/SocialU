@@ -1,4 +1,4 @@
-import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx } from "./_generated/server";
+import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx, } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 import {nanoid} from "../src/lib/utils"
 import {snakeCase} from "lodash"
@@ -11,6 +11,7 @@ import schema from "./schema";
 import config from "../src/lib/config"; 
 import { paginationOptsValidator, SchemaDefinition } from "convex/server";
 import { link } from "fs";
+
 // import {CohereClient} from "cohere-ai"
 
 export type likes = {likes: number, dislikes: number, likedByTheUser?: "like" | "dislike" | undefined}
@@ -170,6 +171,7 @@ export const create = mutation({
     handler: async (ctx, args) => {
         const user = await getCurrentUserOrThrow(ctx);
         const slug = args.title ? snakeCase(args.title) + nanoid(3) : await nanoid(7);
+        const anoimousId = await getAnonimousUsername(args.anonimo ?  {username: user.username, slug} : "skip")
         let post = {
             ...args,
             contentInHtml: args.contentInHtml?.replace("<img", "<img loading='lazy' fetchpriority='low'") || "",
@@ -181,8 +183,8 @@ export const create = mutation({
             likeText: {
                 positive: "Me gusta",
                 negative: "No me gusta"
-            }
-            // ...(args.anonimo && {authorAnonimousId: generateSHA256Hash(user._id, slug)}),
+            },
+            ...((args.anonimo && anoimousId) && {authorAnonimousId: anoimousId}),
         } as Doc<"post">
         if (args.asBussiness) {
             const bussinessId = await ctx.db.query("organization").collect()
@@ -193,6 +195,7 @@ export const create = mutation({
                 organizationId: business._id,
             } 
         }
+
         // console.log(`${user.name} creó el post ${slug}`)
         const createdPost = await ctx.db.insert("post", post )
         await Promise.all([
@@ -201,6 +204,24 @@ export const create = mutation({
         ])
     }
 })
+
+// import crypto from "SubtleCrypto"
+
+export const getAnonimousUsername = async (args: { username: string, slug: string } | "skip"): Promise<string | undefined> => {
+    if (args === "skip") {
+        return undefined
+    }
+    
+    const concatenated = args.username + args.slug
+    const encoder = new TextEncoder();
+    const data = encoder.encode(concatenated);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const id = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+
+    return '@'+id.slice(0, 7)
+}
 
 export const revalidate = action({
     args: {
@@ -457,8 +478,6 @@ export const storeEmbedding = internalMutation({
         await ctx.db.insert("embeddings", { artifactId: args.postId,  embedding: args.embedding, artifactType: args.type})
     }
 })
-
-
 
 
 

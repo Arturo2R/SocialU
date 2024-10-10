@@ -5,11 +5,12 @@ import { Doc, Id } from "./_generated/dataModel";
 // import {PostComment} from "../index";
 import { getCurrentUserOrThrow } from "./user";
 import { WithoutSystemFields } from "convex/server";
-import { likes, reactionOfPost } from "./post";
+import { getAnonimousUsername, likes, reactionOfPost } from "./post";
 // import { generateSHA256Hash } from "../src/lib/utils";
 
-export interface PostComment extends Doc<"comment">, likes {
+export interface PostComment extends Omit<Doc<"comment">, "authorId">, likes {
   author: author | "anonimo";
+  authorId?: string | undefined;
   subcomments: (PostComment | null)[] | null;
 }
 
@@ -26,9 +27,12 @@ export const get = query({
     commentId: v.string(),
   },
   handler: async (ctx, args) => {
-    const comment = await ctx.db.query("comment").filter(q => q.eq(q.field("postId"), args.commentId)).first();
+    let comment = await ctx.db.query("comment").filter(q => q.eq(q.field("postId"), args.commentId)).first();
     const creator = (comment?.anonimo && comment.authorId) ? await ctx.db.get(comment.authorId) : null;
     const business = (comment?.asOrganization && comment.organizationId) ? await ctx.db.get(comment.organizationId) : null;
+
+
+
 
     let author = (() => {
       if (comment?.asOrganization && business) {
@@ -84,6 +88,7 @@ export const create = mutation({
     const author = await getCurrentUserOrThrow(ctx);
     const post = await ctx.db.get(args.postId);
     if (!post) { throw new Error("Post not found") }
+    const anoimousId = await getAnonimousUsername(args.anonimo ? { username: author.username, slug: post.slug } : "skip")
 
     let payload = {
       authorId: author._id,
@@ -92,7 +97,7 @@ export const create = mutation({
       parentId: args.parentId,
       anonimo: args.anonimo,
       asOrganization: args.asOrganization,
-      // ...(args.anonimo && { organizationId: generateSHA256Hash(author.username, post?.slug) })
+      ...((args.anonimo && anoimousId) && { authorAnonimousId: anoimousId })
     } as WithoutSystemFields<Doc<"comment">>;
 
     if (args.asOrganization) {
@@ -159,12 +164,13 @@ export const getCommentsForPost = query({
         .map(async comment => {
           const author = await getAuthorDetails(comment.authorId, comment.anonimo, comment.organizationId);
           const children = await buildNestedComments(comment._id);
-          const reactions = await reactionOfPost(ctx, comment._id);
+          const reactions = await reactionOfPost(ctx, comment._id) as likes;
           return {
             ...comment,
             author: author,
             subcomments: children,
-            ...reactions
+            authorId: "nonnull",
+            ...reactions,
           };
 
         });

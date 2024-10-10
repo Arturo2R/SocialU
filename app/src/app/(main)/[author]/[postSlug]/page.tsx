@@ -165,7 +165,7 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
             )}
             {(content?.anonimo && content.asBussiness === false) && (
                 <Text color={DEFAULT_COLOR} size="lg">
-                    Anonimo
+                    {`Anónimo ${content.authorAnonimousId}` || "Anonimo"}
                 </Text>
             )}
             {/* 

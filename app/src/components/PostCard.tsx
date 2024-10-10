@@ -110,7 +110,7 @@ export const PostCard = ({
             // }} 
             />
             {videoId && (
-              <PlayerPlay size={48} stroke-width="3" className="absolute text-white [transform:translate(-50%,_-50%)] top-1/2 left-1/2 " />
+              <PlayerPlay size={48} strokeWidth="3" className="absolute text-white [transform:translate(-50%,_-50%)] top-1/2 left-1/2 " />
             )}
           </Card.Section>
         )}

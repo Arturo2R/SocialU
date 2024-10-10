@@ -49,6 +49,7 @@ const CommentWall = ({ postId, setRespondTo, oldComments }: CommentWallProps) =>
               id={co._id}
               postId={postId}
               user={user}
+              username={co.anonimo ? co.authorAnonimousId || "Anónimo" : co.author.name! || "juancho"}
               // setRespondTo={setRespondTo}
               parentId={co.postId}
               subComments={co.subcomments}
