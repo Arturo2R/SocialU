@@ -59,8 +59,8 @@ export const getUploadedVideoUrl = action({
 
         // const videoId = await ctx.storage.store(args.video);
         const mux = new Mux({
-            tokenId: '2086071e-7cfb-496a-98ce-2f1c60b7931d', // process.env.MUX_TOKEN_ID,
-            tokenSecret: 'S0ys3Bho8rfP9XSERINg/a8C7bym1J312GeCHzGwh76R96Ll6HVgIM0qS6yZYgqggjSSMzi+4k6', //process.env.MUX_TOKEN_SECRET
+            tokenId: process.env.MUX_TOKEN_ID,
+            tokenSecret: process.env.MUX_TOKEN_SECRET
         });
         let upload = await mux.video.uploads.retrieve(args.uploadId)
 
