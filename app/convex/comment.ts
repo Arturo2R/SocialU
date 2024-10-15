@@ -31,9 +31,6 @@ export const get = query({
     const creator = (comment?.anonimo && comment.authorId) ? await ctx.db.get(comment.authorId) : null;
     const business = (comment?.asOrganization && comment.organizationId) ? await ctx.db.get(comment.organizationId) : null;
 
-
-
-
     let author = (() => {
       if (comment?.asOrganization && business) {
         return {
