@@ -146,10 +146,7 @@ export const preparePost = async (ctx: QueryCtx, rawpost: Doc<"post">) => {
             }}
         }
     }
-
-
     return post
-
 }
 
 
