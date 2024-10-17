@@ -8,6 +8,7 @@ import { api } from "@backend/api";
 import * as UpChunk from '@mux/upchunk';
 import { useState } from "react";
 
+
 export const uploadFile = async (file: File): Promise<string> => {
     const imageRef = ref(attachments, file.name);
     try {
@@ -56,12 +57,13 @@ export const uploadFileToConvex = async (file: File): Promise<string> => {
 
 export type Load = "loading" | "loaded" | "error" | null
 
-export const useUploadVideoToMux = (): { upload: (file: File) => Promise<void>, videoUrl: string, progress?: number, status: Load, } => {
+export const useUploadVideoToMux = (): { upload: (file: File) => Promise<void>, videoUrl: string, progress?: number, status: Load, aspectRatio?: string } => {
     const [uploadProgress, setUploadProgress] = useState<number>(0)
     const [uploadStatus, setUploadStatus] = useState<Load>(null)
     const [url, setUrl] = useState<string>("")
     const generateUploadVideoUrl = useAction(api.media.generateUploadVideoUrl);
     const getVideoUrl = useAction(api.media.getUploadedVideoUrl);
+    const [aspectRatio, setAspectRatio] = useState<string|undefined>()
 
     const uploadYa = async (file: File) => {
         setUploadStatus("loading")
@@ -90,14 +92,15 @@ export const useUploadVideoToMux = (): { upload: (file: File) => Promise<void>, 
         })
 
         upload.on('success', async () => {
-            let urela = await getVideoUrl({ uploadId: mux_asset_id })
-            setUrl(urela!)
+            let { id, aspectRatio } = await getVideoUrl({ uploadId: mux_asset_id })
+            setUrl(id!)
+            setAspectRatio(aspectRatio)
             setUploadStatus("loaded")
             console.log('Upload complete')
         })
 
     }
-    return { upload: uploadYa, videoUrl: url, progress: uploadProgress, status: uploadStatus, }
+    return { upload: uploadYa, videoUrl: url, progress: uploadProgress, status: uploadStatus, aspectRatio }
 }
 
 export const getBase64Image = async (file: File) => {

@@ -4,19 +4,20 @@ import { api } from '../../convex/_generated/api'
 
 import { PostCard } from './PostCard';
 import { Metadata } from 'next';
-import { Button, Container } from '@mantine/core';
+import { Anchor, Container } from '@mantine/core';
 
 import Masonry from 'react-masonry-css';
 import mansory from "@components/Feed/Feed.module.css";
 import FilterByTags from './FilterByTags';
 
 import { } from 'convex-helpers/react/cache/hooks';
-import { Preloaded, usePreloadedQuery } from 'convex/react';
+import { Preloaded, useAction, usePreloadedQuery } from 'convex/react';
 
 import { usefeed } from '../context/FeedContext';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import PostCardLoading from './Post/PostCardLoading';
+import { POST } from 'convex/post';
 
 
 export const metadata = {
@@ -28,9 +29,29 @@ export const Feed = (props: {
   preloadedPosts: Preloaded<typeof api.post.getFeed>;
 }) => {
   const [pageloaded, setPageLoaded] = useState(false)
+  const [searchPosts, setSearchPosts] = useState<Array<POST>>()
 
   const postee = usePreloadedQuery(props.preloadedPosts).page
-  const { posts, status, loadMore, isLoading, category, setCategory } = usefeed()
+  const { posts, status, loadMore, isLoading, category, setCategory, searchValue } = usefeed()
+
+
+  const vectorSearch = useAction(api.post.vectorSearch)
+
+  const search = async () => {
+    const AiSearchPost = await vectorSearch({ search: searchValue, type: "post" })
+    setSearchPosts(AiSearchPost)
+  }
+  useEffect(() => {
+    if (searchValue) {
+      search()
+    }
+  }, [searchValue])
+
+  useEffect(() => {
+    if (status !== "LoadingFirstPage" && !pageloaded) {
+      setPageLoaded(true)
+    }
+  }, [status])
 
   const breakpointColumnsObj = {
     1920: 6,
@@ -40,12 +61,6 @@ export const Feed = (props: {
     500: 1,
     default: 1,
   };
-  useEffect(() => {
-    if (status !== "LoadingFirstPage" && !pageloaded) {
-      setPageLoaded(true)
-    }
-  }, [status])
-
   return (
     <Container className="p-0 mb-10 md:mb-0">
       <FilterByTags category={category} categorySetter={setCategory} />
@@ -68,7 +83,7 @@ export const Feed = (props: {
           className={mansory.grid}
           columnClassName={mansory.column}
         >
-          {(pageloaded ? posts : postee).map((post) => (
+          {(pageloaded ? ((searchValue && searchPosts) ? searchPosts! : posts) : postee).map((post) => (
             <PostCard
               commentsQuantity={post.commentsCounter}
               description={post.renderMethod === "DangerouslySetInnerHtml" ? post.contentInHtml || post.content as string : post.content as string}
@@ -94,7 +109,7 @@ export const Feed = (props: {
         </Masonry>
       </InfiniteScroll>
       {status === "Exhausted" && (
-        <div className="text-center text-gray-600 dark:text-gray-400">Esos fueron todos los posts, ya no hay más por aqui</div>
+        <div className="text-center text-gray-600 dark:text-gray-400">Esos fueron todos los posts, ya no hay más por aqui. Puedes ver aquí todos los <Anchor color="cyan" href="https://old.redsocialu.com" target='_blank'>posts antigüos</Anchor> </div>
       )}
       {/* <Button onClick={() => loadMore(13)} disabled={status !== "CanLoadMore"} loading={isLoading} fullWidth>Cargar Más Posts</Button> */}
     </Container>

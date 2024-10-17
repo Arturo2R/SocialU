@@ -54,7 +54,7 @@ const CrearPage = () => {
         },
     });
 
-    const { status, upload, videoUrl, progress } = useUploadVideoToMux()
+    const { status, upload, videoUrl, progress, aspectRatio } = useUploadVideoToMux()
 
     useEffect(() => {
         if (user?.settings) {
@@ -101,6 +101,8 @@ const CrearPage = () => {
             messageFormat: "Tiptap",
             renderMethod: "DangerouslySetInnerHtml",
             ...(videoUrl && { video: videoUrl }),
+            ...((videoUrl && aspectRatio) && { videoMetadata: { aspectRatio } }),
+            // ...(imageData && { imageData: imageData }),
         }).then(() => setCreatingPost("loaded"))
         reset()
         notifications.show({

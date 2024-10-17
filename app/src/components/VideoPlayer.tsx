@@ -12,6 +12,7 @@ export interface VidePlayerInterface {
     poster?: string;
     source?: string;
     title?: string;
+    aspectRatio?: string;
 }
 
 export const VideoPlayer = (props: VidePlayerInterface) => {
@@ -24,6 +25,8 @@ export const VideoPlayer = (props: VidePlayerInterface) => {
             logLevel='warn'
             className="mb-6"
             crossOrigin
+            // preload="metadata"
+            aspectRatio={props.aspectRatio}
         >
             <MediaProvider >
                 <Poster asChild>

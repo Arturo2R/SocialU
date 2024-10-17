@@ -78,7 +78,7 @@ export const getUploadedVideoUrl = action({
             upload = await mux.video.uploads.retrieve(args.uploadId)
         }
         let asset = await mux.video.assets.retrieve(upload.asset_id!)
-        console.log("asset", asset)
+
 
         while (asset.status !== 'ready') {
             if (asset.status === 'errored') throw new Error('Video processing failed')
@@ -89,9 +89,9 @@ export const getUploadedVideoUrl = action({
         }
 
         if (asset?.playback_ids && asset.playback_ids[0]?.id) {
-            return asset.playback_ids[0].id
+            return { id: asset.playback_ids[0].id, aspectRatio: asset.aspect_ratio }
         } else {
-            return "nose bro"
+            throw new Error('Video processing failed')
         }
     }
 })

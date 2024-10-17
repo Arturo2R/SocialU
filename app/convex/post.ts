@@ -1,16 +1,14 @@
-import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx, } from "./_generated/server";
-import { ConvexError, v } from "convex/values";
-import {nanoid} from "../src/lib/utils"
-import {snakeCase} from "lodash"
-import { filter } from "convex-helpers/server/filter";
-import { Doc, Id } from "./_generated/dataModel";
-import { getCurrentUser, getCurrentUserOrThrow } from "./user";
-import { api, internal } from "./_generated/api";
 import { literals } from "convex-helpers/validators";
+import { paginationOptsValidator } from "convex/server";
+import { ConvexError, v } from "convex/values";
+import { snakeCase } from "lodash";
+import config from "../src/lib/config";
+import { nanoid } from "../src/lib/utils";
+import { internal } from "./_generated/api";
+import { Doc, Id } from "./_generated/dataModel";
+import { action, internalAction, internalMutation, internalQuery, mutation, query, QueryCtx, } from "./_generated/server";
 import schema from "./schema";
-import config from "../src/lib/config"; 
-import { paginationOptsValidator, SchemaDefinition } from "convex/server";
-import { link } from "fs";
+import { getCurrentUser, getCurrentUserOrThrow } from "./user";
 
 // import {CohereClient} from "cohere-ai"
 
@@ -110,7 +108,7 @@ export const reactionOfPost = async (ctx:QueryCtx, postId: Id<"post">| Id<"comme
 }
 
 
-export const preparePost = async (ctx: QueryCtx, rawpost: Doc<"post">) => {
+export const preparePost = async (ctx: QueryCtx, rawpost: Doc<"post">) : Promise<POST> => {
     const reactions = await reactionOfPost(ctx, rawpost._id)
     const authorId = rawpost.authorId
     let post : POST = {...rawpost, ...reactions, authorId: "nonull"} as POST
@@ -367,20 +365,22 @@ export const checkImage = action({
 
 
 
-export const search = internalAction({
+import { VECTOR_SEARCH_LIMIT } from "../src/lib/constants";
+
+export const vectorSearch = action({
     args: {
         search: v.string(),
+        type: literals("post", "comment", "organization", "user", "scraped_pages"),
     },
     handler: async ( ctx, args): Promise<any> => {
         const embedding = await ctx.runAction(internal.post.createEmbedding, {content: args.search, type: "query"})
-
-        const results = await ctx.vectorSearch("embeddings", "by_embedding", {
+        let results = await ctx.vectorSearch("embeddings", "by_embedding", {
             vector: embedding,
-            filter:  (q) => q.eq("artifactType", "post"),
-            limit: 12
+            filter:  (q) => q.eq("artifactType", args.type),
+            limit: VECTOR_SEARCH_LIMIT,
         })
 
-        const searchPosts: Array<Doc<"post">> = await ctx.runQuery(
+        const searchPosts: Array<POST> = await ctx.runQuery(
             internal.post.fetchResults,
             { ids: results.map((result) => result._id) },
           );
@@ -393,7 +393,7 @@ export const search = internalAction({
 export const fetchResults = internalQuery({
     args: { ids: v.array(v.id("embeddings")) },
     handler: async (ctx, args) => {
-      const results: Array<Doc<"post">> = [];
+      const results: Array<POST> = [];
       for (const id of args.ids) {
         const embed = await ctx.db.get(id)
         if (embed === null) {
@@ -403,7 +403,8 @@ export const fetchResults = internalQuery({
         if (doc === null) {
           continue;
         }
-        results.push(doc as Doc<"post">);
+        const bakedPost = await preparePost(ctx, doc as Doc<"post">)
+        results.push(bakedPost);
       }
       return results;
     },

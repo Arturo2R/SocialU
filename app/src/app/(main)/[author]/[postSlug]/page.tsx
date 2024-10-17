@@ -74,10 +74,11 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                 <meta name="twitter:label2" content="Fecha de publicación" />
                 <meta name="twitter:data2" content={dayjs(content._creationTime).format("MMMM D, YYYY")} />
             </Head>
+
             <Paper classNames={{ root: styles.postPage }}>
                 {content.video && (
                     <>
-                        <VideoPlayer playbackId={content.video} title={content.title} />
+                        <VideoPlayer aspectRatio={content.videoMetadata?.aspectRatio} playbackId={content.video} title={content.title} />
 
                     </>
                 )}
