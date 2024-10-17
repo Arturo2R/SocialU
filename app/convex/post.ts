@@ -410,6 +410,18 @@ export const fetchResults = internalQuery({
     },
   });
 
+
+export const recreateAllEmbeddings = internalMutation({
+    handler: async (ctx) => {
+        const posts = await ctx.db.query("post").collect();
+        let i = 10
+        for (const post of posts) {
+            await ctx.scheduler.runAfter(i, internal.post.createEmbedding, {content: post.contentInMarkdown || "", type: "document", store: true, postId: post._id})
+            i += 1000
+        }
+    }
+})
+
 export const createEmbedding = internalAction({
     args: {
         content: v.string(),
