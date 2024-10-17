@@ -18,9 +18,12 @@ export const Search = (props: SeachInterface) => {
             props.close()
         }
     }
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+    }
 
     return (
-        <form className="w-full">
+        <form className="w-full" onSubmit={handleSubmit}>
             <Input
                 onChange={(event) => setSearch(event.currentTarget.value)}
                 // onReset={() => setSearch('')}
