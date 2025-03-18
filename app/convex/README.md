@@ -88,3 +88,14 @@ function handleButtonPress() {
 Use the Convex CLI to push your functions to a deployment. See everything
 the Convex CLI can do by running `npx convex -h` in your project root
 directory. To learn more, launch the docs with `npx convex docs`.
+
+
+SocialU tuvo hiatus porque a Horacio dejo que se le venciera el dominio y a mi se me paso recordarle.
+
+Pero ya volvemos con toda, agradecemos fuertemente al Grupo Estudiantil de Mecánica 🦄 que donó para reanimar la aplicación y mantenerla así en el largo plazo. Por lo que el grupo estudiantil de mecánica se convierten en los primeros patrocinadores oficiales de SocialU 🎉
+
+Desarrollar SocialU el año pasado ha sido muy costoso en dinero, pero sobre todo tiempo y costo de oportunidad (nunca hay que olvidar el costo de oportunidad), por lo que queremos agradecer a todas las personas que han aportado a la comunidad estudiantil a través de la app y queremos que sigan participando.
+
+
+
+Cualquier pregunta o problema comunicarse con nosotros atravez de arosenstielhl@uninorte.edu.co y horaciob@uninorte.edu.co

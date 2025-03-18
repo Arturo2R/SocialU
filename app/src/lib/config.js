@@ -29,12 +29,12 @@ export default function () {
       // { color: "#2F4B7C", name: "Imagen", active: true, value: "imagen" },
       { color: "#3CAEA3", name: "Eventos", active: true, value: "eventos" },
       //{ color: "#ED553B", name: "Clases", active: true, value: "clases" },
+      { color: "#8000FF", name: "Olimpiadas", active: true, value: "olimpiadas_uninorte" },
       { color: "#20639B", name: "Ventas", active: true, value: "Ventas" },
       //
       { color: "#431C53", name: "Objetos perdidos", active: true, value: "Objetos_perdidos" },
 
       // Hola
-      { color: "#8000FF", name: "Parciales finales", active: true, value: "parciales_finales" },
     ],
     appNames: ['Campus Gossip', "Chisme.app", "Desembuchalo", 'Chismes En La U', 'Student Secrets', "Campus Confessions", "UniConfesiones", "UniLeaks", "Campus Help", "Campus Connect",]
   }

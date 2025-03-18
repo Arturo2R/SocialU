@@ -76,7 +76,7 @@ export const PostCard = ({
     <article className="max-w-sm" id={slug}>
       <Card
         href={{
-          pathname: `/${author !== "anonimo" ? author.username : "anonimo"}/${slug}`,
+          pathname: `/${author !== "anonimo" ? author.userName : "anonimo"}/${slug}`,
         }}
         component={Link}
         className="X"
