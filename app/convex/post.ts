@@ -225,7 +225,7 @@ export const revalidate = action({
     },
     handler: (_, args) => {
         // do something with `args.a` and `args.b`
-        fetch(`https://redsocialu.com/api/revalidate?secret=calandriel&id=${args.id}&author=${args.author}`)
+        fetch(`https://redsocialu.net/api/revalidate?secret=calandriel&id=${args.id}&author=${args.author}`)
         // optionally rredsocialu.net
 
         return "success";
