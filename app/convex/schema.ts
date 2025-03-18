@@ -29,7 +29,7 @@ export default defineSchema({
         priority: v.optional(v.boolean()),
         renderMethod: literals("DangerouslySetInnerHtml", "NonEditableTiptap", "none", "CustomTiptapParser", "CustomEditorJSParser"),
         messageFormat: literals("Markdown", "HTML", "Tiptap", "EditorJS"),
-        categoryValue: v.optional(literals(...lascategories)),
+        categoryValue: v.optional(v.string()),
         authorAnonimousId: v.optional(v.string()),
         likeText: v.object({
             positive: v.string(),
