@@ -2,8 +2,8 @@ import { IconBellRinging, IconSend, IconSettings } from "@tabler/icons-react";
 import pk from "../../package.json";
 export default function () {
   return {
-    domain: "redsocialu.com",
-    url: "https://redsocialu.com",
+    domain: "redsocialu.net",
+    url: "https://redsocialu.net",
     description: "La Aplicación de la Universidad",
     siteName: "SocialU",
     logo: "/logo.png",

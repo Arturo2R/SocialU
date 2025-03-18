@@ -133,13 +133,13 @@ export const preparePost = async (ctx: QueryCtx, rawpost: Doc<"post">) : Promise
             post = { ...post, anonimo: false, author: {
                 displayName: "Usuario eliminado",
                 userName: "Usuarioeliminado",
-                link: `https://redsocialu.com/`,
+                link: `https://redsocialu.net/`,
             }}
         } else {
             post = { ...post, anonimo: false, author: {
                 displayName: author.settings?.useUserName ? author.username : author.displayName || author.username,
                 userName: author.username,
-                link: `https://redsocialu.com/${author.username}`,
+                link: `https://redsocialu.net/${author.username}`,
                 ...(author.photoURL && { image: author.photoURL }),
             }}
         }
@@ -226,7 +226,7 @@ export const revalidate = action({
     handler: (_, args) => {
         // do something with `args.a` and `args.b`
         fetch(`https://redsocialu.com/api/revalidate?secret=calandriel&id=${args.id}&author=${args.author}`)
-        // optionally return a value
+        // optionally rredsocialu.net
 
         return "success";
     },

@@ -12,7 +12,7 @@
   "packageManager": "bun@1.1.27",
   "bugs": "arosenstielhl@uninorte.edu.co",
   "description": "Social U es una red social para la comunidad universitaria de la Universidad del Norte",
-  "homepage": "https://redsocialu.com",
+  "homepage": "https://redsocialu.net",
   "repository": {
     "type": "git",
     "url": "https://github.com/Arturo2r/SocialU"

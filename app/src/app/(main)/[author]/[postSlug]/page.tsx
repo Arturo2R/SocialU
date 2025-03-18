@@ -60,7 +60,7 @@ const PostPage = ({ params }: { params: { postSlug: string } }) => {
                 <meta property="og:image" content={content.image} />
                 <meta property="og:type" content="article" />
                 <meta property="og:site_name" content="Redsocialu" />
-                <meta property="og:url" content={`https://redsocialu.com/anonimo/${content.slug}`} />
+                <meta property="og:url" content={`https://redsocialu.net/anonimo/${content.slug}`} />
                 <meta property="og:locale" content="es_ES" />
                 <meta name="twitter:card" content="summary_large_image" />
                 <meta name="twitter:site" content="@redsocialu" />

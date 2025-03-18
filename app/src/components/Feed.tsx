@@ -109,7 +109,7 @@ export const Feed = (props: {
         </Masonry>
       </InfiniteScroll>
       {status === "Exhausted" && (
-        <div className="text-center text-gray-600 dark:text-gray-400">Esos fueron todos los posts, ya no hay más por aqui. Puedes ver aquí todos los <Anchor color="cyan" href="https://old.redsocialu.com" target='_blank'>posts antiguos</Anchor> </div>
+        <div className="text-center text-gray-600 dark:text-gray-400">Esos fueron todos los posts, ya no hay más por aqui. Puedes ver aquí todos los <Anchor color="cyan" href="https://old.redsocialu.net" target='_blank'>posts antiguos</Anchor> </div>
       )}
       {/* <Button onClick={() => loadMore(13)} disabled={status !== "CanLoadMore"} loading={isLoading} fullWidth>Cargar Más Posts</Button> */}
     </Container>
