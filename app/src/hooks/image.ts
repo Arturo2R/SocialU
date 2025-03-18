@@ -1,5 +1,5 @@
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { attachments } from "@lib/firebase";
+// import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+// import { attachments } from "@lib/firebase";
 
 import posthog from "posthog-js";
 import { useAction, useMutation } from "convex/react";
@@ -9,25 +9,25 @@ import * as UpChunk from '@mux/upchunk';
 import { useState } from "react";
 
 
-export const uploadFile = async (file: File): Promise<string> => {
-    const imageRef = ref(attachments, file.name);
-    try {
-        const uploadResult = await uploadBytes(imageRef, file, {
-            contentType: file.type,
-        })
-        const url = await getDownloadURL(uploadResult.ref)
+// export const uploadFile = async (file: File): Promise<string> => {
+//     const imageRef = ref(attachments, file.name);
+//     try {
+//         const uploadResult = await uploadBytes(imageRef, file, {
+//             contentType: file.type,
+//         })
+//         const url = await getDownloadURL(uploadResult.ref)
 
-        console.log(url)
-        return url
-    } catch (error: any) {
-        console.error(error.message)
-        posthog.capture('upload_image_error', {
-            message: error.message,
-            fileName: file.name,
-        });
-        return "error"
-    }
-}
+//         console.log(url)
+//         return url
+//     } catch (error: any) {
+//         console.error(error.message)
+//         posthog.capture('upload_image_error', {
+//             message: error.message,
+//             fileName: file.name,
+//         });
+//         return "error"
+//     }
+// }
 
 export const uploadFileToConvex = async (file: File): Promise<string> => {
     console.log("AJAA y la imagen ", file)
