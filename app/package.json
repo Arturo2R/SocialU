@@ -52,7 +52,7 @@
     "@blocknote/server-util": "^0.16.0",
     "@clerk/clerk-react": "^5.2.9",
     "@clerk/nextjs": "^5.2.6",
-    "@convex-dev/auth": "^0.0.61",
+    "@convex-dev/auth": "^0.0.72",
     "@mantine/code-highlight": "^7.8.1",
     "@mantine/core": "^7.11.0",
     "@mantine/dates": "7.4.0",
