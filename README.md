@@ -138,8 +138,8 @@ yarn test
 
 I'm currently looking for frontend development opportunities. If you're impressed by this project, I'd love to chat about how I can contribute to your team.
 
-- **Email**: [your.email@example.com](mailto:arosenstielhl@uninorte.edu.co)
-- **LinkedIn**: [linkedin.com/in/yourusername](https://linkedin.com/in/_arturo2r)
+- **Email**: [arosenstielhl@uninorte.edu.co](mailto:arosenstielhl@uninorte.edu.co)
+- **LinkedIn**: [linkedin.com/in/arturo2r](https://linkedin.com/in/arturo2r)
 
 ## 📜 License
 
