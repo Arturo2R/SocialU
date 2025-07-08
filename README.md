@@ -8,6 +8,8 @@
 SocialU is a full-featured, responsive social media platform designed to connect university communities. It provides a modern UI/UX with real-time interactions, personalized content feeds, and robust user authentication.
 
 ### 🌟 Live Demo: [SocialU Platform](https://socialu.vercel.app)
+![image](https://github.com/user-attachments/assets/b2f011b6-d683-4d79-a533-0b38e123215c)
+
 
 ## 🚀 Key Features
 
